@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CiF Dialogue Annotator</title>
+
+    <!-- Bootstrap -->
+    <link href="lib/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body style="padding: 30px">
+    <div class="page-header">
+        <h1 >CiF Dialogue Annotator</h1>
+        <p class="lead">Web page for annotating CiF dialogue, so that it may later be recombined.</p>
+    </div>
+    
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-2" style="font-size:25px">Speaker</div>
+    		<div class="col-md-5" style="font-size:25px">Line of dialogue</div>
+    		<div class="col-md-5" style="font-size:25px">Properties</div>    
+    	</div>
+    </div>
+    
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-2" >Initiator</div>
+    		<div class="col-md-5" >This is a prototype of what lines of dialogue would look like</div>
+    		<div class="col-md-5" >Annotation properties</div>    
+    	
+    		<div class="col-md-2" >Responder</div>
+    		<div class="col-md-5" >This is the next line</div>
+    		<div class="col-md-5" >Annotation properties</div>
+    	</div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="lib/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="lib/js/bootstrap.min.js"></script>
+    
+    <!-- Script src's for personal code -->
+    <script src="src/main.js"></script>
+    <script src="src/lineOfDialogue.js"></script>
+    
+    
+    <!-- initialize main, and run update loop -->
+    <script>
+    
+    var main = new Main();
+    
+    function update(){
+    	main.update();
+    	setTimeout(update, 100);
+    }
+    
+    $( document ).ready(function() {
+    	update();
+    });
+
+    </script>
+    
+  </body>
+</html>
