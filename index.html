@@ -34,35 +34,11 @@
     	</div>
     </div>
 
-    <div class="container">
+    <!--Container which will hold all of the lines-->
+    <div class="container" id="LinesContainer"></div>
 
-    	<div class="row">
-    		<div class="col-md-2" >
-        		<div class="dropdown">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select Speaker <span class="caret"></span></button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Initiator</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Responder</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Other</a></li>
-                  </ul>
-                </div>
-            </div>
-    		<div class="col-md-5" ><textarea rows="5" cols="72" style="resize:vertical">Enter Dialogue here</textarea></div>
-    		<div class="col-md-5" >
-    		    <ul class="list-group">
-                  <li class="list-group-item" style="background-color: #428bca; border-color: #428bca;">
-                    <h4 class="list-group-item-heading" style="color:white">Category</h4>
-                  </li>
-                  <a href="#" class="list-group-item">+</a>
-                </ul>
-    		</div>
-    	</div>
-
-    	 <button class="btn btn-default btn-lg">+ Add Line</button>
-
-
-
-    </div>
+    <!--Button for adding new lines-->
+    <div class="container"><button class="btn btn-default btn-lg" id="AddLine">+ Add Line</button></div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="lib/js/jquery.min.js"></script>
@@ -73,10 +49,68 @@
     <script src="src/lineOfDialogue.js"></script>
     <script src="src/main.js"></script>
 
+    <!--Load json databases here-->
+    <script type="text/javascript">
+        //Get the different types of properties. [{id, name, description, color}, ...]
+        //Json loading doesnt work locally, so this is manually entered for now
+        var propertyTypes = [
+                {"id": "SocialExchangeIdentities",
+                 "name": "Social Exchange Identities",
+                 "description": "This line transmits the identity of the Social Exchange",
+                 "color": "#428bca"},
+                {"id": "SocialExchangeOutcomes",
+                 "name": "Social Exchange Outcomes",
+                 "description": "This line transmits the outcome (eg Accept, Reject) of the Social Exchange",
+                 "color": "#3c763d"},
+                {"id": "StoryWorldTransmissions",
+                 "name": "Story World Transmissions",
+                 "description": "This line transmits things about the Story World",
+                 "color": "#31708f"},
+                {"id": "StoryWorldContradictions",
+                 "name": "Story World Contradictions",
+                 "description": "This line cannot be accurate if these are true about the Story World",
+                 "color": "#8a6d3b"},
+                {"id": "SpeechActs",
+                 "name": "Speech Acts",
+                 "description": "This line is some type(s) of Speech Act",
+                 "color": "#a94442"},
+                {"id": "SpeechActsPrecede",
+                 "name": "Speech Acts that can Precede",
+                 "description": "This line has speech acts that can precede it",
+                 "color": "#ffaeae"},
+                {"id": "SpeechActsFollow",
+                 "name": "Speech Acts that can Follow",
+                 "description": "This line has speech acts that can follow it",
+                 "color": "#ff9900"},
+                {"id": "StrictDependence",
+                 "name": "Strict Dependence",
+                 "description": "This line relies strictly on another line",
+                 "color": "#660066"}
+                ];
 
+
+        //custom html tags will go here, depending on the game, perhaps it will be moved to the "json file" above
+        var propertyTable = {};
+        propertyTable["SocialExchangeOutcomes"] = "Green green green";
+        propertyTable["SocialExchangeIdentities"] = "Blue blue blue";
+        propertyTable["StoryWorldTransmissions"] = "Navy navy navy";
+        propertyTable["StoryWorldContradictions"] = "Brown brown brown";
+        propertyTable["SpeechActs"] = "Red red red";
+        propertyTable["SpeechActsPrecede"] = "Pink pink pink";
+        propertyTable["SpeechActsFollow"] = "Yellow yellow yellow";
+        propertyTable["StrictDependence"] = "Purple purple purple";
+
+
+
+
+        //$.getJSON("res/property_types.json", function(data){
+        //   propertyTypes = data;
+        //});
+
+    </script>
 
     <!-- initialize main, and run update loop -->
-    <script>
+    <script type="text/javascript">
 
     var main = new Main();
 
@@ -89,7 +123,14 @@
     	update();
     });
 
+
+    //Set a listener for adding a new line
+    $("#AddLine").click(function(){
+        main.addLine();
+    });
+
     </script>
+
 
 
   </body>
