@@ -1,0 +1,52 @@
+This Document has notes on what different .json files are encoding.
+
+
+
+property_types.json:
+An array of different potential properties of a line. Each of these potential properties
+describes a list of property-specific annotations. For details on what these properties encode
+specifically, look at requirements_for_authoring_tool.txt.
+
+Pseudocode:
+
+class Property:
+    string id //the id of the property, used for html tag id elements
+    string name  //the name of the property
+    string description //the description of the property, for user reference
+    string color //the color of the header of the list of property annotations, in hex
+
+
+
+game_identity.json:
+An array of Social-Exchange Identity objects. It is used to describe different social exchange identities,
+and the intents of the identity. This json covers the property types of the Social Exchange Identities,
+and the Social Excahnge Outcomes.
+
+Pseudocode:
+
+class Identity:
+    string identity //the name of the social Exchange
+    Outcome accept //an object describing the intent of accept
+    Outcome reject //an object describing the intent of reject
+
+class Outcome:
+    string transmissionType //The type of transmission made by the intent
+    string uid //The unique id of that transmission, a number to find it in that transmission type's object
+
+speech_acts.json
+An array of Speech Act objects. It is used to describe different speech acts, which speech acts 
+can precede it, and which speech acts can follow. This json covers the property types of Speech Acts,
+Can precede Speech Acts, and Can Follow Speech Acts.
+
+Pseudocode:
+
+class SpeechAct:
+    string name //Name of the speech Act
+    AutoSpeechAct[] canPrecede //Array of preceding speech acts which autofill
+    AutoSpeechAct[] canFollow  //Array of following speech acts which autofill
+
+class AutoSpeechAct:
+    string name //name of the speech Act
+    int weight //weight of the speech act on the autofill continuum
+    
+    

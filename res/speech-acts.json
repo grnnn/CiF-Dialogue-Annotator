@@ -1,0 +1,82 @@
+[
+{"name": "Speech Act name",
+ "canFollow":[
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			],
+ "canPrecede": [
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			]
+ },
+{"name": "Speech Act name",
+ "canFollow":[
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			],
+ "canPrecede": [
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			]
+ },
+{"name": "Speech Act name",
+ "canFollow":[
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			],
+ "canPrecede": [
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			]
+ },
+{"name": "Speech Act name",
+ "canFollow":[
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			],
+ "canPrecede": [
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			 {"name": "Speech Act name",
+			  "weight": 50},
+			  ...
+			]
+ }
+]
