@@ -75,7 +75,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
             $(this).remove();
             //if the list is empty, delete the button
             if($("#PropertiesDropDown" + lineNum).has("a").length == 0){
-                $("#PropertiesDropDown" + lineNum).remove();
+                $("#PropertiesDropDown" + lineNum).hide();
             }
 
             //Add the list-group for the property
@@ -124,6 +124,9 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                 //remove the entire listgroup
                 $("#"+id+"ListGroup"+lineNum).remove();
 
+                //If the dropdown is hidden, unhide it
+                $("#PropertiesDropDown" + lineNum).show();
+
                 //add the correct property back into the dropdown
                 $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
             });
@@ -135,8 +138,14 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
 };
 
-//updates the lines properties every 100 ms
+//updates the line's properties every 100 ms, pulls data into the structure
 LineOfDialogue.prototype.update = function(){
+    //if speaker drop down isn't "select speaker", set the speaker to the speaker drop down
+    if($("#SpeakerDropDownButton"+this.lineNumber).html().search("Select") == -1) this.speaker=$("#SpeakerDropDownButton"+this.lineNumber).html();
+
+    //if the textarea isn't "Enter Dialogue here", set the text to the html
+    if($("#TextArea"+this.lineNumber).val().search("Enter Dialogue here") == -1) this.text=$("#TextArea"+this.lineNumber).val();
+
 
 
 };
