@@ -8,6 +8,8 @@ function LineOfDialogue(lineNum){
 
     this.text = "";
 
+    this.annotationData = new AnnotationData(lineNum);
+
 
     //Initialize Base HTML
     this.baseStructureConfigure();
@@ -49,7 +51,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
     var textForDropdown = "<div class='dropdown' id='PropertiesDropDown"+this.lineNumber+"' style='padding:15px'><button type='button' class='btn btn-default dropdown-toggle'   data-toggle='dropdown'>+ Add Type of Annotation <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='PropertiesDropDownInner"+this.lineNumber+"' aria-labelledby='dropdownMenu1' >";
     for(var i = 0; i < propertyTypes.length; i++){
         var propertyType = propertyTypes[i];
-        textForDropdown = textForDropdown + " <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+this.lineNumber+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>";
+        textForDropdown = textForDropdown + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+this.lineNumber+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>";
 
     }
     //append that text to the Property tag
@@ -78,29 +80,72 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                 $("#PropertiesDropDown" + lineNum).hide();
             }
 
+            //add the property to annotationData
+            main.findLine(lineNum).annotationData.addProperty(id);
+
             //Add the list-group for the property
             $("#Properties"+lineNum).append("<ul class='list-group' id='"+id+"ListGroup"+lineNum+"'><li class='list-group-item' style='color:white; background-color: "+color+"; border-color: "+color+";'><h4 class='list-group-item-heading' style='color:white'>"+name+"<button type='button' id='"+id+"ListGroupClose"+lineNum+"' class='close' aria-hidden='true'>&times;</button></h4>"+desc+"</li><a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a></ul>");
             //Add a 'click' listener for the plus button in that list group
-            //Logic for different formats is in the propertyTable Hash Table (defined in index)
+            //Logic for different formats is in the propertyTable object (defined in PropertyTable.js)
             $("#"+id+"ListGroup"+lineNum).on('click', 'a', function(){
 
-                //retrieve id and lineNum
-                var id = this.id.replace("PlusButton", "");
-                id = id.replace(/(\d+)/g, "");
-                var lineNum = this.id.replace(/([A-Z]+)/g, "");
-                lineNum = lineNum.replace(/([a-z]+)/g, "");
+                if(this.id.search("PlusButton") != -1){
+                    //retrieve id and lineNum
+                    var id = this.id.replace("PlusButton", "");
+                    id = id.replace(/(\d+)/g, "");
+                    var lineNum = this.id.replace(/([A-Z]+)/g, "");
+                    lineNum = lineNum.replace(/([a-z]+)/g, "");
 
-                //Define the html code to be added, including a new plus button
-                var breadOne = "<li class='list-group-item'> <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> ";
-                var insides = propertyTable[id];
-                var breadTwo = " </li> <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ";
+                    //add 1 to the length in annotationData
+                    main.findLine(lineNum).annotationData[id].length++;
+                    //get the length
+                    var listGroupLength = main.findLine(lineNum).annotationData[id].length.toString();
 
-                //append the code
-                $("#"+id+"ListGroup"+lineNum).append(breadOne + insides + breadTwo);
+                    //Define the html code to be added, including a new plus button
+                    var breadOne = "<li class='list-group-item' id='"+id+"ItemAt"+lineNum+"And"+listGroupLength+"'>  <div class='row'> <div class='col-md-10'>";
+                    var insides = propertyTable.addHTML(id, lineNum, listGroupLength);
+                    var breadTwo = "</div> <div class='col-md-1'> <button type='button' id='"+id+"ItemCloseAt"+lineNum+"And"+listGroupLength+"' class='close' aria-hidden='true'>&times;</button></div></div> </li>";
 
-                //remove the old plus button
-                var plusButton = $("#"+id+"PlusButton"+lineNum);
-                plusButton.remove();
+                    //Some properties can't have more than 1 members,
+                    //this exception doesn't add a plus button if it's that kind of property
+                    if(id != "SocialExchangeIdentities"){
+                        breadTwo = breadTwo + " <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ";
+                    }
+
+                    //append the code
+                    $("#"+id+"ListGroup"+lineNum).append(breadOne + insides + breadTwo);
+
+                    //remove the old plus button
+                    var plusButton = $("#"+id+"PlusButton"+lineNum);
+                    plusButton.remove();
+
+                    //Set listeners for that particular property id
+                    propertyTable.setListeners(id, lineNum, listGroupLength);
+
+                    //Set one more listener for the close button of the list group item that was just created
+                    //#nestedListeners2014
+                    $("#"+id+"ItemCloseAt"+lineNum+"And"+listGroupLength).on('click', function(){
+                        //get id, lineNum, and length
+                        var props = this.id.split("ItemCloseAt");
+                        var nums = props[1].split("And");
+                        var id = props[0];
+                        var lineNum = nums[0];
+                        var length = nums[1];
+
+                        //The flip side to removing the plus button,
+                        //Add it if the property would be empty otherwise
+                        if($("#"+id+"ListGroup"+lineNum).children().length == 2){
+                            $("#"+id+"ListGroup"+lineNum).append(" <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ");
+                        }
+
+                        //Remove the list item
+                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
+
+                    });
+
+                }
+
+
             });
 
 
@@ -120,6 +165,9 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                         break;
                     }
                 }
+
+                //remove the property from annotationData
+                main.findLine(lineNum).annotationData.removeProperty(id);
 
                 //remove the entire listgroup
                 $("#"+id+"ListGroup"+lineNum).remove();
@@ -146,6 +194,7 @@ LineOfDialogue.prototype.update = function(){
     //if the textarea isn't "Enter Dialogue here", set the text to the html
     if($("#TextArea"+this.lineNumber).val().search("Enter Dialogue here") == -1) this.text=$("#TextArea"+this.lineNumber).val();
 
-
+    //Also pull data into the annotationData object with its own update method
+    this.annotationData.update();
 
 };
