@@ -26,6 +26,8 @@ Main.prototype.addLine = function(){
     this.linesOfDialogue.push(new LineOfDialogue(this.currentLineNumber));
 };
 
+
+//used to find a particular line by number
 Main.prototype.findLine = function(lineNum){
     for(var i = 0; i < this.linesOfDialogue.length; i++){
         if(this.linesOfDialogue[i].lineNumber == lineNum) return this.linesOfDialogue[i];

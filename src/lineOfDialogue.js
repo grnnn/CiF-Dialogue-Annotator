@@ -39,6 +39,9 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
     $("#RemoveLineButton"+this.lineNumber).on('click', function(){
         var lineNum = this.id.replace("RemoveLineButton","");
 
+        var line = main.findLine(lineNum);
+        main.linesOfDialogue.splice(main.linesOfDialogue.indexOf(line), 1);
+
         $("#Line" + lineNum).remove();
         $("#Divider" + lineNum).remove();
     });
