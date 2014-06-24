@@ -87,6 +87,49 @@ propertyTable.seoListeners = function(lineNum, length){
         $("#SEODropDownButtonAt"+lineNum+"And"+length).text(propertyArray[0].text());
         $("#SEODropDownButtonAt"+lineNum+"And"+length).val(propertyArray[0].text());
     }
+    
+    //Find the Social Exchange Identities lines and get the selected exchange value
+    //The point is to get the correct intent displaying
+    //First get the sei text elements
+    var seiArray = [];
+    for(var k = 0; k < main.linesOfDialogue.length; k++){
+        var line = main.linesOfDialogue[k];
+        if(line.annotationData["SocialExchangeIdentities"] != null){
+            for(var g=1; g<line.annotationData["SocialExchangeIdentities"].length+1; g++){
+                var seiProperty = $("#SEIDropDownButtonAt" + (k+1) + "And" + g);
+                if(seiProperty.length){
+                    seiArray.push(seiProperty);
+                }
+            }
+        }
+    }
+    //Next find the game object for the selected string
+    if(seiArray.length > 0){
+    	var selectedExchange = seiArray[0].val();
+	    var game;
+	    for(var b=0; b < games.length; b++){
+	        if(games[b].identity == selectedExchange){
+	            game = games[b];
+	        }
+	    }
+	    var bool = true;
+	    if(propertyArray.length){
+		    if(propertyArray[0].val() === "Accept"){
+		        game = game.accept;
+		    }
+		    else if(propertyArray[0].val() === "Reject"){
+		        game = game.reject;
+		    }
+		    else bool=false;
+	    }
+	    else bool=false;
+	    
+		 //Finally, set the val to the new intent
+	    if(bool){
+	    	$("#SEOTextAt"+lineNum+"And"+length).html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+" </b>");
+	    }
+	    
+    }
 
 
     //'click' listener for the sei drop down
@@ -153,13 +196,13 @@ propertyTable.seoListeners = function(lineNum, length){
             return;
         }
         //Finally, set the val to the new intent
-        for(var a = 0; a < seiArray.length; a++){
+        for(var a = 0; a < propertyArray.length; a++){
             nums = propertyArray[a].attr("id").replace("SEODropDownButtonAt", "");
             nums = nums.split("And");
             lineNum = nums[0];
             length = nums[1];
 
-            $("#SEOTextAt"+lineNum+"And"+length).html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+"</b>");
+            $("#SEOTextAt"+lineNum+"And"+length).html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+" </b>");
         }
 
     });
@@ -261,7 +304,7 @@ propertyTable.seiListeners = function(lineNum, length){
         }
         //Finally, set the val to the new intent
         for(var a = 0; a < seoArray.length; a++){
-            seoArray[a].html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+"</b>");
+            seoArray[a].html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+" </b>");
         }
 
     });
@@ -271,12 +314,42 @@ propertyTable.seiListeners = function(lineNum, length){
     //any intents should default back to "Select exchange identity and outcome to generate intent"
     $("#SEIDropDownAt" + lineNum + "And"+ length).on('remove', function(){
         //First find out if this one being closed is the last of its kind
-
-        //Next, if it is the last of its kind, find all of the intents that
-        //are floating around
-
-        //change the value of those intents to "Select exchange identity and outcome to generate intent"
-
+    	var propertyArray = [];
+        for(var i = 0; i < main.linesOfDialogue.length; i++){
+            var line = main.linesOfDialogue[i];
+            if(line.annotationData["SocialExchangeIdentities"] != null){
+                for(var j=1; j<line.annotationData["SocialExchangeIdentities"].length+1; j++){
+                    var property = $("#SEIDropDownButtonAt" + (i+1) + "And" + j);
+                    if(property.length){
+                        propertyArray.push(property);
+                    }
+                }
+            }
+        }
+        if(propertyArray.length === 0){
+        	//Next, if it is the last of its kind, find all of the intents that
+        	//are floating around
+        	var seoArray = [];
+            for(var k = 0; k < main.linesOfDialogue.length; k++){
+                var line = main.linesOfDialogue[k];
+                if(line.annotationData["SocialExchangeOutcomes"] != null){
+                    for(var g=1; g<line.annotationData["SocialExchangeOutcomes"].length+1; g++){
+                        var seoProperty = $("#SEOTextAt" + (k+1) + "And" + g);
+                        if(seoProperty.length){
+                            seoArray.push(seoProperty);
+                        }
+                    }
+                }
+            }
+            if(seoArray.length > 0){
+            	//change the value of those intents to "Select exchange identity and outcome to generate intent"
+            	for(var a = 0; a < seoArray.length; a++){
+                    seoArray[a].html("Select exchange identity and outcome to generate intent");
+                }
+            	
+            }
+        	
+        }
 
     });
 
