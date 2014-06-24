@@ -111,7 +111,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
                     //Some properties can't have more than 1 members,
                     //this exception doesn't add a plus button if it's that kind of property
-                    if(id != "SocialExchangeIdentities"){
+                    if(id != "SocialExchangeIdentities" && id != "SocialExchangeOutcomes"){
                         breadTwo = breadTwo + " <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ";
                     }
 
