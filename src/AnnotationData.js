@@ -68,6 +68,9 @@ Property.prototype.seiUpdate = function(){
             this.val = property.text();
         }
     }
+    
+    //this.val data structure:
+    //class val (string)
 };
 
 //Updates the property value for "SocialExchangeOutcomes"
@@ -75,21 +78,42 @@ Property.prototype.seoUpdate = function(){
 	//Iterate through each listgroup item
 	for(var i = 1; i < this.length+1; i++){
 		
-		//Get the jquery object
+		//Get the jquery objects
 		var property = $("#SEODropDownButtonAt" + this.lineNum + "And" + i);
 		var text = $("#SEOTextAt" + this.lineNum + "And" + i);
 		
+		//assign the outcome value
 		if(property.text().search("Select Exchange Outcome") == -1 && property.length && property.text() !== this.val.outcome){
             this.val.outcome = property.text();
         }
+		
+		//assign the intent values
 		if(text.text().search("Select exchange identity and outcome to generate intent") == -1 && text.length && text.html() !== this.val.intent){
-			this.val.intent = text.html();
-			console.log(this.val.intent);
+			var intent = text.html();
 			
-			var valArray = this.val.intent.match(/>(\w)* </gi);
-			console.log(valArray);
+			var valArray = intent.match(/>(\w)* </gi);
+			
+			var val;
+			for(var j=0; j < valArray.length; j++){
+				val = valArray[j];
+				val = val.replace(">", "");
+				val = val.replace("<", "");
+				val = val.replace(" ", "");
+				valArray[j] = val;
+			}
+			
+			this.val.subject = valArray[0];
+			this.val.verb = valArray[1];
+			this.val.object = valArray[2];
 			
 		}
 		
 	}
+	
+	//this.val data structure:
+    //class val:
+	//	string outcome //(accept/reject)
+	//	string subject //(intent subject)
+	//	string verb //(intent verb)
+	//	string object //(intent object)
 };

@@ -182,12 +182,15 @@ propertyTable.seoListeners = function(lineNum, length){
         //Next find the game object for the selected string
         if(seiArray.length > 0) var selectedExchange = seiArray[0].val();
         else return;
+        var matches = false;
         var game;
         for(var b=0; b < games.length; b++){
             if(games[b].identity == selectedExchange){
                 game = games[b];
+                matches = true;
             }
         }
+        if(!matches) return;
         if($("#SEODropDownButtonAt" + lineNum + "And" + length).val() === "Accept"){
             game = game.accept;
         } else if($("#SEODropDownButtonAt" + lineNum + "And" + length).val() === "Reject"){
