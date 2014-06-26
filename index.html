@@ -250,6 +250,674 @@
                  "reject" : {"subject":"Initiator", "verb":"likes", "object":"Cookies"}
                 }
                 ];
+        
+        var speechActs = [
+			{"name": "Accept Offer",
+			 "description": "Speaker accepts an interlocutor offer.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			{"name": "Accept Action-Directive",
+			 "description": "Speaker agrees to undertake interlocutor action-directive.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			{"name": "Action-Directive",
+			 "description": "Speaker is requesting/directing interlocutor to do something.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			{"name": "Address Third Party",
+			 "description": "Speaker is addressing a person or group outside of the initiator, responder, or other.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Affirmative Answer",
+			 "description": "'Yes' and other affirmative answers.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Agree",
+			 "description": "Speaker agrees with an interlocutor statement.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Apology",
+			 "description": "Speaker apologizes to the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Compliment",
+			 "description": "Speaker compliments the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Conventional Closing",
+			 "description": "Speaker is closing the conversation in a conventional way, e.g., 'Alright, I'll talk to you later.'",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Deliberation",
+			 "description": "Speaker is deliberating over how to respond to an interlocutor question or offer.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Disagree",
+			 "description": "Speaker disagrees with an interlocutor statement.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Exclamation",
+			 "description": "Speaker exclaims as a reaction to some sort of spectacular display by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Insult",
+			 "description": "Speaker insults the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Greeting",
+			 "description": "Speaker greets the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Hedge",
+			 "description": "Speaker is hesitant, non-committal, beating around the bush, etc.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Lead-In",
+			 "description": "Speaker utterance is a lead-in for his or her subsequent utterance, e.g., 'Look, %i%.'",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Negative Answer",
+			 "description": "'No' and other negative answers.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Negative Response Acknowledgement",
+			 "description": "Speaker acknowledges a negative interlocutor response - e.g., a negative answer to the speaker's question or an interlocutor insult directed at the speaker.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Negative Statement",
+			 "description": "General statement that is negative in sentiment. First try to use negative answer, negative response acknowledgement, insult, etc.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Offer",
+			 "description": "Speaker offers to do something, usually for the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Off-Topic",
+			 "description": "Off-topic speech.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Other Answer",
+			 "description": "Answer that is neither affirmative, negative, nor a hedge.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Positive Response Acknowledgement",
+			 "description": "Speaker acknowledges a positive interlocutor response - e.g., an affirmative answer to the speaker's question of an interlocutor compliment directed at the speaker.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Positive Statement",
+			 "description": "General statement that is positive in sentiment. First try to use affirmative answer, positive response acknowledgement, compliment, etc.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Reject Offer",
+			 "description": "Speaker rejects an interlocutor offer.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Refuse Action-Directive",
+			 "description": "Speaker refuses an interlocutor action-directive.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Request Repair",
+			 "description": "Speaker requests rewording, confirmation about unclear speech, etc.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Response",
+			 "description": "Speaker generically responds to interlocutor. (Use only if no other tag fits.)",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Response Acknowledgement",
+			 "description": "Speaker acknowledges a generic interlocutor response. (Use positive or negative response acknowledgement, if possible.)",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Statement",
+			 "description": "Speaker generically states something.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Stun",
+			 "description": "Speaker does something that would warrant exclamation by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Summarize/Reformulate",
+			 "description": "Speaker summarizes or reformulates prior speech.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Thanking",
+			 "description": "Speaker thanks the interlocutor.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Yes/No Question",
+			 "description": "Speaker asks a question of the interlocutor that obligates a yes/no answer.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 },
+			 {"name": "Wh- Question",
+			 "description": "Speaker asks a question of the interlocutor that does not obligate a yes/no answer.",
+			 "canFollow":[
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						],
+			 "canPrecede": [
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50},
+						 {"name": "Speech Act name",
+						  "weight": 50}
+						]
+			 }
+			];
 
 
         //$.getJSON("res/property_types.json", function(data){
@@ -259,6 +927,11 @@
         //$.getJSON("res/game_identity.json", function(data){
         //   games = data;
         //});
+        
+        //$.getJSON("res/speech-acts.json", function(data){
+        //   speechActs = data;
+        //});
+        
 
     </script>
 

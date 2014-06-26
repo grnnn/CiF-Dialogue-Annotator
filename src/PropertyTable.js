@@ -16,7 +16,7 @@ propertyTable.addHTML = function(id, lineNum, length){
         case "StoryWorldContradictions":
             return "Brown brown brown";
         case "SpeechActs":
-            return "Red red red";
+            return this.saHTML(lineNum, length);
         case "SpeechActsPrecede":
             return "Pink pink pink";
         case "SpeechActsFollow":
@@ -25,6 +25,13 @@ propertyTable.addHTML = function(id, lineNum, length){
             return "Purple purple purple";
     }
 
+};
+
+//return the html string for "SpeechActs"
+//Includes a drop down of just 'accept' and 'reject'
+propertyTable.saHTML = function(lineNum, length){
+	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SEODropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Exchange Outcome <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SEODropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+	
 };
 
 //return the html string for "SocialExchangeOutcomes"
@@ -37,7 +44,7 @@ propertyTable.seoHTML = function(lineNum, length){
     dropdownText = dropdownText + "<p style='padding:10px;' id='SEOTextAt"+lineNum+"And"+length+"'>Select exchange identity and outcome to generate intent</p>"
 
     return dropdownText;
-}
+};
 
 
 //return the html string for "SocialExchangeIdentities"
