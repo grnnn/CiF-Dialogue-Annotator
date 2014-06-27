@@ -36,9 +36,9 @@ propertyTable.saHTML = function(lineNum, length){
 		dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
 	}
 	dropdownText = dropdownText + "<p style='padding:10px;' id='SATextAt"+lineNum+"And"+length+"'></p>";
-	
+
 	return dropdownText;
-	
+
 };
 
 //return the html string for "SocialExchangeOutcomes"
@@ -74,7 +74,14 @@ propertyTable.setListeners = function(id, lineNum, length){
             return this.seiListeners(lineNum, length);
         case "SocialExchangeOutcomes":
             return this.seoListeners(lineNum, length);
+        case "SpeechActs":
+            return this.saListeners(lineNum, length);
     }
+
+};
+
+//Set up the proper dropdown listener
+propertyTable.saListeners = function(lineNum, length){
 
 };
 
@@ -101,7 +108,7 @@ propertyTable.seoListeners = function(lineNum, length){
         $("#SEODropDownButtonAt"+lineNum+"And"+length).text(propertyArray[0].text());
         $("#SEODropDownButtonAt"+lineNum+"And"+length).val(propertyArray[0].text());
     }
-    
+
     //Find the Social Exchange Identities lines and get the selected exchange value
     //The point is to get the correct intent displaying
     //First get the sei text elements
@@ -137,12 +144,12 @@ propertyTable.seoListeners = function(lineNum, length){
 		    else bool=false;
 	    }
 	    else bool=false;
-	    
+
 		 //Finally, set the val to the new intent
 	    if(bool){
 	    	$("#SEOTextAt"+lineNum+"And"+length).html("Intent: <b style='color:red'>"+game.subject+" </b><b style='color:green'>"+game.verb+" </b><b style='color:blue'>"+game.object+" </b>");
 	    }
-	    
+
     }
 
 
@@ -363,9 +370,9 @@ propertyTable.seiListeners = function(lineNum, length){
             	for(var a = 0; a < seoArray.length; a++){
                     seoArray[a].html("Select exchange identity and outcome to generate intent");
                 }
-            	
+
             }
-        	
+
         }
 
     });
