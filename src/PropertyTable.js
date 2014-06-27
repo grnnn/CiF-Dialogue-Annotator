@@ -28,9 +28,16 @@ propertyTable.addHTML = function(id, lineNum, length){
 };
 
 //return the html string for "SpeechActs"
-//Includes a drop down of just 'accept' and 'reject'
+//Includes a drop down speech acts with descriptions
 propertyTable.saHTML = function(lineNum, length){
-	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SEODropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Exchange Outcome <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SEODropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SADropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SADropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+	for(var i = 0; i < speechActs.length; i++){
+		var speechAct = speechActs[i];
+		dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
+	}
+	dropdownText = dropdownText + "<p style='padding:10px;' id='SATextAt"+lineNum+"And"+length+"'></p>";
+	
+	return dropdownText;
 	
 };
 

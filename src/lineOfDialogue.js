@@ -105,9 +105,9 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                     var listGroupLength = main.findLine(lineNum).annotationData[id].length.toString();
 
                     //Define the html code to be added, including a new plus button
-                    var breadOne = "<li class='list-group-item' id='"+id+"ItemAt"+lineNum+"And"+listGroupLength+"'>  <div class='row'> <div class='col-md-10'>";
+                    var breadOne = "<li class='list-group-item' id='"+id+"ItemAt"+lineNum+"And"+listGroupLength+"'> <div class='badge'> <button type='button' id='"+id+"ItemCloseAt"+lineNum+"And"+listGroupLength+"' class='close pull-right' aria-hidden='true' >&times;</button> </div>";
                     var insides = propertyTable.addHTML(id, lineNum, listGroupLength);
-                    var breadTwo = "</div> <div class='col-md-1'> <button type='button' id='"+id+"ItemCloseAt"+lineNum+"And"+listGroupLength+"' class='close' aria-hidden='true'>&times;</button></div></div> </li>";
+                    var breadTwo = " </li>";
 
                     //Some properties can't have more than 1 members,
                     //this exception doesn't add a plus button if it's that kind of property
