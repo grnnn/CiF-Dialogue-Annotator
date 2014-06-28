@@ -18,7 +18,7 @@ propertyTable.addHTML = function(id, lineNum, length){
         case "SpeechActs":
             return this.saHTML(lineNum, length);
         case "SpeechActsPrecede":
-            return "Pink pink pink";
+            return this.sapHTML(lineNum, length);
         case "SpeechActsFollow":
             return "Yellow yellow yellow";
         case "StrictDependence":
@@ -27,14 +27,30 @@ propertyTable.addHTML = function(id, lineNum, length){
 
 };
 
+//return the html string for "SpeechActsPrecede"
+//Includes a drop down speech acts with descriptions
+propertyTable.sapHTML = function(lineNum, length){
+    var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    for(var i = 0; i < speechActs.length; i++){
+        var speechAct = speechActs[i];
+        dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
+    }
+    dropdownText = dropdownText + "</ul> </div>";
+    dropdownText = dropdownText + "<p style='padding:10px;' id='SAPTextAt"+lineNum+"And"+length+"'></p>";
+
+    return dropdownText;
+
+};
+
 //return the html string for "SpeechActs"
 //Includes a drop down speech acts with descriptions
 propertyTable.saHTML = function(lineNum, length){
-	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SADropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SADropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SADropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SADropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
 	for(var i = 0; i < speechActs.length; i++){
 		var speechAct = speechActs[i];
-		dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
+		dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
 	}
+	dropdownText = dropdownText + "</ul> </div>";
 	dropdownText = dropdownText + "<p style='padding:10px;' id='SATextAt"+lineNum+"And"+length+"'></p>";
 
 	return dropdownText;
@@ -57,10 +73,10 @@ propertyTable.seoHTML = function(lineNum, length){
 //return the html string for "SocialExchangeIdentities"
 //includes a drop down of different exchanges, stored in "games"
 propertyTable.seiHTML = function(lineNum, length){
-    var dropdownText = "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SEIDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Exchange Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SEIDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    var dropdownText = "<div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle' id='SEIDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Exchange Type <span class='caret'></span></button> <ul class='dropdown-menu'  role='menu' id='SEIDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
     for(var i = 0; i < games.length; i++){
         var game = games[i];
-        dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>"+game.identity+"</a></li>";
+        dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1'  style='cursor:default;'>"+game.identity+"</a></li>";
     }
     return dropdownText + "</ul> </div>";
 };
@@ -76,13 +92,62 @@ propertyTable.setListeners = function(id, lineNum, length){
             return this.seoListeners(lineNum, length);
         case "SpeechActs":
             return this.saListeners(lineNum, length);
+        case "SpeechActsPrecede":
+            return this.sapListeners(lineNum, length);
     }
 
 };
 
 //Set up the proper dropdown listener
-propertyTable.saListeners = function(lineNum, length){
+propertyTable.sapListeners = function(lineNum, length){
+    $("#SAPDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SAPDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
 
+        //pull out the name of the Speech Act
+        var name = $(this).html().match(/>(\w| |-)*</g)[0];
+        name = name.replace(">", "");
+        name = name.replace("<", "");
+
+        //Pull out the description of the speech act
+        var desc = $(this).html().split("<br>")[1];
+
+        //Set the text in the Dropdown button to the name
+        $("#SAPDropDownButtonAt"+lineNum+"And"+length).text(name);
+        $("#SAPDropDownButtonAt"+lineNum+"And"+length).val(name);
+
+        //Set the description to the desc
+        $("#SAPTextAt"+lineNum+"And"+length).text(desc);
+    });
+};
+
+//Set up the proper dropdown listener
+propertyTable.saListeners = function(lineNum, length){
+    $("#SADropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SADropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //pull out the name of the Speech Act
+        var name = $(this).html().match(/>(\w| |-)*</g)[0];
+        name = name.replace(">", "");
+        name = name.replace("<", "");
+
+        //Pull out the description of the speech act
+        var desc = $(this).html().split("<br>")[1];
+
+        //Set the text in the Dropdown button to the name
+        $("#SADropDownButtonAt"+lineNum+"And"+length).text(name);
+        $("#SADropDownButtonAt"+lineNum+"And"+length).val(name);
+
+        //Set the description to the desc
+        $("#SATextAt"+lineNum+"And"+length).text(desc);
+    });
 };
 
 //Set up the proper dropdown listener, as well as synchronize the drop downs
