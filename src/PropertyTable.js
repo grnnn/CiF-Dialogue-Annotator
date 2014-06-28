@@ -22,9 +22,30 @@ propertyTable.addHTML = function(id, lineNum, length){
         case "SpeechActsFollow":
             return "Yellow yellow yellow";
         case "StrictDependence":
-            return "Purple purple purple";
+            return this.sdHTML(lineNum, length);
     }
 
+};
+
+//return the html string for "StrictDependence"
+//Includes a drop down of each line
+propertyTable.sdHTML = function(lineNum, length){
+    var lineNums = [];
+    for(var j = 0; j < main.linesOfDialogue.length; j++){
+        if(j===0) lineNums.push(1);
+        if(j!==0) lineNums.push(lineNums[j-1] + 1);
+    }
+    var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SDDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Line <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SDDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    for(var i = 0; i < main.linesOfDialogue.length; i++){
+        var line =  main.linesOfDialogue[i];
+        if(line.text !== "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no speaker</a></li>";
+        else if(line.text === "" && line.speaker !== "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no dialogue</a></li>";
+        else if(line.text === "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line neither has a speaker nor dialogue</a></li>";
+        else dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".<b style='font-size:15px;'>"+line.speaker+"</b>:"+line.text+"</a></li>";
+    }
+    dropdownText = dropdownText + "</ul> </div>";
+
+    return dropdownText;
 };
 
 //return the html string for "SpeechActsPrecede"
@@ -94,11 +115,31 @@ propertyTable.setListeners = function(id, lineNum, length){
             return this.saListeners(lineNum, length);
         case "SpeechActsPrecede":
             return this.sapListeners(lineNum, length);
+        case "StrictDependence":
+            return this.sdListeners(lineNum, length);
     }
 
 };
 
-//Set up the proper dropdown listener
+//Set up the proper dropdown listener of lines
+propertyTable.sdListeners = function(lineNum, length){
+    $("#SDDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SDDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Set the text in the Dropdown button to the html
+        $("#SDDropDownButtonAt"+lineNum+"And"+length).val("");
+        $("#SDDropDownButtonAt"+lineNum+"And"+length).text("");
+
+        $("#SDDropDownButtonAt"+lineNum+"And"+length).append($(this).html());
+    });
+
+};
+
+//Set up the proper dropdown listener of speech acts
 propertyTable.sapListeners = function(lineNum, length){
     $("#SAPDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
@@ -124,7 +165,7 @@ propertyTable.sapListeners = function(lineNum, length){
     });
 };
 
-//Set up the proper dropdown listener
+//Set up the proper dropdown listener of speech acts
 propertyTable.saListeners = function(lineNum, length){
     $("#SADropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length

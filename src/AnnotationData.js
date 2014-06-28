@@ -31,8 +31,14 @@ AnnotationData.prototype.update = function(){
       this["SpeechActs"].saUpdate();
   }
 
+  //If there's an object labelled "SpeechActsPrecede", update it
   if(this["SpeechActsPrecede"] != null){
       this["SpeechActsPrecede"].sapUpdate();
+  }
+
+  //If there's an object labelled "StrictDependence", update it
+  if(this["StrictDependence"] != null){
+      this["StrictDependence"].sdUpdate();
   }
 
 };
@@ -191,3 +197,30 @@ Property.prototype.sapUpdate = function(){
     //
     //]
 };
+
+//Updates the property value for "StrictDependence"
+//Also, updates the dropdown to reflect line properties
+Property.prototype.sdUpdate = function(){
+    //First check if we need to do the update
+    if(/*Length has changed*/)
+        var o = 1;
+
+
+    var lineNums = [];
+    for(var j = 0; j < main.linesOfDialogue.length; j++){
+        if(j===0) lineNums.push(1);
+        if(j!==0) lineNums.push(lineNums[j-1] + 1);
+    }
+    var dropdownText =  "";
+    for(var i = 0; i < main.linesOfDialogue.length; i++){
+        var line =  main.linesOfDialogue[i];
+        if(line.text !== "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no speaker</a></li>";
+        else if(line.text === "" && line.speaker !== "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no dialogue</a></li>";
+        else if(line.text === "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line neither has a speaker nor dialogue</a></li>";
+        else dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".<b style='font-size:15px;'>"+line.speaker+"</b>:"+line.text+"</a></li>";
+    }
+    dropdownText = dropdownText + "</ul> </div>";
+
+
+};
+
