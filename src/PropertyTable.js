@@ -137,6 +137,28 @@ propertyTable.sdListeners = function(lineNum, length){
         $("#SDDropDownButtonAt"+lineNum+"And"+length).append($(this).html());
     });
 
+    $("#SDDropDownButtonAt"+lineNum+"And"+length).on('click', function(){
+        //get the line number and length
+        var nums =  $(this).attr("id").replace("SDDropDownButtonAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Re-get the dropdown html for the updated lines
+        var dropdownText =  "";
+        for(var i = 0; i < main.linesOfDialogue.length; i++){
+            var line =  main.linesOfDialogue[i];
+            if(line.text !== "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+(main.linesOfDialogue.indexOf(line)+1).toString()+".This line has no speaker</a></li>";
+            else if(line.text === "" && line.speaker !== "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+(main.linesOfDialogue.indexOf(line)+1).toString()+".This line has no dialogue</a></li>";
+            else if(line.text === "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+(main.linesOfDialogue.indexOf(line)+1).toString()+".This line neither has a speaker nor dialogue</a></li>";
+            else dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+(main.linesOfDialogue.indexOf(line)+1).toString()+".<b style='font-size:15px;'>"+line.speaker+"</b>:"+line.text+"</a></li>";
+        }
+
+        //push in the new html
+        $("#SDDropDownAt"+lineNum+"And"+length).empty();
+        $("#SDDropDownAt"+lineNum+"And"+length).append(dropdownText);
+    });
+
 };
 
 //Set up the proper dropdown listener of speech acts

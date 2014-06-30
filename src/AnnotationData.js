@@ -189,7 +189,7 @@ Property.prototype.sapUpdate = function(){
 
     }
 
-    //this.val data structureL:
+    //this.val data structure:
     //[
     //string speechAct1,
     //string speechAct2,
@@ -201,25 +201,54 @@ Property.prototype.sapUpdate = function(){
 //Updates the property value for "StrictDependence"
 //Also, updates the dropdown to reflect line properties
 Property.prototype.sdUpdate = function(){
-    //First check if we need to do the update
-    if(/*Length has changed*/)
-        var o = 1;
 
+    //First initialize this.val as an array
+    if(!this.val.length) this.val = [];
 
-    var lineNums = [];
-    for(var j = 0; j < main.linesOfDialogue.length; j++){
-        if(j===0) lineNums.push(1);
-        if(j!==0) lineNums.push(lineNums[j-1] + 1);
+     for(var k = 1; k < this.length+1; k++){
+        //next pull all of the lineNumber pointers into an array at this.val
+        var buttonText = $("#SDDropDownButtonAt"+this.lineNum+"And"+k).text();
+        //array upkeep
+        if( k > this.val.length) this.val.push(-1);
+        //If the line content matches the value, get the line Number
+        var trigger = true;
+        for(var u = 0; u<main.linesOfDialogue.length; u++){
+            var line =  main.linesOfDialogue[u];
+
+            var fromTheLine = (main.linesOfDialogue.indexOf(line)+1).toString() + "." + line.speaker + ":" + line.text;
+            if(fromTheLine === buttonText){
+                this.val[k-1] = line.lineNumber;
+                trigger = false;
+                break;
+            }
+        }
+
+        //If Button hasn't been clicked on, even once, we don't update the text
+        if(buttonText.search("Select Line") !== -1) trigger = false;
+
+        //If we are unable to find a value that matches, then we change the button
+        //content to reflect changes
+        if(trigger){
+            var daLine = -1;
+            for(var i=0; i < main.linesOfDialogue.length; i++){
+                if(main.linesOfDialogue[i].lineNumber === this.val[k-1]) daLine = main.linesOfDialogue[i];
+            }
+
+            if(this.val[k-1] !== -1 && daLine !== -1){
+                $("#SDDropDownButtonAt"+this.lineNum+"And"+this.length).html((main.linesOfDialogue.indexOf(daLine)+1).toString()+".<b style='font-size:15px;'>"+daLine.speaker+"</b>:"+daLine.text);
+            } else {
+                $("#SDDropDownButtonAt"+this.lineNum+"And"+this.length).html("Reselect Line <span class='caret'></span>");
+            }
+        }
     }
-    var dropdownText =  "";
-    for(var i = 0; i < main.linesOfDialogue.length; i++){
-        var line =  main.linesOfDialogue[i];
-        if(line.text !== "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no speaker</a></li>";
-        else if(line.text === "" && line.speaker !== "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line has no dialogue</a></li>";
-        else if(line.text === "" && line.speaker === "") dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".This line neither has a speaker nor dialogue</a></li>";
-        else dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+lineNums[i]+".<b style='font-size:15px;'>"+line.speaker+"</b>:"+line.text+"</a></li>";
-    }
-    dropdownText = dropdownText + "</ul> </div>";
+
+    //this.val data structure:
+    //[
+    //int lineNumber1,
+    //int lineNumber2,
+    //...
+    //
+    //]
 
 
 };
