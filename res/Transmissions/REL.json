@@ -1,0 +1,10 @@
+[
+{"representation":"Initiator and Responder are friends"},
+{"representation":"Initiator and Responder are enemies"},
+{"representation":"Initiator and Other are enemies"},
+{"representation":"Initiator and Responder are dating"},
+{"representation":"Initiator and Other are dating"},
+{"representation":"Responder and Other are dating"},
+{"representation":"Initiator and Responder used to date"},
+{"representation":"Initiator and Other are/were dating (unspecified)"},
+]

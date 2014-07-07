@@ -41,6 +41,11 @@ AnnotationData.prototype.update = function(){
       this["StrictDependence"].sdUpdate();
   }
 
+  //If there's an object labelled "StoryWorldTransmissions", update it
+  if(this["StoryWorldTransmissions"] != null){
+      this["StoryWorldTransmissions"].swtUpdate();
+  }
+
 };
 
 
@@ -253,3 +258,35 @@ Property.prototype.sdUpdate = function(){
 
 };
 
+
+//Updates the property value for "StoryWorldTransmissions"
+Property.prototype.swtUpdate = function(){
+    //First initialize this.val as an array
+    if(!this.val.length) this.val = [];
+
+    //Iterate through each listgroup item
+    for(var i = 1; i < this.length+1; i++){
+
+        //Get the jquery object
+        var transmission = $("#SWTDropDownButtonNested1At" + this.lineNum + "And" + i);
+
+        //(do some upkeep on the array)
+        if(i > this.val.length) this.val.push({});
+
+        //assign the transmission value
+        if(transmission.text().search("Select Transmission") == -1 && transmission.length && transmission.text() !== this.val[i]){
+            this.val[i-1] = transmission.text();
+        }
+        if(!transmission.length) this.val[i-1] = "";
+
+
+    }
+
+    //this.val data structure:
+    //[
+    //string transmission1,
+    //string transmission2,
+    //...
+    //
+    //]
+};

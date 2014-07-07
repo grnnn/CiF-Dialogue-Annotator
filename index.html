@@ -250,7 +250,7 @@
                  "reject" : {"subject":"Initiator", "verb":"likes", "object":"Cookies"}
                 }
                 ];
-        
+
         var speechActs = [
 			{"name": "Accept Offer",
 			 "description": "Speaker accepts an interlocutor offer.",
@@ -919,6 +919,59 @@
 			 }
 			];
 
+		var transmissions = {};
+        transmissions.CKB = [
+            {"representation":"Initiator likes a CKB item"},
+            {"representation":"Responder likes a CKB item"}
+        ];
+        transmissions.ST = [
+            {"representation":"Initiator is brainy"},
+            {"representation":"Responder is brainy"},
+            {"representation":"Initiator is a cheater"},
+            {"representation":"Responder is a cheater"},
+            {"representation":"Responder is cold"},
+            {"representation":"Initiator is confident"},
+            {"representation":"Initiator has a crush on Responder"},
+            {"representation":"Initiator is domineering"},
+            {"representation":"Responder is domineering"},
+            {"representation":"Initiator is impulsive"},
+            {"representation":"Initiator is inarticulate"},
+            {"representation":"Initiator is introverted"},
+            {"representation":"Responder is introverted"},
+            {"representation":"Responder is a jerk"},
+            {"representation":"Responder is mean"},
+            {"representation":"Initiator is muscular"},
+            {"representation":"Responder is nice"},
+            {"representation":"Initiator is popular"},
+            {"representation":"Responder is popular"},
+            {"representation":"Initiator is sharp"},
+            {"representation":"Responder is shy"},
+            {"representation":"Responder is a swinger"},
+            {"representation":"Initiator is a weakling"}
+        ];
+        transmissions.SFDB = [
+            {"representation":"Initiator did something cool"},
+            {"representation":"Initiator did something cool to/with Responder"},
+            {"representation":"Initiator did something failed-romance to/with Responder"},
+            {"representation":"Initiator did something mean to Other"},
+            {"representation":"Initiator did something romantic to/with Responder"},
+            {"representation":"Responder did something romantic to/with Initiator"}
+        ];
+        transmissions.REL = [
+            {"representation":"Initiator and Responder are friends"},
+            {"representation":"Initiator and Responder are enemies"},
+            {"representation":"Initiator and Other are enemies"},
+            {"representation":"Initiator and Responder are dating"},
+            {"representation":"Initiator and Other are dating"},
+            {"representation":"Responder and Other are dating"},
+            {"representation":"Initiator and Responder used to date"},
+            {"representation":"Initiator and Other are/were dating (unspecified)"},
+        ];
+        transmissions.NET = [
+            {"representation":"Responder thinks Initiator is attractive"},
+            {"representation":"Initiator thinks Responder is attractive"},
+            {"representation":"Responder thinks Initiator is cool"}
+        ];
 
         //$.getJSON("res/property_types.json", function(data){
         //   propertyTypes = data;
@@ -927,11 +980,27 @@
         //$.getJSON("res/game_identity.json", function(data){
         //   games = data;
         //});
-        
+
         //$.getJSON("res/speech-acts.json", function(data){
         //   speechActs = data;
         //});
-        
+
+        //$.getJSON("res/Transmissions/CKB.json", function(data){
+        //   transmissions.CKB = data;
+        //});
+        //$.getJSON("res/Transmissions/S-T.json", function(data){
+        //   transmissions.ST = data;
+        //});
+        //$.getJSON("res/Transmissions/SFDB.json", function(data){
+        //   transmissions.SFDB = data;
+        //});
+        //$.getJSON("res/Transmissions/REL.json", function(data){
+        //   transmissions.REL = data;
+        //});
+        //$.getJSON("res/Transmissions/NET.json", function(data){
+        //   transmissions.NET = data;
+        //});
+
 
     </script>
 

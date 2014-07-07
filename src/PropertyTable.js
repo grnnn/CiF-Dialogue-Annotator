@@ -12,7 +12,7 @@ propertyTable.addHTML = function(id, lineNum, length){
         case "SocialExchangeIdentities":
             return this.seiHTML(lineNum, length);
         case "StoryWorldTransmissions":
-            return "Navy navy navy";
+            return this.swtHTML(lineNum, length);
         case "StoryWorldContradictions":
             return "Brown brown brown";
         case "SpeechActs":
@@ -25,6 +25,22 @@ propertyTable.addHTML = function(id, lineNum, length){
             return this.sdHTML(lineNum, length);
     }
 
+};
+
+//return the html string for "StoryWorldTransmissions"
+//Includes a drop down of each transmission type,
+//Then a drop down for the representations for that type
+propertyTable.swtHTML = function(lineNum, length){
+    var dropdownText = "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SWTDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Cultural Knowledgebase Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Network-value Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Relationship Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Status/Trait Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Social Facts Database Predicates</a></li> </ul> </div>";
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
+
+    return dropdownText;
 };
 
 //return the html string for "StrictDependence"
@@ -85,7 +101,7 @@ propertyTable.seoHTML = function(lineNum, length){
     dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Accept</a></li>";
     dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Reject</a></li> </ul> </div>";
 
-    dropdownText = dropdownText + "<p style='padding:10px;' id='SEOTextAt"+lineNum+"And"+length+"'>Select exchange identity and outcome to generate intent</p>"
+    dropdownText = dropdownText + "<p style='padding:10px;' id='SEOTextAt"+lineNum+"And"+length+"'>Select exchange identity and outcome to generate intent</p>";
 
     return dropdownText;
 };
@@ -117,7 +133,76 @@ propertyTable.setListeners = function(id, lineNum, length){
             return this.sapListeners(lineNum, length);
         case "StrictDependence":
             return this.sdListeners(lineNum, length);
+        case "StoryWorldTransmissions":
+            return this.swtListeners(lineNum, length);
     }
+
+};
+
+//Nested Dropdown listeners, woot woot!
+propertyTable.swtListeners = function(lineNum, length){
+    $("#SWTDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Set the text in the dropdown button to the selected type
+        $("#SWTDropDownButtonAt"+lineNum+"And"+length).val($(this).text());
+        $("#SWTDropDownButtonAt"+lineNum+"And"+length).text($(this).text());
+
+        //Get the proper object for the first nested dropdown
+        myTransmissions = {};
+        switch($(this).text()) {
+            case "Cultural Knowledgebase Predicates":
+                myTransmissions = transmissions.CKB;
+                break;
+            case "Network-value Predicates":
+                myTransmissions = transmissions.NET;
+                break;
+            case "Relationship Predicates":
+                myTransmissions = transmissions.REL;
+                break;
+            case "Status/Trait Predicates":
+                myTransmissions = transmissions.ST;
+                break;
+            case "Social Facts Database Predicates":
+                myTransmissions = transmissions.SFDB;
+                break;
+        }
+
+        //Then obtain the div for the next dropdown, and push out the old container elements
+        var nestedDrop = $("#SWTDropDownContainerNested1At"+lineNum+"And"+length);
+        nestedDrop.empty();
+
+        //Build up the dropdown string
+        var dropdownText =  "<button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+        for(var i = 0; i < myTransmissions.length; i++){
+            var transmission = myTransmissions[i];
+            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission.representation+"</a></li>";
+        }
+        dropdownText = dropdownText + "</ul>";
+
+        //Append it to the container
+        nestedDrop.append(dropdownText);
+
+
+        //Next set up a listener for the next menu
+        $("#SWTDropDownNested1At" + lineNum + "And"+ length).on('click', 'li a', function(){
+            //get the line number and length
+            var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownNested1At", "");
+            var nums = nums.split("And");
+            var lineNum = nums[0];
+            var length = nums[1];
+
+            //Set the text in the Dropdown button to the selected text
+            $("#SWTDropDownButtonNested1At"+lineNum+"And"+length).val($(this).text());
+            $("#SWTDropDownButtonNested1At"+lineNum+"And"+length).text($(this).text());
+        });
+
+
+    });
 
 };
 
