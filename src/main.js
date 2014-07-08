@@ -69,7 +69,7 @@ Main.prototype.exportButton = function(){
 
         lineObj.succeded_by = "";
 
-        //lineObj.speaker = line.speaker;
+        lineObj.speaker = line.speaker;
 
         lineObj.body = line.text;
 
