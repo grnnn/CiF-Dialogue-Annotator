@@ -24,6 +24,12 @@
     <div class="page-header">
         <h1 >CiF Dialogue Annotator</h1>
         <p class="lead">Web page for annotating CiF dialogue, so that it may later be recombined.</p>
+
+        <input id="nameOfInstantiation" class="form-control" type="text" value="Enter Name of Instantiation here">
+        <div class="btn-group" style="padding-top:5px;">
+            <button class="btn btn-default" id="importer" disabled>Import <span class="glyphicon glyphicon-import"></span></button>
+            <button class="btn btn-default" id="exporter">Export <span class="glyphicon glyphicon-export"></span></button>
+        </div>
     </div>
 
     <div class="container">
@@ -46,6 +52,10 @@
     <script src="lib/js/jquery-ui.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="lib/js/bootstrap.min.js"></script>
+    <!--Library for xml strings, gotten from http://goessner.net/download/prj/jsonxml/-->
+    <script src="lib/js/json2xml.js"></script>
+    <!--Library for generating files to be saved client-side: https://github.com/eligrey/FileSaver.js-->
+    <script src="lib/js/FileSaver.js"></script>
 
     <!-- Script src's for personal code -->
     <script src="src/PropertyTable.js"></script>
@@ -1022,6 +1032,11 @@
     //Set a listener for adding a new line
     $("#AddLine").click(function(){
         main.addLine();
+    });
+
+    //Set a listener for exporting
+    $("#exporter").click(function(){
+        main.exportButton();
     });
 
     </script>
