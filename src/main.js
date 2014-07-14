@@ -125,6 +125,10 @@ Main.prototype.exportButton = function(){
 
         lineObj.lines_strictly_depended_on = "";
 
+        //Likeliness of success
+        lineObj.likeliness_of_success_range = line.rangeVal1.toString() + " - " + line.rangeVal2.toString();
+        lineObj.range_of_next_success = line.nextRange;
+
 
         lines.line.push(lineObj);
     }
@@ -132,6 +136,7 @@ Main.prototype.exportButton = function(){
     //Set strict dependence and social exchange
     for(var j = 0; j < lines.line.length; j++){
         var line = lines.line[j];
+
 
         //strict dependence
         line.lines_strictly_depended_on = "";
@@ -166,3 +171,11 @@ Main.prototype.exportButton = function(){
     saveAs(blob, this.export.instantiation.name.replace(/ /g, "_") + ".xml");
 };
 
+//Bound to import Button
+//get xml
+//parse into javascript object
+//Build up properties and lines
+Main.prototype.importButton = function(numFiles, label){
+    console.log(numFiles);
+    console.log(label);
+};

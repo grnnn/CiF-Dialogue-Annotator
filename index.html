@@ -8,6 +8,7 @@
 
     <!-- Bootstrap -->
     <link href="lib/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/css/jquery-ui.css" rel="stylesheet">
 
     <link href="src/MyClasses.css" rel="stylesheet">
 
@@ -27,7 +28,7 @@
 
         <input id="nameOfInstantiation" class="form-control" type="text" value="Enter Name of Instantiation here">
         <div class="btn-group" style="padding-top:5px;">
-            <button class="btn btn-default" id="importer" disabled>Import <span class="glyphicon glyphicon-import"></span></button>
+            <button class="btn btn-default btn-file" id="importer">Import <span class="glyphicon glyphicon-import"></span> <input type="file"></button>
             <button class="btn btn-default" id="exporter">Export <span class="glyphicon glyphicon-export"></span></button>
         </div>
     </div>
@@ -851,7 +852,7 @@
 						  "weight": 50}
 						]
 			 },
-			 {"name": "Summarize/Reformulate",
+			 {"name": "Summarize or Reformulate",
 			 "description": "Speaker summarizes or reformulates prior speech.",
 			 "canFollow":[
 						 {"name": "Speech Act name",
@@ -889,7 +890,7 @@
 						  "weight": 50}
 						]
 			 },
-			 {"name": "Yes/No Question",
+			 {"name": "Yes or No Question",
 			 "description": "Speaker asks a question of the interlocutor that obligates a yes/no answer.",
 			 "canFollow":[
 						 {"name": "Speech Act name",
@@ -1037,6 +1038,17 @@
     //Set a listener for exporting
     $("#exporter").click(function(){
         main.exportButton();
+    });
+
+    //Set a listener for importing
+    $(document).on('change', '.btn-file :file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        main.importButton(numFiles, label);
     });
 
     </script>

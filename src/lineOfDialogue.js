@@ -8,6 +8,12 @@ function LineOfDialogue(lineNum){
 
     this.text = "";
 
+    this.rangeVal1 = 40;
+
+    this.rangeVal2 = 60;
+
+    this.nextRange = "+20";
+
     this.annotationData = new AnnotationData(lineNum);
 
 
@@ -23,7 +29,9 @@ function LineOfDialogue(lineNum){
 //Append base structure
 LineOfDialogue.prototype.baseStructureConfigure = function(){
     //Superlong append that I wish I could make tidier
-    $('#LinesContainer').append("<div class='row' id='Line"+this.lineNumber+"'><div class='col-md-2' ><div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='SpeakerDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Speaker <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='SpeakerDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Outsider</a></li></ul></div></div><div class='col-md-5' ><textarea rows='5' cols='72' style='resize:vertical' id='TextArea"+this.lineNumber+"'>Enter Dialogue here</textarea></div><div class='col-md-4' id='Properties"+this.lineNumber+"' ></div><div class='col-md-1' ><div style='padding:40px'><button class='btn btn-danger'  id='RemoveLineButton"+this.lineNumber+"'>&times;</button></div> </div></div><div id='Divider"+this.lineNumber+"' class='page-header'></div>");
+    $('#LinesContainer').append("<div class='row' id='Line"+this.lineNumber+"'><div class='col-md-2' ><div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='SpeakerDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Speaker <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='SpeakerDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Outsider</a></li></ul></div></div>"
+                                +"<div class='col-md-5' ><textarea rows='5' cols='72' style='resize:vertical' id='TextArea"+this.lineNumber+"'>Enter Dialogue here</textarea> <div><p><label for='amount'>Likeliness of Sucess range: </label><input type='text' id='amountAt"+this.lineNumber+"' readonly style='border:0; color:#f6931f; font-weight:bold;'></p><div id='slider-rangeAt"+this.lineNumber+"'></div><div style='padding-top: 20px;'><b >Range of next line sucess:</b></div><div style='width:25%; padding-top: 10px;' class='input-group'><div class='input-group-btn'><button type='button' id='RangeDropDownButton"+this.lineNumber+"' class='btn btn-default dropdown-toggle' data-toggle='dropdown'> +</button><ul id='RangeDropDown"+this.lineNumber+"' class='dropdown-menu' role='menu'><li><a> +</a></li><li><a> -</a></li></ul></div><input type='text' value='20' id='NextRange"+this.lineNumber+"' class='form-control'></div> </div> </div>"
+                                +"<div class='col-md-4' id='Properties"+this.lineNumber+"' ></div><div class='col-md-1' ><div style='padding:40px'><button class='btn btn-danger'  id='RemoveLineButton"+this.lineNumber+"'>&times;</button></div> </div></div><div id='Divider"+this.lineNumber+"' class='page-header'></div>");
 
     //'click' listener for the Speaker dropdowns
     $("#SpeakerDropDown"+this.lineNumber).on('click', 'li a', function(){
@@ -44,6 +52,31 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
 
         $("#Line" + lineNum).remove();
         $("#Divider" + lineNum).remove();
+    });
+
+    var lineNum = this.lineNumber;
+    //Set up slider for the likeliness of success
+    $(function() {
+        $( "#slider-rangeAt" + lineNum ).slider({
+          range: true,
+          min: 0,
+          max: 100,
+          values: [ 40, 60 ],
+          slide: function( event, ui ) {
+            $( "#amountAt" + lineNum ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+          }
+        });
+        $( "#amountAt" + lineNum ).val(  $( "#slider-rangeAt" + lineNum ).slider( "values", 0 ) +
+          " - " + $( "#slider-rangeAt" + lineNum ).slider( "values", 1 ) );
+      });
+
+    //click listener for Range Drop down
+    $("#RangeDropDown"+this.lineNumber).on('click', 'li a', function(){
+        var lineNum =  $(this).parent().parent().attr("id").replace("RangeDropDown", "");
+
+        $("#RangeDropDownButton"+lineNum).text($(this).text());
+        $("#RangeDropDownButton"+lineNum).val($(this).text());
+
     });
 
 }
@@ -196,6 +229,11 @@ LineOfDialogue.prototype.update = function(){
 
     //if the textarea isn't "Enter Dialogue here", set the text to the html
     if($("#TextArea"+this.lineNumber).val().search("Enter Dialogue here") == -1) this.text=$("#TextArea"+this.lineNumber).val();
+
+    //Pull success data
+    this.rangeVal1 = $( "#slider-rangeAt" + this.lineNumber ).slider( "values", 0 );
+    this.rangeVal2 = $( "#slider-rangeAt" + this.lineNumber ).slider( "values", 1 );
+    this.nextRange = $("#RangeDropDownButton"+this.lineNumber).text() + ($("#NextRange"+this.lineNumber).val()).toString();
 
     //Also pull data into the annotationData object with its own update method
     this.annotationData.update();
