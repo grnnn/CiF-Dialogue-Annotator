@@ -55,6 +55,8 @@
     <script src="lib/js/bootstrap.min.js"></script>
     <!--Library for xml strings, gotten from http://goessner.net/download/prj/jsonxml/-->
     <script src="lib/js/json2xml.js"></script>
+    <!--Got this library from a different source than the one above: http://www.thomasfrank.se/xml_to_json.html-->
+    <script src="lib/js/xml2json.js"></script>
     <!--Library for generating files to be saved client-side: https://github.com/eligrey/FileSaver.js-->
     <script src="lib/js/FileSaver.js"></script>
 
@@ -1044,11 +1046,12 @@
     $(document).on('change', '.btn-file :file', function() {
         var input = $(this),
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
-            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+            firstFile = input.get(0).files[0];
+        input.trigger('fileselect', [numFiles, label, firstFile]);
     });
-    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-        main.importButton(numFiles, label);
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label, firstFile) {
+        main.importButton(numFiles, label, firstFile);
     });
 
     </script>

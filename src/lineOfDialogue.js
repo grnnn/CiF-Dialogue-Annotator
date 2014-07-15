@@ -224,6 +224,10 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
 //updates the line's properties every 100 ms, pulls data into the structure
 LineOfDialogue.prototype.update = function(){
+
+    //For some reason, this handles an importing error
+    if(!$("#SpeakerDropDownButton"+this.lineNumber).html() ) return;
+
     //if speaker drop down isn't "select speaker", set the speaker to the speaker drop down
     if($("#SpeakerDropDownButton"+this.lineNumber).html().search("Select") == -1) this.speaker=$("#SpeakerDropDownButton"+this.lineNumber).html();
 
@@ -237,5 +241,7 @@ LineOfDialogue.prototype.update = function(){
 
     //Also pull data into the annotationData object with its own update method
     this.annotationData.update();
+
+
 
 };

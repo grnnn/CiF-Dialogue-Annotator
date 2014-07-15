@@ -42,6 +42,7 @@ Main.prototype.findLine = function(lineNum){
 //write to xml file,
 //download the file, and delete file locally
 Main.prototype.exportButton = function(){
+    console.log("Exporting...");
     this.export.instantiation = {};
     //console.log( json2xml(this.export, ""));
     this.export.instantiation.social_exchange = "";
@@ -175,7 +176,74 @@ Main.prototype.exportButton = function(){
 //get xml
 //parse into javascript object
 //Build up properties and lines
-Main.prototype.importButton = function(numFiles, label){
-    console.log(numFiles);
-    console.log(label);
+Main.prototype.importButton = function(numFiles, label, firstFile){
+    if(numFiles !== 1){
+        alert("Please load only 1 file and try again.");
+        return;
+    }
+
+    console.log("loading: " + label);
+
+    var that = this;
+    if(firstFile){
+        var r = new FileReader();
+        r.onload = function(e){
+            var contents = e.target.result;
+            that.successfulImport(contents);
+        };
+        r.readAsText(firstFile);
+    } else {
+        alert("File loading failed. Please try again.");
+        return;
+    }
+};
+
+Main.prototype.successfulImport = function(contents){
+    var importObj = xml2json.parser(contents);
+
+    console.log(importObj);
+
+    //Begin the actual importing
+    $("#LinesContainer").empty();
+    for(var a = this.linesOfDialogue.length - 1; a !== -1; a--){
+        this.linesOfDialogue.splice(a, 1);
+    }
+
+    $("#nameOfInstantiation").val(importObj.instantiation.name);
+    $("#nameOfInstantiation").text(importObj.instantiation.name);
+
+    for(var i = 0; i < importObj.instantiation.lines_of_dialogue.line.length; i++){
+        this.addLine();
+    }
+
+    var lines = importObj.instantiation.lines_of_dialogue.line;
+
+    for(var j = 0; j < lines.length; j++){
+        var line = lines[j];
+        var lineObj = this.linesOfDialogue[j];
+
+        //Speaker
+        $("#SpeakerDropDownButton" + lineObj.lineNumber).val(line.speaker);
+        $("#SpeakerDropDownButton" + lineObj.lineNumber).text(line.speaker);
+
+        //TextArea
+        $("#TextArea" + lineObj.lineNumber).val(line.body);
+
+        //Range
+        $( "#slider-rangeAt" + lineObj.lineNumber ).slider( "values", 0, line.likeliness_of_success_range.split(" - ")[0]);
+        $( "#slider-rangeAt" + lineObj.lineNumber ).slider( "values", 1, line.likeliness_of_success_range.split(" - ")[1]);
+        //Assuming that this works...test later
+
+        //Next range
+        $("#RangeDropDown"+this.lineNumber).val(line.range_of_next_success.substring(0,1));
+        $("#RangeDropDown"+this.lineNumber).text(line.range_of_next_success.substring(0,1));
+        $("#NextRange"+this.lineNumber).val(line.range_of_next_success.substr(2));
+        //Also assuming that this works, text later
+
+        //And now, time for something completely different
+        //Properties, woooooooo!
+
+
+    }
+
 };
