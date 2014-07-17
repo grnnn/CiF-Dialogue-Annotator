@@ -235,13 +235,59 @@ Main.prototype.successfulImport = function(contents){
         //Assuming that this works...test later
 
         //Next range
-        $("#RangeDropDown"+this.lineNumber).val(line.range_of_next_success.substring(0,1));
-        $("#RangeDropDown"+this.lineNumber).text(line.range_of_next_success.substring(0,1));
-        $("#NextRange"+this.lineNumber).val(line.range_of_next_success.substr(2));
+        $("#RangeDropDown"+lineObj.lineNumber).val(line.range_of_next_success.substring(0,1));
+        $("#RangeDropDown"+lineObj.lineNumber).text(line.range_of_next_success.substring(0,1));
+        $("#NextRange"+lineObj.lineNumber).val(line.range_of_next_success.substr(2));
         //Also assuming that this works, text later
 
         //And now, time for something completely different
-        //Properties, woooooooo!
+        //Properties
+
+        //Exchange Identity
+        if(typeof line.exchange_identity_communicated !== "object"){
+            var identities = line.exchange_identity_communicated.split(", ");
+            $("#SocialExchangeIdentitiesProp" + lineObj.lineNumber).trigger("click");
+            for(var seiLength = 0; seiLength < identities.length; seiLength++){
+                $("#SocialExchangeIdentitiesPlusButton" + lineObj.lineNumber).trigger("click");
+                $("#SEIDropDownButtonAt" + lineObj.lineNumber + "And" + (seiLength+1)).val(identities[seiLength]);
+                $("#SEIDropDownButtonAt" + lineObj.lineNumber + "And" + (seiLength+1)).text(identities[seiLength]);
+            }
+        }
+
+        //Exchange Outcome
+        if(typeof line.exchange_outcome_communicated !== "object"){
+            var outcomes = line.exchange_outcome_communicated.split(", ");
+            $("#SocialExchangeOutcomesProp" + lineObj.lineNumber).trigger("click");
+            for(var seoLength = 0; seoLength < identities.length; seoLength++){
+                $("#SocialExchangeOutcomesPlusButton" + lineObj.lineNumber).trigger("click");
+                $("#SEODropDownButtonAt" + lineObj.lineNumber + "And" + (seoLength+1)).val(outcomes[seoLength]);
+                $("#SEODropDownButtonAt" + lineObj.lineNumber + "And" + (seoLength+1)).text(outcomes[seoLength]);
+            }
+        }
+
+        //Speech Acts
+        if(typeof line.speech_acts !== "object"){
+            var acts = line.speech_acts.split(", ");
+            $("#SpeechActsProp" + lineObj.lineNumber).trigger("click");
+            for(var saLength = 0; saLength < acts.length; saLength++){
+                $("#SpeechActsPlusButton" + lineObj.lineNumber).trigger("click");
+                $("#SADropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).val(acts[saLength]);
+                $("#SADropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).text(acts[saLength]);
+            }
+        }
+
+        //Speech Acts that can Precede
+        if(typeof line.speech_act_strictly_depended_on !== "object"){
+            var actsPrecede = line.speech_acts_strictly_depended_on.split(", ");
+            $("#SpeechActsPrecedeProp" + lineObj.lineNumber).trigger("click");
+            for(var sapLength = 0; sapLength < actsPrecede.length; sapLength++){
+                $("#SpeechActsPrecedePlusButton" + lineObj.lineNumber).trigger("click");
+                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).val(actsPrecede[sapLength]);
+                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).text(actsPrecede[sapLength]);
+            }
+        }
+
+        //if(typeof line.transmissions === "object") console.log(j + " is empty");
 
 
     }

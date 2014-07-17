@@ -99,7 +99,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
         //Listener definition
         $( '#PropertiesDropDown'+this.lineNumber ).on('click','a', function(){
 
-            if(this.id.search("Prop") != -1){
+        if(this.id.search("Prop") != -1){
             //Pull the id, color, name, and lineNum out of the html element
             var id = this.id.replace("Prop", "");
             id = id.replace(/(\d+)/g, "");
@@ -111,7 +111,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
             //Remove the button that adds that type of property
             $(this).remove();
-            //if the list is empty, delete the button
+            //if the list is empty, hide the button
             if($("#PropertiesDropDown" + lineNum).has("a").length == 0){
                 $("#PropertiesDropDown" + lineNum).hide();
             }
