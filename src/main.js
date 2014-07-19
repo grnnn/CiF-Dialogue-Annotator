@@ -232,13 +232,12 @@ Main.prototype.successfulImport = function(contents){
         //Range
         $( "#slider-rangeAt" + lineObj.lineNumber ).slider( "values", 0, line.likeliness_of_success_range.split(" - ")[0]);
         $( "#slider-rangeAt" + lineObj.lineNumber ).slider( "values", 1, line.likeliness_of_success_range.split(" - ")[1]);
-        //Assuming that this works...test later
+        $("#amountAt" + lineObj.lineNumber ).val(line.likeliness_of_success_range);
 
         //Next range
-        $("#RangeDropDown"+lineObj.lineNumber).val(line.range_of_next_success.substring(0,1));
-        $("#RangeDropDown"+lineObj.lineNumber).text(line.range_of_next_success.substring(0,1));
+        $("#RangeDropDownButton"+lineObj.lineNumber).val(line.range_of_next_success.substring(0,2));
+        $("#RangeDropDownButton"+lineObj.lineNumber).text(line.range_of_next_success.substring(0,2));
         $("#NextRange"+lineObj.lineNumber).val(line.range_of_next_success.substr(2));
-        //Also assuming that this works, text later
 
         //And now, time for something completely different
         //Properties
@@ -287,9 +286,69 @@ Main.prototype.successfulImport = function(contents){
             }
         }
 
-        //if(typeof line.transmissions === "object") console.log(j + " is empty");
+        //Strict Dependence
+        if(typeof line.lines_strictly_depended_on !== "object"){
+            var dependencies = line.lines_strictly_depended_on.split(", ");
+            $("#SpeechActsProp" + lineObj.lineNumber).trigger("click");
+            for(var dLength = 0; dLength < dependencies.length; dLength++){
+                $("#StrictDependencePlusButton" + lineObj.lineNumber).trigger("click");
+
+                var lineNum = 0;
+                for(var l = 0; l < lines.length; l++){
+                    if(dependencies[dLength] === lines[l].id){
+                        lineNum = l;
+                        break;
+                    }
+                    if(l === lines.length - 1){
+                        alert("Dependencies don't work. Report this bug.");
+                    }
+                }
+
+                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).val(lineNum + "<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
+                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).text(lineNum + "<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
+            }
+        }
+
+        //Story World Transmissions
+        if(typeof line.transmissions !== "object"){
+            var myTransmissions = line.transmissions.split(", ");
+            $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
+            for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
+                $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
+
+                var type = findTransmissionType(myTransmissions[swtLength]);
+
+                $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+type+"')").trigger("click");
+
+                $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).val(myTransmissions[swtLength]);
+                $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).text(myTransmissions[swtLength]);
+            }
+        }
 
 
     }
 
 };
+
+function findTransmissionType(trans){
+    for(stLength = 0; stLength < transmissions.ST.length; stLength++){
+        if(trans === transmissions.ST[stLength].representation) return "Status/Trait Predicates";
+    }
+    for(ckbLength = 0; ckbLength < transmissions.CKB.length; ckbLength++){
+        if(trans === transmissions.CKB[ckbLength].representation) return "Cultural Knowledgebase Predicates";
+    }
+    for(sfdbLength = 0; sfdbLength < transmissions.SFDB.length; sfdbLength++){
+        if(trans === transmissions.SFDB[sfdbLength].representation) return "Social Facts Database Predicates";
+    }
+    for(relLength = 0; relLength < transmissions.REL.length; relLength++){
+        if(trans === transmissions.REL[reLength].representation) return "Relationship Predicates";
+    }
+    for(netLength = 0; netlength < transmissions.NET.length; netLength++){
+        if(trans === transmissions.NET[netLength].representation) return "Network-value Predicates";
+    }
+    alert("No transmission was found. This is a bug, please report it.");
+}
+
+
+
+
