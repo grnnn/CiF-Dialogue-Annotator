@@ -29,29 +29,54 @@ function LineOfDialogue(lineNum){
 //Append base structure
 LineOfDialogue.prototype.baseStructureConfigure = function(){
     //Superlong append that I wish I could make tidier
-    $('#LinesContainer').append("<div class='row' id='Line"+this.lineNumber+"'><div class='col-md-2' ><div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='SpeakerDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Speaker <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='SpeakerDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Outsider</a></li></ul></div></div>"
+    $('#LinesContainer').append("<div class='row' id='Line"+this.lineNumber+"'><div class='col-md-2' > <b style='font-size: 24px;'> Speaker </b> <div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='SpeakerDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Speaker <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='SpeakerDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Outsider</a></li></ul></div>"
+    							+"<b style='font-size: 24px;'> Interlocutor </b> <div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='InterlocutorDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Interlocutor <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='InterlocutorDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Outsider</a></li></ul></div></div>"
                                 +"<div class='col-md-5' ><textarea rows='5' cols='72' style='resize:vertical' id='TextArea"+this.lineNumber+"'>Enter Dialogue here</textarea> <div><p><label for='amount'>Likeliness of Sucess range: </label><input type='text' id='amountAt"+this.lineNumber+"' readonly style='border:0; color:#f6931f; font-weight:bold;'></p><div id='slider-rangeAt"+this.lineNumber+"'></div><div style='padding-top: 20px;'><b >Range of next line sucess:</b></div><div style='width:25%; padding-top: 10px;' class='input-group'><div class='input-group-btn'><button type='button' id='RangeDropDownButton"+this.lineNumber+"' class='btn btn-default dropdown-toggle' data-toggle='dropdown'> +</button><ul id='RangeDropDown"+this.lineNumber+"' class='dropdown-menu' role='menu'><li><a> +</a></li><li><a> -</a></li></ul></div><input type='text' value='20' id='NextRange"+this.lineNumber+"' class='form-control'></div> </div> </div>"
                                 +"<div class='col-md-4' id='Properties"+this.lineNumber+"' ></div><div class='col-md-1' ><div style='padding:40px'><button class='btn btn-danger'  id='RemoveLineButton"+this.lineNumber+"'>&times;</button></div> </div></div><div id='Divider"+this.lineNumber+"' class='page-header'></div>");
 
-    //'click' listener for the Speaker dropdowns
+    //'click' listener for the Speaker dropdown
     $("#SpeakerDropDown"+this.lineNumber).on('click', 'li a', function(){
         //get the line number
         var lineNum =  $(this).parent().parent().attr("id").replace("SpeakerDropDown", "");
-
+        
+        //If the interlocutor dropdown contains 'Select', autofill
+        //that dropdown
+        if( $("#InterlocutorDropDownButton"+lineNum).text().search("Select Interlocutor") !== -1 ){
+        	if( $(this).text() === "Initiator"){
+        		$("#InterlocutorDropDownButton"+lineNum).text("Responder");
+                $("#InterlocutorDropDownButton"+lineNum).val("Responder");
+        	} else if( $(this).text() === "Responder" ) {
+        		$("#InterlocutorDropDownButton"+lineNum).text("Initiator");
+                $("#InterlocutorDropDownButton"+lineNum).val("Initiator");
+        	}
+        }
 
         //Set the text in the Dropdown button to the selected text
         $("#SpeakerDropDownButton"+lineNum).text($(this).text());
         $("#SpeakerDropDownButton"+lineNum).val($(this).text());
     });
+    
+  //'click' listener for the Interlocutor dropdown
+    $("#InterlocutorDropDown"+this.lineNumber).on('click', 'li a', function(){
+        //get the line number
+        var lineNum =  $(this).parent().parent().attr("id").replace("InterlocutorDropDown", "");
+
+
+        //Set the text in the Dropdown button to the selected text
+        $("#InterlocutorDropDownButton"+lineNum).text($(this).text());
+        $("#InterlocutorDropDownButton"+lineNum).val($(this).text());
+    });
 
     $("#RemoveLineButton"+this.lineNumber).on('click', function(){
         var lineNum = this.id.replace("RemoveLineButton","");
 
-        var line = main.findLine(lineNum);
-        main.linesOfDialogue.splice(main.linesOfDialogue.indexOf(line), 1);
-
-        $("#Line" + lineNum).remove();
-        $("#Divider" + lineNum).remove();
+        if(confirm("Are you sure that you want to delete this line?")){
+	        var line = main.findLine(lineNum);
+	        main.linesOfDialogue.splice(main.linesOfDialogue.indexOf(line), 1);
+	
+	        $("#Line" + lineNum).remove();
+	        $("#Divider" + lineNum).remove();
+        }
     });
 
     var lineNum = this.lineNumber;
@@ -167,15 +192,18 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                         var id = props[0];
                         var lineNum = nums[0];
                         var length = nums[1];
+                        
+                        if(confirm("Are you sure you want to delete this annotation?")){
 
-                        //The flip side to removing the plus button,
-                        //Add it if the property would be empty otherwise
-                        if($("#"+id+"ListGroup"+lineNum).children().length == 2){
-                            $("#"+id+"ListGroup"+lineNum).append(" <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ");
+	                        //The flip side to removing the plus button,
+	                        //Add it if the property would be empty otherwise
+	                        if($("#"+id+"ListGroup"+lineNum).children().length == 2){
+	                            $("#"+id+"ListGroup"+lineNum).append(" <a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a> ");
+	                        }
+	
+	                        //Remove the list item
+	                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
                         }
-
-                        //Remove the list item
-                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
 
                     });
 
@@ -193,27 +221,30 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                 id = id.replace(/(\d+)/g, "");
                 var lineNum = this.id.replace(/([A-Z]+)/g, "");
                 lineNum = lineNum.replace(/([a-z]+)/g, "");
+                
+                if(confirm("Are you sure that you want to delete this property type and all associated annotations?")){
 
-                //find the propertyType which corresponds to the id
-                for(var i=0; i < propertyTypes.length; i++){
-                    if(propertyTypes[i].id == id){
-                        var propertyType = propertyTypes[i];
-                        break;
-                    }
+	                //find the propertyType which corresponds to the id
+	                for(var i=0; i < propertyTypes.length; i++){
+	                    if(propertyTypes[i].id == id){
+	                        var propertyType = propertyTypes[i];
+	                        break;
+	                    }
+	                }
+	
+	                //remove the property from annotationData
+	                main.findLine(lineNum).annotationData.removeProperty(id);
+	
+	                //remove the entire listgroup
+	                $("#"+id+"ListGroup"+lineNum).remove();
+	
+	                //If the dropdown is hidden, unhide it
+	                $("#PropertiesDropDown" + lineNum).show();
+	
+	                //add the correct property back into the dropdown
+	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
                 }
-
-                //remove the property from annotationData
-                main.findLine(lineNum).annotationData.removeProperty(id);
-
-                //remove the entire listgroup
-                $("#"+id+"ListGroup"+lineNum).remove();
-
-                //If the dropdown is hidden, unhide it
-                $("#PropertiesDropDown" + lineNum).show();
-
-                //add the correct property back into the dropdown
-                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
-            });
+	        });
             }
         });
 

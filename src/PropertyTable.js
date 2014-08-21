@@ -14,17 +14,33 @@ propertyTable.addHTML = function(id, lineNum, length){
         case "StoryWorldTransmissions":
             return this.swtHTML(lineNum, length);
         case "StoryWorldContradictions":
-            return "Brown brown brown";
+            return this.swcHTML(lineNum, length);
         case "SpeechActs":
             return this.saHTML(lineNum, length);
         case "SpeechActsPrecede":
             return this.sapHTML(lineNum, length);
         case "SpeechActsFollow":
-            return "Yellow yellow yellow";
+            return this.safHTML(lineNum, length);
         case "StrictDependence":
             return this.sdHTML(lineNum, length);
     }
 
+};
+
+//return the html string for "StoryWorldContradictions"
+//Includes a drop down of each transmission type,
+//Then a drop down for the representations for that type
+propertyTable.swcHTML = function(lineNum, length){
+	var dropdownText = "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SWCDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Cultural Knowledgebase Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Network-value Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Relationship Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Status/Trait Predicates</a></li>";
+    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Social Facts Database Predicates</a></li> </ul> </div>";
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
+
+    return dropdownText;
 };
 
 //return the html string for "StoryWorldTransmissions"
@@ -62,6 +78,21 @@ propertyTable.sdHTML = function(lineNum, length){
     dropdownText = dropdownText + "</ul> </div>";
 
     return dropdownText;
+};
+
+//return the html string for "SpeechActsFollow"
+//Includes a drop down speech acts with descriptions
+propertyTable.safHTML = function(lineNum, length){
+  var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+  for(var i = 0; i < speechActs.length; i++){
+      var speechAct = speechActs[i];
+      dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
+  }
+  dropdownText = dropdownText + "</ul> </div>";
+  dropdownText = dropdownText + "<p style='padding:10px;' id='SAFTextAt"+lineNum+"And"+length+"'></p>";
+
+  return dropdownText;
+
 };
 
 //return the html string for "SpeechActsPrecede"
@@ -131,11 +162,82 @@ propertyTable.setListeners = function(id, lineNum, length){
             return this.saListeners(lineNum, length);
         case "SpeechActsPrecede":
             return this.sapListeners(lineNum, length);
+        case "SpeechActsFollow":
+            return this.safListeners(lineNum, length);
         case "StrictDependence":
             return this.sdListeners(lineNum, length);
         case "StoryWorldTransmissions":
             return this.swtListeners(lineNum, length);
+        case "StoryWorldContradictions":
+        	return this.swcListeners(lineNum, length);
     }
+
+};
+
+//Nested Dropdown listeners for StoryWorldContradictions
+propertyTable.swcListeners = function(lineNum, length){
+    $("#SWCDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Set the text in the dropdown button to the selected type
+        $("#SWCDropDownButtonAt"+lineNum+"And"+length).val($(this).text());
+        $("#SWCDropDownButtonAt"+lineNum+"And"+length).text($(this).text());
+
+        //Get the proper object for the first nested dropdown
+        myTransmissions = {};
+        switch($(this).text()) {
+            case "Cultural Knowledgebase Predicates":
+                myTransmissions = transmissions.CKB;
+                break;
+            case "Network-value Predicates":
+                myTransmissions = transmissions.NET;
+                break;
+            case "Relationship Predicates":
+                myTransmissions = transmissions.REL;
+                break;
+            case "Status/Trait Predicates":
+                myTransmissions = transmissions.ST;
+                break;
+            case "Social Facts Database Predicates":
+                myTransmissions = transmissions.SFDB;
+                break;
+        }
+
+        //Then obtain the div for the next dropdown, and push out the old container elements
+        var nestedDrop = $("#SWCDropDownContainerNested1At"+lineNum+"And"+length);
+        nestedDrop.empty();
+
+        //Build up the dropdown string
+        var dropdownText =  "<button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWCDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+        for(var i = 0; i < myTransmissions.length; i++){
+            var transmission = myTransmissions[i];
+            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission.representation+"</a></li>";
+        }
+        dropdownText = dropdownText + "</ul>";
+
+        //Append it to the container
+        nestedDrop.append(dropdownText);
+
+
+        //Next set up a listener for the next menu
+        $("#SWCDropDownNested1At" + lineNum + "And"+ length).on('click', 'li a', function(){
+            //get the line number and length
+            var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownNested1At", "");
+            var nums = nums.split("And");
+            var lineNum = nums[0];
+            var length = nums[1];
+
+            //Set the text in the Dropdown button to the selected text
+            $("#SWCDropDownButtonNested1At"+lineNum+"And"+length).val($(this).text());
+            $("#SWCDropDownButtonNested1At"+lineNum+"And"+length).text($(this).text());
+        });
+
+
+    });
 
 };
 
@@ -246,7 +348,7 @@ propertyTable.sdListeners = function(lineNum, length){
 
 };
 
-//Set up the proper dropdown listener of speech acts
+//Set up the proper dropdown listener of speech acts Precede
 propertyTable.sapListeners = function(lineNum, length){
     $("#SAPDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
@@ -269,6 +371,32 @@ propertyTable.sapListeners = function(lineNum, length){
 
         //Set the description to the desc
         $("#SAPTextAt"+lineNum+"And"+length).text(desc);
+    });
+};
+
+//Set up the proper dropdown listener of speech acts Follow
+propertyTable.safListeners = function(lineNum, length){
+    $("#SAFDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SAFDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //pull out the name of the Speech Act
+        var name = $(this).html().match(/>(\w| |-)*</g)[0];
+        name = name.replace(">", "");
+        name = name.replace("<", "");
+
+        //Pull out the description of the speech act
+        var desc = $(this).html().split("<br>")[1];
+
+        //Set the text in the Dropdown button to the name
+        $("#SAFDropDownButtonAt"+lineNum+"And"+length).text(name);
+        $("#SAFDropDownButtonAt"+lineNum+"And"+length).val(name);
+
+        //Set the description to the desc
+        $("#SAFTextAt"+lineNum+"And"+length).text(desc);
     });
 };
 
