@@ -72,6 +72,8 @@ Main.prototype.exportButton = function(){
 
         lineObj.speaker = line.speaker;
 
+        lineObj.interlocutor = line.interlocutor;
+
         lineObj.body = line.text;
 
         //Speech Acts
@@ -112,14 +114,38 @@ Main.prototype.exportButton = function(){
 
         }
 
+        //Contradictions
+        lineObj.contradictions = "";
+        if(line.annotationData["StoryWorldContradictions"] != null){
+            for(var c = 0; c < line.annotationData["StoryWorldContradictions"].val.length; c++){
+                var contradiction = line.annotationData["StoryWorldContradictions"].val[c];
+                if(contradiction === "") continue;
+                if(c > 0) lineObj.contradictions = lineObj.contradictions + ", " + contradiction;
+                if(c === 0) lineObj.contradictions = contradiction;
+            }
+
+        }
+
         //speech act precede
-        lineObj.speech_act_strictly_depended_on = "";
+        lineObj.speech_acts_that_can_precede = "";
         if(line.annotationData["SpeechActsPrecede"] != null){
             for(var sap = 0; sap < line.annotationData["SpeechActsPrecede"].val.length; sap++){
                 var speechAct = line.annotationData["SpeechActsPrecede"].val[sap];
                 if(speechAct === "") continue;
-                if(sap > 0) lineObj.speech_act_strictly_depended_on = lineObj.speech_act_strictly_depended_on + ", " + speechAct;
-                if(sap === 0) lineObj.speech_act_strictly_depended_on = speechAct;
+                if(sap > 0) lineObj.speech_acts_that_can_precede = lineObj.speech_acts_that_can_precede + ", " + speechAct;
+                if(sap === 0) lineObj.speech_acts_that_can_precede = speechAct;
+            }
+
+        }
+
+        //speech act follow
+        lineObj.speech_acts_that_can_follow = "";
+        if(line.annotationData["SpeechActsFollow"] != null){
+            for(var saf = 0; saf < line.annotationData["SpeechActsFollow"].val.length; saf++){
+                var speechAct = line.annotationData["SpeechActsFollow"].val[saf];
+                if(speechAct === "") continue;
+                if(saf > 0) lineObj.speech_acts_that_can_follow = lineObj.speech_acts_that_can_follow + ", " + speechAct;
+                if(saf === 0) lineObj.speech_acts_that_can_follow = speechAct;
             }
 
         }
@@ -135,9 +161,9 @@ Main.prototype.exportButton = function(){
     }
 
     //Set strict dependence and social exchange
+    var identityCommunicated = false;
     for(var j = 0; j < lines.line.length; j++){
         var line = lines.line[j];
-
 
         //strict dependence
         line.lines_strictly_depended_on = "";
@@ -156,9 +182,9 @@ Main.prototype.exportButton = function(){
         //Social Exchange
         if(line.exchange_identity_communicated !== ""){
             this.export.instantiation.social_exchange = line.exchange_identity_communicated;
-            break;
+            identityCommunicated = true;
         }
-        else if(j === lines.line.length - 1){
+        else if(j === lines.line.length - 1 && !identityCommunicated){
             alert("No Social Exchange is selected. Select an exchange and try again");
             return;
         }
@@ -226,6 +252,10 @@ Main.prototype.successfulImport = function(contents){
         $("#SpeakerDropDownButton" + lineObj.lineNumber).val(line.speaker);
         $("#SpeakerDropDownButton" + lineObj.lineNumber).text(line.speaker);
 
+        //Interlocutor
+        $("#InterlocutorDropDownButton" + lineObj.lineNumber).val(line.interlocutor);
+        $("#InterlocutorDropDownButton" + lineObj.lineNumber).text(line.interlocutor);
+
         //TextArea
         $("#TextArea" + lineObj.lineNumber).val(line.body);
 
@@ -257,7 +287,7 @@ Main.prototype.successfulImport = function(contents){
         if(typeof line.exchange_outcome_communicated !== "object"){
             var outcomes = line.exchange_outcome_communicated.split(", ");
             $("#SocialExchangeOutcomesProp" + lineObj.lineNumber).trigger("click");
-            for(var seoLength = 0; seoLength < identities.length; seoLength++){
+            for(var seoLength = 0; seoLength < outcomes.length; seoLength++){
                 $("#SocialExchangeOutcomesPlusButton" + lineObj.lineNumber).trigger("click");
                 $("#SEODropDownButtonAt" + lineObj.lineNumber + "And" + (seoLength+1)).val(outcomes[seoLength]);
                 $("#SEODropDownButtonAt" + lineObj.lineNumber + "And" + (seoLength+1)).text(outcomes[seoLength]);
@@ -272,24 +302,41 @@ Main.prototype.successfulImport = function(contents){
                 $("#SpeechActsPlusButton" + lineObj.lineNumber).trigger("click");
                 $("#SADropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).val(acts[saLength]);
                 $("#SADropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).text(acts[saLength]);
+                $("#SATextAt" + lineObj.lineNumber + "And" + (saLength+1)).val( findSpeechActDescription(acts[saLength]) );
+                $("#SATextAt" + lineObj.lineNumber + "And" + (saLength+1)).text( findSpeechActDescription(acts[saLength]) );
             }
         }
 
         //Speech Acts that can Precede
-        if(typeof line.speech_act_strictly_depended_on !== "object"){
-            var actsPrecede = line.speech_acts_strictly_depended_on.split(", ");
+        if(typeof line.speech_acts_that_can_precede !== "object"){
+            var actsPrecede = line.speech_acts_that_can_precede.split(", ");
             $("#SpeechActsPrecedeProp" + lineObj.lineNumber).trigger("click");
             for(var sapLength = 0; sapLength < actsPrecede.length; sapLength++){
                 $("#SpeechActsPrecedePlusButton" + lineObj.lineNumber).trigger("click");
-                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).val(actsPrecede[sapLength]);
-                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (saLength+1)).text(actsPrecede[sapLength]);
+                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).val(actsPrecede[sapLength]);
+                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).text(actsPrecede[sapLength]);
+                $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).val( findSpeechActDescription(actsPrecede[sapLength]) );
+                $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).text( findSpeechActDescription(actsPrecede[sapLength]) );
+            }
+        }
+
+        //Speech Acts that can Follow
+        if(typeof line.speech_acts_that_can_follow !== "object"){
+            var actsFollow = line.speech_acts_that_can_follow.split(", ");
+            $("#SpeechActsFollowProp" + lineObj.lineNumber).trigger("click");
+            for(var safLength = 0; safLength < actsFollow.length; safLength++){
+                $("#SpeechActsFollowPlusButton" + lineObj.lineNumber).trigger("click");
+                $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).val(actsFollow[safLength]);
+                $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).text(actsFollow[safLength]);
+                $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).val( findSpeechActDescription(actsFollow[safLength]) );
+                $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).text( findSpeechActDescription(actsFollow[safLength]) );
             }
         }
 
         //Strict Dependence
         if(typeof line.lines_strictly_depended_on !== "object"){
             var dependencies = line.lines_strictly_depended_on.split(", ");
-            $("#SpeechActsProp" + lineObj.lineNumber).trigger("click");
+            $("#StrictDependenceProp" + lineObj.lineNumber).trigger("click");
             for(var dLength = 0; dLength < dependencies.length; dLength++){
                 $("#StrictDependencePlusButton" + lineObj.lineNumber).trigger("click");
 
@@ -304,8 +351,8 @@ Main.prototype.successfulImport = function(contents){
                     }
                 }
 
-                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).val(lineNum + "<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
-                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).text(lineNum + "<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
+                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).val((lineNum+1) + ".<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
+                $("#SDDropDownButtonAt" + lineObj.lineNumber + "And" + (dLength+1)).html((lineNum+1) + ".<b>" + lines[lineNum].speaker + "</b>:"+ lines[lineNum].body);
             }
         }
 
@@ -325,6 +372,22 @@ Main.prototype.successfulImport = function(contents){
             }
         }
 
+        //Story World Contradictions
+        if(typeof line.contradictions !== "object"){
+            var myContradictions = line.contradictions.split(", ");
+            $("#StoryWorldContradictionsProp" + lineObj.lineNumber).trigger("click");
+            for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
+                $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
+
+                var cType = findTransmissionType(myContradictions[swcLength]);
+
+                $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+cType+"')").trigger("click");
+
+                $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).val(myContradictions[swcLength]);
+                $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).text(myContradictions[swcLength]);
+            }
+        }
+
 
     }
 
@@ -341,7 +404,7 @@ function findTransmissionType(trans){
         if(trans === transmissions.SFDB[sfdbLength].representation) return "Social Facts Database Predicates";
     }
     for(relLength = 0; relLength < transmissions.REL.length; relLength++){
-        if(trans === transmissions.REL[reLength].representation) return "Relationship Predicates";
+        if(trans === transmissions.REL[relLength].representation) return "Relationship Predicates";
     }
     for(netLength = 0; netlength < transmissions.NET.length; netLength++){
         if(trans === transmissions.NET[netLength].representation) return "Network-value Predicates";
@@ -349,6 +412,16 @@ function findTransmissionType(trans){
     alert("No transmission was found. This is a bug, please report it.");
 }
 
+function findSpeechActDescription(actName){
+    for(var i = 0; i < speechActs.length; i++){
+        var act = speechActs[i];
+
+        if(act.name === actName){
+            return act.description;
+        }
+    }
+    alert("This is a bug related to finding the right speech act. Please report this.");
+}
 
 
 
