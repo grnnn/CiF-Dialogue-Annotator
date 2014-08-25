@@ -40,6 +40,8 @@ propertyTable.swcHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
 
+    dropdownText += "<br><p><label for='amount'>Strength of Contradiction:</label><input type='text'id='SWCAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWCslider-rangeAt"+lineNum+"And"+length+"'></div>";
+
     return dropdownText;
 };
 
@@ -55,6 +57,9 @@ propertyTable.swtHTML = function(lineNum, length){
     dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Social Facts Database Predicates</a></li> </ul> </div>";
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
+
+    dropdownText += "<br><p><label for='amount'>Strength of Transmission:</label><input type='text'id='SWTAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWTslider-rangeAt"+lineNum+"And"+length+"'></div>";
+    dropdownText += "<div id='SWTTypeOfStrength"+lineNum+"And"+length+"' style='margin-top: 10px;'>The transmission is of medium strength</div>";
 
     return dropdownText;
 };
@@ -176,6 +181,19 @@ propertyTable.setListeners = function(id, lineNum, length){
 
 //Nested Dropdown listeners for StoryWorldContradictions
 propertyTable.swcListeners = function(lineNum, length){
+    //Set up slider for the strength of transmission
+    $(function() {
+        $( "#SWCslider-rangeAt" + lineNum + "And" + length ).slider({
+            min: 0,
+            max: 100,
+            value: 50,
+            slide: function( event, ui ) {
+                $( "#SWCAmountAt"+lineNum+"And"+length ).val( ui.value );
+            }
+        });
+        $( "#SWCAmountAt"+lineNum+"And"+length ).val( $( "#SWCslider-rangeAt" + lineNum + "And" + length ).slider("value") );
+    });
+
     $("#SWCDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownAt", "");
@@ -243,6 +261,45 @@ propertyTable.swcListeners = function(lineNum, length){
 
 //Nested Dropdown listeners, woot woot!
 propertyTable.swtListeners = function(lineNum, length){
+    //Set up slider for the strength of transmission
+    $(function() {
+        $( "#SWTslider-rangeAt" + lineNum + "And" + length ).slider({
+            min: 0,
+            max: 100,
+            value: 50,
+            slide: function( event, ui ) {
+                $( "#SWTAmountAt"+lineNum+"And"+length ).val( ui.value );
+                //Change meaning based on value of slider
+                if(ui.value <= 30){
+                    $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is only a dependency");
+                } else if(ui.value > 30 && ui.value < 70){
+                    $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is of medium strength");
+                } else if(ui.value >= 70 ){
+                    $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is a proper transmission");
+                }
+            }
+        });
+        $( "#SWTAmountAt"+lineNum+"And"+length ).val( $( "#SWTslider-rangeAt" + lineNum + "And" + length ).slider("value") );
+    });
+
+    //Set up ticks on slider
+    var $slider =  $("#SWTslider-rangeAt" + lineNum + "And" + length);
+    var max =  $slider.slider("option", "max");
+    var spacing =  100 / (max -1);
+    $slider.find('.ui-slider-tick-mark').remove();
+    $('<span class="ui-slider-tick-mark"></span>').css('left', (spacing * 30) +  '%').appendTo($slider);
+    $('<span class="ui-slider-tick-mark"></span>').css('left', (spacing * 70) +  '%').appendTo($slider);
+
+    //Change meaning based on value of slider
+    if($slider.slider("value") <= 30){
+        $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is only a dependency");
+    } else if($slider.slider("value") > 30 && $slider.slider("value") < 70){
+        $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is of medium strength");
+    } else if($slider.slider("value") >= 70 ){
+        $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is a proper transmission");
+    }
+
+
     $("#SWTDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownAt", "");

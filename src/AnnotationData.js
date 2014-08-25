@@ -318,17 +318,17 @@ Property.prototype.swtUpdate = function(){
 
         //assign the transmission value
         if(transmission.text().search("Select Transmission") == -1 && transmission.length && transmission.text() !== this.val[i-1]){
-            this.val[i-1] = transmission.text();
+            this.val[i-1] = {"transmission":transmission.text(), "slider":$("#SWTslider-rangeAt" + this.lineNum + "And" + i).slider("value") };
         }
-        if(!transmission.length) this.val[i-1] = "";
+        if(!transmission.length) this.val[i-1] = {};
 
 
     }
 
     //this.val data structure:
     //[
-    //string transmission1,
-    //string transmission2,
+    //{string transmission, int sliderValue},
+    //{string transmission, int sliderValue},
     //...
     //
     //]
@@ -350,17 +350,17 @@ Property.prototype.swcUpdate = function(){
 
         //assign the transmission value
         if(transmission.text().search("Select Transmission") == -1 && transmission.length && transmission.text() !== this.val[i-1]){
-            this.val[i-1] = transmission.text();
+            this.val[i-1] = {"transmission":transmission.text(), "slider":$("#SWCslider-rangeAt" + this.lineNum + "And" + i).slider("value") };
         }
-        if(!transmission.length) this.val[i-1] = "";
+        if(!transmission.length) this.val[i-1] = {};
 
 
     }
 
     //this.val data structure:
     //[
-    //string transmission1,
-    //string transmission2,
+    //{string transmission, int sliderValue},
+    //{string transmission, int sliderValue},
     //...
     //
     //]

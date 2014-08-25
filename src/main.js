@@ -103,25 +103,27 @@ Main.prototype.exportButton = function(){
         }
 
         //Transmissions
-        lineObj.transmissions = "";
+        lineObj.transmissions = {};
+        lineObj.transmissions.transmission = [];
         if(line.annotationData["StoryWorldTransmissions"] != null){
             for(var t = 0; t < line.annotationData["StoryWorldTransmissions"].val.length; t++){
-                var transmission = line.annotationData["StoryWorldTransmissions"].val[t];
+                var transmission = line.annotationData["StoryWorldTransmissions"].val[t].transmission;
+                var slider = line.annotationData["StoryWorldTransmissions"].val[t].slider;
                 if(transmission === "") continue;
-                if(t > 0) lineObj.transmissions = lineObj.transmissions + ", " + transmission;
-                if(t === 0) lineObj.transmissions = transmission;
+                lineObj.transmissions.transmission.push({"name": transmission, "slider": slider});
             }
 
         }
 
         //Contradictions
-        lineObj.contradictions = "";
+        lineObj.contradictions = {};
+        lineObj.contradictions.contradiction = [];
         if(line.annotationData["StoryWorldContradictions"] != null){
             for(var c = 0; c < line.annotationData["StoryWorldContradictions"].val.length; c++){
-                var contradiction = line.annotationData["StoryWorldContradictions"].val[c];
+                var contradiction = line.annotationData["StoryWorldContradictions"].val[c].transmission;
+                var cSlider = line.annotationData["StoryWorldContradictions"].val[c].slider;
                 if(contradiction === "") continue;
-                if(c > 0) lineObj.contradictions = lineObj.contradictions + ", " + contradiction;
-                if(c === 0) lineObj.contradictions = contradiction;
+                lineObj.contradictions.contradiction.push({"name": contradiction, "slider": cSlider});
             }
 
         }
@@ -357,34 +359,59 @@ Main.prototype.successfulImport = function(contents){
         }
 
         //Story World Transmissions
-        if(typeof line.transmissions !== "object"){
-            var myTransmissions = line.transmissions.split(", ");
-            $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
-            for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
-                $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
+        if(line.transmissions.transmission !== undefined){
+            if( line.transmissions.transmission.length !== undefined || line.transmissions.transmission.slider > 0){
+                var myTransmissions = line.transmissions.transmission;
+                if(line.transmissions.transmission.slider > 0) myTransmissions = [myTransmissions];
+                $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
+                for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
+                    $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
 
-                var type = findTransmissionType(myTransmissions[swtLength]);
+                    var type = findTransmissionType(myTransmissions[swtLength].name);
 
-                $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+type+"')").trigger("click");
+                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+type+"')").trigger("click");
 
-                $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).val(myTransmissions[swtLength]);
-                $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).text(myTransmissions[swtLength]);
+                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).val(myTransmissions[swtLength].name);
+                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).text(myTransmissions[swtLength].name);
+
+                    $("#SWTslider-rangeAt" + lineObj.lineNumber + "And" + (swtLength+1)).slider("value", myTransmissions[swtLength].slider);
+
+                    $("#SWTAmountAt"+lineObj.lineNumber+"And"+(swtLength+1)).val(myTransmissions[swtLength].slider);
+
+                    if(myTransmissions[swtLength].slider <= 30){
+                        $("#SWTTypeOfStrength"+lineObj.lineNumber+"And"+(swtLength+1)).text("This transmission is only a dependency");
+                    } else if(myTransmissions[swtLength].slider > 30 && myTransmissions[swtLength].slider < 70){
+                        $("#SWTTypeOfStrength"+lineObj.lineNumber+"And"+(swtLength+1)).text("This transmission is of medium strength");
+                    } else if(myTransmissions[swtLength].slider >= 70 ){
+                        $("#SWTTypeOfStrength"+lineObj.lineNumber+"And"+(swtLength+1)).text("This transmission is a proper transmission");
+                    }
+
+
+                }
             }
         }
 
         //Story World Contradictions
-        if(typeof line.contradictions !== "object"){
-            var myContradictions = line.contradictions.split(", ");
-            $("#StoryWorldContradictionsProp" + lineObj.lineNumber).trigger("click");
-            for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
-                $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
+        console.log(line.contradictions.contradiction);
+        if(line.contradictions.contradiction !== undefined){
+            if(line.contradictions.contradiction.length !== undefined || line.contradictions.contradiction.slider > 0){
+                var myContradictions = line.contradictions.contradiction;
+                if(line.contradictions.contradiction.slider > 0) myContradictions = [myContradictions];
+                $("#StoryWorldContradictionsProp" + lineObj.lineNumber).trigger("click");
+                for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
+                    $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
 
-                var cType = findTransmissionType(myContradictions[swcLength]);
+                    var cType = findTransmissionType(myContradictions[swcLength].name);
 
-                $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+cType+"')").trigger("click");
+                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+cType+"')").trigger("click");
 
-                $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).val(myContradictions[swcLength]);
-                $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).text(myContradictions[swcLength]);
+                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).val(myContradictions[swcLength].name);
+                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).text(myContradictions[swcLength].name);
+
+                    $("#SWCslider-rangeAt" + lineObj.lineNumber + "And" + (swcLength+1)).slider("value", myContradictions[swcLength].slider);
+
+                    $("#SWCAmountAt"+lineObj.lineNumber+"And"+(swcLength+1)).val(myContradictions[swcLength].slider);
+                }
             }
         }
 
@@ -394,19 +421,19 @@ Main.prototype.successfulImport = function(contents){
 };
 
 function findTransmissionType(trans){
-    for(stLength = 0; stLength < transmissions.ST.length; stLength++){
+    for(var stLength = 0; stLength < transmissions.ST.length; stLength++){
         if(trans === transmissions.ST[stLength].representation) return "Status/Trait Predicates";
     }
-    for(ckbLength = 0; ckbLength < transmissions.CKB.length; ckbLength++){
+    for(var ckbLength = 0; ckbLength < transmissions.CKB.length; ckbLength++){
         if(trans === transmissions.CKB[ckbLength].representation) return "Cultural Knowledgebase Predicates";
     }
-    for(sfdbLength = 0; sfdbLength < transmissions.SFDB.length; sfdbLength++){
+    for(var sfdbLength = 0; sfdbLength < transmissions.SFDB.length; sfdbLength++){
         if(trans === transmissions.SFDB[sfdbLength].representation) return "Social Facts Database Predicates";
     }
-    for(relLength = 0; relLength < transmissions.REL.length; relLength++){
+    for(var relLength = 0; relLength < transmissions.REL.length; relLength++){
         if(trans === transmissions.REL[relLength].representation) return "Relationship Predicates";
     }
-    for(netLength = 0; netlength < transmissions.NET.length; netLength++){
+    for(var netLength = 0; netLength < transmissions.NET.length; netLength++){
         if(trans === transmissions.NET[netLength].representation) return "Network-value Predicates";
     }
     alert("No transmission was found. This is a bug, please report it.");
