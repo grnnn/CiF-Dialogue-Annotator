@@ -129,25 +129,27 @@ Main.prototype.exportButton = function(){
         }
 
         //speech act precede
-        lineObj.speech_acts_that_can_precede = "";
+        lineObj.speech_acts_that_can_precede = {};
+        lineObj.speech_acts_that_can_precede.speech_act = [];
         if(line.annotationData["SpeechActsPrecede"] != null){
             for(var sap = 0; sap < line.annotationData["SpeechActsPrecede"].val.length; sap++){
-                var speechAct = line.annotationData["SpeechActsPrecede"].val[sap];
+                var speechAct = line.annotationData["SpeechActsPrecede"].val[sap].name;
+                var sapSlider = line.annotationData["SpeechActsPrecede"].val[sap].slider;
                 if(speechAct === "") continue;
-                if(sap > 0) lineObj.speech_acts_that_can_precede = lineObj.speech_acts_that_can_precede + ", " + speechAct;
-                if(sap === 0) lineObj.speech_acts_that_can_precede = speechAct;
+                lineObj.speech_acts_that_can_precede.speech_act.push({"name": speechAct, "slider": sapSlider});
             }
 
         }
 
         //speech act follow
-        lineObj.speech_acts_that_can_follow = "";
+        lineObj.speech_acts_that_can_follow = {};
+        lineObj.speech_acts_that_can_follow.speech_act = [];
         if(line.annotationData["SpeechActsFollow"] != null){
             for(var saf = 0; saf < line.annotationData["SpeechActsFollow"].val.length; saf++){
-                var speechAct = line.annotationData["SpeechActsFollow"].val[saf];
+                var speechAct = line.annotationData["SpeechActsFollow"].val[saf].name;
+                var safSlider = line.annotationData["SpeechActsFollow"].val[saf].slider;
                 if(speechAct === "") continue;
-                if(saf > 0) lineObj.speech_acts_that_can_follow = lineObj.speech_acts_that_can_follow + ", " + speechAct;
-                if(saf === 0) lineObj.speech_acts_that_can_follow = speechAct;
+                lineObj.speech_acts_that_can_follow.speech_act.push({"name": speechAct, "slider": safSlider});
             }
 
         }
@@ -310,28 +312,42 @@ Main.prototype.successfulImport = function(contents){
         }
 
         //Speech Acts that can Precede
-        if(typeof line.speech_acts_that_can_precede !== "object"){
-            var actsPrecede = line.speech_acts_that_can_precede.split(", ");
-            $("#SpeechActsPrecedeProp" + lineObj.lineNumber).trigger("click");
-            for(var sapLength = 0; sapLength < actsPrecede.length; sapLength++){
-                $("#SpeechActsPrecedePlusButton" + lineObj.lineNumber).trigger("click");
-                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).val(actsPrecede[sapLength]);
-                $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).text(actsPrecede[sapLength]);
-                $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).val( findSpeechActDescription(actsPrecede[sapLength]) );
-                $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).text( findSpeechActDescription(actsPrecede[sapLength]) );
+        if(line.speech_acts_that_can_precede.speech_act !== undefined){
+            if( line.speech_acts_that_can_precede.speech_act.length !== undefined || line.speech_acts_that_can_precede.speech_act.slider >= 0 ){
+                var actsPrecede = line.speech_acts_that_can_precede.speech_act;
+                if(line.speech_acts_that_can_precede.speech_act.slider >= 0) actsPrecede = [actsPrecede];
+                $("#SpeechActsPrecedeProp" + lineObj.lineNumber).trigger("click");
+                for(var sapLength = 0; sapLength < actsPrecede.length; sapLength++){
+                    $("#SpeechActsPrecedePlusButton" + lineObj.lineNumber).trigger("click");
+                    $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).val(actsPrecede[sapLength].name);
+                    $("#SAPDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).text(actsPrecede[sapLength].name);
+                    $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).val( findSpeechActDescription(actsPrecede[sapLength].name) );
+                    $("#SAPTextAt" + lineObj.lineNumber + "And" + (sapLength+1)).text( findSpeechActDescription(actsPrecede[sapLength].name) );
+
+                    $("#SAPslider-rangeAt" + lineObj.lineNumber + "And" + (sapLength+1)).slider("value", actsPrecede[sapLength].slider);
+
+                    $("#SAPAmountAt"+lineObj.lineNumber+"And"+(sapLength+1)).val(actsPrecede[sapLength].slider);
+                }
             }
         }
 
         //Speech Acts that can Follow
-        if(typeof line.speech_acts_that_can_follow !== "object"){
-            var actsFollow = line.speech_acts_that_can_follow.split(", ");
-            $("#SpeechActsFollowProp" + lineObj.lineNumber).trigger("click");
-            for(var safLength = 0; safLength < actsFollow.length; safLength++){
-                $("#SpeechActsFollowPlusButton" + lineObj.lineNumber).trigger("click");
-                $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).val(actsFollow[safLength]);
-                $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).text(actsFollow[safLength]);
-                $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).val( findSpeechActDescription(actsFollow[safLength]) );
-                $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).text( findSpeechActDescription(actsFollow[safLength]) );
+        if(line.speech_acts_that_can_follow.speech_act !== undefined){
+            if( line.speech_acts_that_can_follow.speech_act.length !== undefined || line.speech_acts_that_can_follow.speech_act.slider >= 0){
+                var actsFollow = line.speech_acts_that_can_follow.speech_act;
+                if(line.speech_acts_that_can_follow.speech_act.slider >= 0) actsFollow = [actsFollow];
+                $("#SpeechActsFollowProp" + lineObj.lineNumber).trigger("click");
+                for(var safLength = 0; safLength < actsFollow.length; safLength++){
+                    $("#SpeechActsFollowPlusButton" + lineObj.lineNumber).trigger("click");
+                    $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).val(actsFollow[safLength].name);
+                    $("#SAFDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).text(actsFollow[safLength].name);
+                    $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).val( findSpeechActDescription(actsFollow[safLength].name) );
+                    $("#SAFTextAt" + lineObj.lineNumber + "And" + (safLength+1)).text( findSpeechActDescription(actsFollow[safLength].name) );
+
+                    $("#SAFslider-rangeAt" + lineObj.lineNumber + "And" + (safLength+1)).slider("value", actsFollow[safLength].slider);
+
+                    $("#SAFAmountAt"+lineObj.lineNumber+"And"+(safLength+1)).val(actsFollow[safLength].slider);
+                }
             }
         }
 
@@ -360,9 +376,9 @@ Main.prototype.successfulImport = function(contents){
 
         //Story World Transmissions
         if(line.transmissions.transmission !== undefined){
-            if( line.transmissions.transmission.length !== undefined || line.transmissions.transmission.slider > 0){
+            if( line.transmissions.transmission.length !== undefined || line.transmissions.transmission.slider >= 0){
                 var myTransmissions = line.transmissions.transmission;
-                if(line.transmissions.transmission.slider > 0) myTransmissions = [myTransmissions];
+                if(line.transmissions.transmission.slider >= 0) myTransmissions = [myTransmissions];
                 $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
                     $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
@@ -392,11 +408,10 @@ Main.prototype.successfulImport = function(contents){
         }
 
         //Story World Contradictions
-        console.log(line.contradictions.contradiction);
         if(line.contradictions.contradiction !== undefined){
-            if(line.contradictions.contradiction.length !== undefined || line.contradictions.contradiction.slider > 0){
+            if(line.contradictions.contradiction.length !== undefined || line.contradictions.contradiction.slider >= 0){
                 var myContradictions = line.contradictions.contradiction;
-                if(line.contradictions.contradiction.slider > 0) myContradictions = [myContradictions];
+                if(line.contradictions.contradiction.slider >= 0) myContradictions = [myContradictions];
                 $("#StoryWorldContradictionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
                     $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");

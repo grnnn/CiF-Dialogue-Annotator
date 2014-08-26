@@ -96,6 +96,8 @@ propertyTable.safHTML = function(lineNum, length){
   dropdownText = dropdownText + "</ul> </div>";
   dropdownText = dropdownText + "<p style='padding:10px;' id='SAFTextAt"+lineNum+"And"+length+"'></p>";
 
+  dropdownText += "<br><p><label for='amount'>Likelihood of this speech act following: </label><input type='text'id='SAFAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SAFslider-rangeAt"+lineNum+"And"+length+"'></div>";
+
   return dropdownText;
 
 };
@@ -110,6 +112,9 @@ propertyTable.sapHTML = function(lineNum, length){
     }
     dropdownText = dropdownText + "</ul> </div>";
     dropdownText = dropdownText + "<p style='padding:10px;' id='SAPTextAt"+lineNum+"And"+length+"'></p>";
+
+    dropdownText += "<br><p><label for='amount'>Likelihood of this speech act preceding: </label><input type='text'id='SAPAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 25px;'></p><div id='SAPslider-rangeAt"+lineNum+"And"+length+"'></div>";
+
 
     return dropdownText;
 
@@ -407,6 +412,20 @@ propertyTable.sdListeners = function(lineNum, length){
 
 //Set up the proper dropdown listener of speech acts Precede
 propertyTable.sapListeners = function(lineNum, length){
+
+    //Set up slider for the likelihood of preceding
+    $(function() {
+        $( "#SAPslider-rangeAt" + lineNum + "And" + length ).slider({
+            min: 0,
+            max: 100,
+            value: 50,
+            slide: function( event, ui ) {
+                $( "#SAPAmountAt"+lineNum+"And"+length ).val( ui.value );
+            }
+        });
+        $( "#SAPAmountAt"+lineNum+"And"+length ).val( $( "#SAPslider-rangeAt" + lineNum + "And" + length ).slider("value") );
+    });
+
     $("#SAPDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SAPDropDownAt", "");
@@ -433,6 +452,21 @@ propertyTable.sapListeners = function(lineNum, length){
 
 //Set up the proper dropdown listener of speech acts Follow
 propertyTable.safListeners = function(lineNum, length){
+
+    //Set up slider for the likelihood of following
+    $(function() {
+        $( "#SAFslider-rangeAt" + lineNum + "And" + length ).slider({
+            min: 0,
+            max: 100,
+            value: 50,
+            slide: function( event, ui ) {
+                $( "#SAFAmountAt"+lineNum+"And"+length ).val( ui.value );
+            }
+        });
+        $( "#SAFAmountAt"+lineNum+"And"+length ).val( $( "#SAFslider-rangeAt" + lineNum + "And" + length ).slider("value") );
+    });
+
+
     $("#SAFDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
         //get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SAFDropDownAt", "");

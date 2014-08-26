@@ -197,9 +197,9 @@ Property.prototype.sapUpdate = function(){
 
         //assign the act value
         if(act.text().search("Select Speech Act") == -1 && act.length && act.text() !== this.val[i-1]){
-            this.val[i-1] = act.text();
+            this.val[i-1] = {"name": act.text(), "slider": $("#SAPslider-rangeAt" + this.lineNum + "And" + i).slider("value")};
         }
-        if(!act.length) this.val[i-1] = "";
+        if(!act.length) this.val[i-1] = {};
 
 
     }
@@ -230,17 +230,17 @@ Property.prototype.safUpdate = function(){
 
         //assign the act value
         if(act.text().search("Select Speech Act") == -1 && act.length && act.text() !== this.val[i-1]){
-            this.val[i-1] = act.text();
+            this.val[i-1] = {"name": act.text(), "slider": $("#SAFslider-rangeAt" + this.lineNum + "And" + i).slider("value")} ;
         }
-        if(!act.length) this.val[i-1] = "";
+        if(!act.length) this.val[i-1] = {};
 
 
     }
 
     //this.val data structure:
     //[
-    //string speechAct1,
-    //string speechAct2,
+    //{ string speechAct, int sliderStrength},
+    //{ string speechAct, int sliderStrength},
     //...
     //
     //]
