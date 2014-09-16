@@ -514,6 +514,37 @@ propertyTable.saListeners = function(lineNum, length){
 
         //Set the description to the desc
         $("#SATextAt"+lineNum+"And"+length).text(desc);
+        
+        //
+        //Autofill code
+        //
+        
+        //Get the proper speechAct data
+        var speechAct = findSpeechAct(name);
+        
+        //Create the listgroups if they dont exist
+        if(! $("#SpeechActsPrecedeListGroup"+lineNum).length ){
+        	$("#SpeechActsPrecedeProp"+lineNum).trigger('click');
+        }
+        if(!  $("#SpeechActsFollowListGroup"+lineNum).length ){
+        	$("#SpeechActsFollowProp"+lineNum).trigger('click');
+        }
+        
+        //Get the two speech act autofill groups
+        var actsThatPrecede = speechAct.canPrecede;
+        var actsThatFollow = speechAct.canFollow;
+        
+        //find out how many items are in the listgroup
+        console.log( $("#SpeechActsPrecedeListGroup"+lineNum).children.length );
+        
+        for(var i = 0; i < actsThatPrecede.length; i++){
+        	var pAct = actsThatPrecede[i];
+        	$("#SpeechActsPrecedePlusButton"+lineNum).trigger('click');
+        	
+        	
+        	
+        }
+        
     });
 };
 
