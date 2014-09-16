@@ -534,8 +534,16 @@ propertyTable.saListeners = function(lineNum, length){
         var actsThatPrecede = speechAct.canPrecede;
         var actsThatFollow = speechAct.canFollow;
         
+        //Step 1) Find all autofilled items that have an 'auto'+length value in their auto field
+        //if exists:
+        //    Step 2) load contents of groups into those items
+        //else: 
+        // 	  Step 2) Find number of items in the listgroup
+        //	  Step 3) Press PlusButton length-of-options-number of times
+        //	  Step 4) Load contents of groups into those generated listgroups
+        
         //find out how many items are in the listgroup
-        console.log( $("#SpeechActsPrecedeListGroup"+lineNum).children.length );
+        console.log( $("#SpeechActsPrecedeListGroup"+lineNum).children().length );
         
         for(var i = 0; i < actsThatPrecede.length; i++){
         	var pAct = actsThatPrecede[i];
