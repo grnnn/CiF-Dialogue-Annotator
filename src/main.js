@@ -465,5 +465,15 @@ function findSpeechActDescription(actName){
     alert("This is a bug related to finding the right speech act. Please report this.");
 }
 
+function findSpeechAct(actName){
+    for(var i = 0; i < speechActs.length; i++){
+        var act = speechActs[i];
+
+        if(act.name === actName){
+            return act;
+        }
+    }
+    alert("This is a bug related to finding the right speech act. Please report this.");
+}
 
 
