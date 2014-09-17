@@ -1,0 +1,178 @@
+[{
+	"operator": "friends",
+	"template": "%f% and %s% are friends",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+	"contradictions": ["enemies"]
+ },
+  {
+	"operator": "nice",
+	"template": "%f% is nice",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["mean", "jerk", "cold"]
+ },
+  {
+	"operator": "thinks is cool",
+	"template": "%f% thinks %s% is cool",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "inarticulate",
+	"template": "%f% is inarticulate",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["sharp", "popular", "cool", "confident"]
+ },
+  {
+	"operator": "cheater",
+	"template": "%f% is a cheater",
+	"first": ["initiator","responder","other"],
+ },
+  {
+	"operator": "domineering",
+	"template": "%f% is domineering",
+	"first": ["initiator", "responder", "other"],
+	"contradictions": ["shy", "introverted"]
+ },
+  {
+	"operator": "introverted",
+	"template": "%f% is introverted",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["domineering", "cool", "sharp", "popular", "confident"]
+ },
+  {
+	"operator": "brainy",
+	"template": "%f% is brainy",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["cool", "popular", "muscular"]
+ },
+  {
+	"operator": "dating",
+	"template": "%f% and %s% are dating",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "popular",
+	"template": "%f% is popular",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["brainy", "inarticulate", "shy", "introverted", "weakling"]
+ },
+  {
+	"operator": "did something cool to",
+	"template": "%f% did something cool that %s% is aware of",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "former friends",
+	"template": "%f% and %s% used to be friends",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "attracted to",
+	"template": "%f% is attracted to %s%",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "dating, unspecified",
+	"template": "%f% and %s% are or were dating",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "failed romance",
+	"template": "%f% performed a failed romantic gesture to %s%",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "did something cool",
+	"template": "%f% did something cool",
+	"first": ["initiator","responder","other"],
+ },
+  {
+	"operator": "jerk",
+	"template": "%f% is a jerk",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["nice"]
+ },
+  {
+	"operator": "enemies",
+	"template": "%f% and %s% are enemies",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+	"contradictions": ["friends"]
+ },
+  {
+	"operator": "has a crush on",
+	"template": "%f% has a crush on %s%",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "cold",
+	"template": "%f% is cold",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["nice"]
+ },
+  {
+	"operator": "did something mean to",
+	"template": "%f% did something mean to %s%",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "muscular",
+	"template": "%f% is muscular",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["weakling", "brainy"]
+ },
+  {
+	"operator": "romantic gesture",
+	"template": "%f% performed a romantic gesture to %s%",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "confident",
+	"template": "%f% is confident",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["brainy", "inarticulate", "shy", "introverted"]
+ },
+  {
+	"operator": "impulsive",
+	"template": "%f% is impulsive",
+	"first": ["initiator","responder","other"],
+ },
+  {
+	"operator": "sharp",
+	"template": "%f% is sharp",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["inarticulate", "shy", "introverted"]
+ },
+  {
+	"operator": "swinger",
+	"template": "%f% is a swinger",
+	"first": ["initiator","responder","other"],
+ },
+  {
+	"operator": "mean",
+	"template": "%f% is mean",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["nice"]
+ },
+  {
+	"operator": "like the same thing",
+	"template": "%f% and %s% like the same thing",
+	"first": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"],
+ },
+  {
+	"operator": "shy",
+	"template": "%f% is shy",
+	"first": ["initiator","responder","other"],
+	"contradictions": ["domineering", "sharp", "popular", "cool", "confident"]
+ }]
