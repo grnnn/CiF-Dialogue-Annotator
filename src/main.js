@@ -473,7 +473,7 @@ function findSpeechAct(actName){
             return act;
         }
     }
-    alert("This is a bug related to finding the right speech act. Please report this.");
+    alert(actName+" is not a speech act. This is a bug related to finding the right speech act. Please report this.");
 }
 
 

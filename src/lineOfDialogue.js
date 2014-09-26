@@ -205,6 +205,21 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
 	                        //Remove the list item
 	                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
+
+	                        //Speech Acts auto-fill exception
+	                        if(id === "SpeechActs"){
+                                var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto=auto"+length+"]");
+                                var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto=auto"+length+"]");
+
+                                for(var a = 0; a < precedeItems.length; a++){
+                                    precedeItems[a].remove();
+                                }
+
+                                for(var b = 0; b < followItems.length; b++){
+                                    followItems[b].remove();
+                                }
+
+                            }
                         }
 
                     });
@@ -245,6 +260,21 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 
 	                //add the correct property back into the dropdown
 	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
+
+	                //exception for speech act, close all the autos
+	                if(id === "SpeechActs"){
+	                    var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto]");
+	                    var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto]");
+
+	                    for(var a = 0; a < precedeItems.length; a++){
+	                        precedeItems[a].remove();
+	                    }
+
+	                    for(var b = 0; b < followItems.length; b++){
+                            followItems[b].remove();
+                        }
+
+	                }
                 }
 	        });
             }

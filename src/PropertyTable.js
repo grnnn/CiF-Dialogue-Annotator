@@ -96,6 +96,10 @@ propertyTable.safHTML = function(lineNum, length){
   dropdownText = dropdownText + "</ul> </div>";
   dropdownText = dropdownText + "<p style='padding:10px;' id='SAFTextAt"+lineNum+"And"+length+"'></p>";
 
+  dropdownText += "Next Line: <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+  dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Interlocutor to Speaker</a></li>";
+  dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Speaker to Interlocutor</a></li> </ul> </div>";
+
   dropdownText += "<br><p><label for='amount'>Likelihood of this speech act following: </label><input type='text'id='SAFAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SAFslider-rangeAt"+lineNum+"And"+length+"'></div>";
 
   return dropdownText;
@@ -112,6 +116,10 @@ propertyTable.sapHTML = function(lineNum, length){
     }
     dropdownText = dropdownText + "</ul> </div>";
     dropdownText = dropdownText + "<p style='padding:10px;' id='SAPTextAt"+lineNum+"And"+length+"'></p>";
+
+    dropdownText += "Previous Line: <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Interlocutor to Speaker</a></li>";
+    dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Speaker to Interlocutor</a></li> </ul> </div>";
 
     dropdownText += "<br><p><label for='amount'>Likelihood of this speech act preceding: </label><input type='text'id='SAPAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 25px;'></p><div id='SAPslider-rangeAt"+lineNum+"And"+length+"'></div>";
 
@@ -413,6 +421,19 @@ propertyTable.sdListeners = function(lineNum, length){
 //Set up the proper dropdown listener of speech acts Precede
 propertyTable.sapListeners = function(lineNum, length){
 
+    //Set up Line drop Down
+    $("#SAPSpeakerDropDownAt" + lineNum + "And" + length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SAPSpeakerDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Set the text in the Dropdown button to the name
+        $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+length).text( $(this).text() );
+        $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+length).val( $(this).text() );
+    });
+
     //Set up slider for the likelihood of preceding
     $(function() {
         $( "#SAPslider-rangeAt" + lineNum + "And" + length ).slider({
@@ -452,6 +473,19 @@ propertyTable.sapListeners = function(lineNum, length){
 
 //Set up the proper dropdown listener of speech acts Follow
 propertyTable.safListeners = function(lineNum, length){
+
+    //Set up Line drop Down
+    $("#SAFSpeakerDropDownAt" + lineNum + "And" + length).on('click', 'li a', function(){
+        //get the line number and length
+        var nums =  $(this).parent().parent().attr("id").replace("SAFSpeakerDropDownAt", "");
+        var nums = nums.split("And");
+        var lineNum = nums[0];
+        var length = nums[1];
+
+        //Set the text in the Dropdown button to the name
+        $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+length).text( $(this).text() );
+        $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+length).val( $(this).text() );
+    });
 
     //Set up slider for the likelihood of following
     $(function() {
@@ -514,14 +548,14 @@ propertyTable.saListeners = function(lineNum, length){
 
         //Set the description to the desc
         $("#SATextAt"+lineNum+"And"+length).text(desc);
-        
+
         //
         //Autofill code
         //
-        
+
         //Get the proper speechAct data
         var speechAct = findSpeechAct(name);
-        
+
         //Create the listgroups if they dont exist
         if(! $("#SpeechActsPrecedeListGroup"+lineNum).length ){
         	$("#SpeechActsPrecedeProp"+lineNum).trigger('click');
@@ -529,30 +563,181 @@ propertyTable.saListeners = function(lineNum, length){
         if(!  $("#SpeechActsFollowListGroup"+lineNum).length ){
         	$("#SpeechActsFollowProp"+lineNum).trigger('click');
         }
-        
+
         //Get the two speech act autofill groups
         var actsThatPrecede = speechAct.canPrecede;
         var actsThatFollow = speechAct.canFollow;
-        
-        //Step 1) Find all autofilled items that have an 'auto'+length value in their auto field
-        //if exists:
-        //    Step 2) load contents of groups into those items
-        //else: 
-        // 	  Step 2) Find number of items in the listgroup
-        //	  Step 3) Press PlusButton length-of-options-number of times
-        //	  Step 4) Load contents of groups into those generated listgroups
-        
-        //find out how many items are in the listgroup
-        console.log( $("#SpeechActsPrecedeListGroup"+lineNum).children().length );
-        
-        for(var i = 0; i < actsThatPrecede.length; i++){
-        	var pAct = actsThatPrecede[i];
-        	$("#SpeechActsPrecedePlusButton"+lineNum).trigger('click');
-        	
-        	
-        	
+
+        //
+
+        var precedeItems = $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto=auto"+length+"]");
+
+        if(actsThatPrecede !== undefined){
+            for(var a = 0; a < precedeItems.length; a++){
+
+                var pAct = actsThatPrecede[a];
+                var pItem = precedeItems[a];
+
+                if(pAct === undefined || pItem === undefined) break;
+
+                var prevItemLength = pItem.id.replace("SpeechActsPrecedeItemAt"+lineNum+"And", "");
+
+                //change the values here
+
+                //Set the text in the Dropdown button to the name
+                $("#SAPDropDownButtonAt"+lineNum+"And"+prevItemLength ).text(pAct.name);
+                $("#SAPDropDownButtonAt"+lineNum+"And"+prevItemLength ).val(pAct.name);
+
+                //Set the description to the desc
+                $("#SAPTextAt"+lineNum+"And"+prevItemLength ).html(findSpeechActDescription(pAct.name) + "<br> <br> <font style='color: grey;'> auto</font>");
+
+                //Set the line speaker
+                var speaker = '';
+                if(pAct.first === "interlocutor") speaker = "Interlocutor to Speaker";
+                else speaker = "Speaker to Interlocutor";
+                $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+prevItemLength ).text(speaker);
+                $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+prevItemLength ).val(speaker);
+
+                //Set the weight
+                $("#SAPslider-rangeAt" + lineNum + "And" + prevItemLength).slider("value", pAct.weight);
+
+                $("#SAPAmountAt"+lineNum+"And"+prevItemLength).val(pAct.weight);
+
+            }
+
+
+            //find out how many items have been created
+            var precedeLength = main.findLine(lineNum).annotationData["SpeechActsPrecede"].length - precedeItems.length;
+
+            for(var i = precedeItems.length; i < actsThatPrecede.length ; i++){
+                var pAct = actsThatPrecede[i];
+                $("#SpeechActsPrecedePlusButton"+lineNum).trigger('click');
+
+
+                //Set the text in the Dropdown button to the name
+                $("#SAPDropDownButtonAt"+lineNum+"And"+(i+precedeLength+1) ).text(pAct.name);
+                $("#SAPDropDownButtonAt"+lineNum+"And"+(i+precedeLength+1) ).val(pAct.name);
+
+                $("#SpeechActsPrecedeItemAt"+lineNum+"And"+(i+precedeLength+1)).attr("auto", "auto"+length);
+
+                //Set the description to the desc
+                $("#SAPTextAt"+lineNum+"And"+(i+precedeLength+1)).html(findSpeechActDescription(pAct.name) + "<br> <br> <font style='color: grey;'> auto</font>" );
+
+                //Set the line speaker
+                var speaker = '';
+                if(pAct.first === "interlocutor") speaker = "Interlocutor to Speaker";
+                else speaker = "Speaker to Interlocutor";
+                $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+(i+precedeLength+1) ).text(speaker);
+                $("#SAPSpeakerDropDownButtonAt"+lineNum+"And"+(i+precedeLength+1) ).val(speaker);
+
+                //Set the weight
+                $("#SAPslider-rangeAt" + lineNum + "And" + (i+precedeLength+1)).slider("value", pAct.weight);
+
+                $("#SAPAmountAt"+lineNum+"And"+(i+precedeLength+1)).val(pAct.weight);
+
+
+
+            }
+
+
+            for(var j = actsThatPrecede.length; j < precedeItems.length; j++){
+                var pItem = precedeItems[j];
+                pItem.remove();
+            }
+
+
+        } else if(precedeItems !== undefined){
+            for(var b = 0; b < precedeItems.length; b++){
+                precedeItems[b].remove();
+            }
+
         }
-        
+
+        //Now for the ones that follow
+
+        var followItems = $("#SpeechActsFollowListGroup"+lineNum).find("li[auto=auto"+length+"]");
+
+        if(actsThatFollow !== undefined){
+            for(var a = 0; a < followItems.length; a++){
+
+                var fAct = actsThatFollow[a];
+                var fItem = followItems[a];
+
+                if(fAct === undefined || fItem === undefined) break;
+
+                var nextItemLength = fItem.id.replace("SpeechActsFollowItemAt"+lineNum+"And", "");
+
+                //change the values here
+
+                //Set the text in the Dropdown button to the name
+                $("#SAFDropDownButtonAt"+lineNum+"And"+nextItemLength ).text(fAct.name);
+                $("#SAFDropDownButtonAt"+lineNum+"And"+nextItemLength ).val(fAct.name);
+
+                //Set the description to the desc
+                $("#SAFTextAt"+lineNum+"And"+nextItemLength ).html(findSpeechActDescription(fAct.name) + "<br> <br> <font style='color: grey;'> auto</font>");
+
+                //Set the line speaker
+                var speaker = '';
+                if(fAct.first === "interlocutor") speaker = "Interlocutor to Speaker";
+                else speaker = "Speaker to Interlocutor";
+                $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+nextItemLength ).text(speaker);
+                $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+nextItemLength ).val(speaker);
+
+                //Set the weight
+                $("#SAFslider-rangeAt" + lineNum + "And" + nextItemLength).slider("value", fAct.weight);
+
+                $("#SAFAmountAt"+lineNum+"And"+nextItemLength).val(fAct.weight);
+
+            }
+
+
+            //find out how many items are in the listgroup, subtract by the two items that always are in the listgroup
+            var followLength = main.findLine(lineNum).annotationData["SpeechActsFollow"].length - followItems.length;
+
+            for(var i = followItems.length; i < actsThatFollow.length ; i++){
+                var fAct = actsThatFollow[i];
+                $("#SpeechActsFollowPlusButton"+lineNum).trigger('click');
+
+
+                //Set the text in the Dropdown button to the name
+                $("#SAFDropDownButtonAt"+lineNum+"And"+(i+followLength+1) ).text(fAct.name);
+                $("#SAFDropDownButtonAt"+lineNum+"And"+(i+followLength+1) ).val(fAct.name);
+
+                $("#SpeechActsFollowItemAt"+lineNum+"And"+(i+followLength+1)).attr("auto", "auto"+length);
+
+                //Set the description to the desc
+                $("#SAFTextAt"+lineNum+"And"+(i+followLength+1)).html(findSpeechActDescription(fAct.name) + "<br> <br> <font style='color: grey;'> auto</font>" );
+
+                //Set the line speaker
+                var speaker = '';
+                if(fAct.first === "interlocutor") speaker = "Interlocutor to Speaker";
+                else speaker = "Speaker to Interlocutor";
+                $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+(i+followLength+1) ).text(speaker);
+                $("#SAFSpeakerDropDownButtonAt"+lineNum+"And"+(i+followLength+1) ).val(speaker);
+
+                //Set the weight
+                $("#SAFslider-rangeAt" + lineNum + "And" + (i+followLength+1)).slider("value", fAct.weight);
+
+                $("#SAFAmountAt"+lineNum+"And"+(i+followLength+1)).val(fAct.weight);
+
+
+
+            }
+
+
+            for(var j = actsThatFollow.length; j < followItems.length; j++){
+                var fItem = followItems[j];
+                fItem.remove();
+            }
+
+
+        } else if(followItems !== undefined){
+            for(var b = 0; b < followItems.length; b++){
+                followItems[b].remove();
+            }
+
+        }
+
     });
 };
 
