@@ -49,14 +49,21 @@ propertyTable.swcHTML = function(lineNum, length){
 //Includes a drop down of each transmission type,
 //Then a drop down for the representations for that type
 propertyTable.swtHTML = function(lineNum, length){
-    var dropdownText = "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SWTDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Cultural Knowledgebase Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Network-value Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Relationship Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Status/Trait Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Social Facts Database Predicates</a></li> </ul> </div>";
+    var dropdownText = "<div class='dropdown' > <b>Type:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SWTDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    for(var i=0; i < transmissions.length; i++){
+        dropdownText += " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>"+transmissions[i].class+"</a></li>";
+    }
+    dropdownText = dropdownText + " </ul> </div>";
 
-    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Type
+
+    dropdownText = dropdownText + "<div id='SWTDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Descriptions
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested3At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For First
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested4At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Second
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
 
     dropdownText += "<br><p><label for='amount'>Strength of Transmission:</label><input type='text'id='SWTAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWTslider-rangeAt"+lineNum+"And"+length+"'></div>";
     dropdownText += "<div id='SWTTypeOfStrength"+lineNum+"And"+length+"' style='margin-top: 10px;'>The transmission is of medium strength</div>";
@@ -325,39 +332,24 @@ propertyTable.swtListeners = function(lineNum, length){
         $("#SWTDropDownButtonAt"+lineNum+"And"+length).text($(this).text());
 
         //Get the proper object for the first nested dropdown
-        myTransmissions = {};
-        switch($(this).text()) {
-            case "Cultural Knowledgebase Predicates":
-                myTransmissions = transmissions.CKB;
-                break;
-            case "Network-value Predicates":
-                myTransmissions = transmissions.NET;
-                break;
-            case "Relationship Predicates":
-                myTransmissions = transmissions.REL;
-                break;
-            case "Status/Trait Predicates":
-                myTransmissions = transmissions.ST;
-                break;
-            case "Social Facts Database Predicates":
-                myTransmissions = transmissions.SFDB;
-                break;
-        }
+        myTransmissions = findTransmissionType($(this).text());
 
         //Then obtain the div for the next dropdown, and push out the old container elements
         var nestedDrop = $("#SWTDropDownContainerNested1At"+lineNum+"And"+length);
         nestedDrop.empty();
 
         //Build up the dropdown string
-        var dropdownText =  "<button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
-        for(var i = 0; i < myTransmissions.length; i++){
-            var transmission = myTransmissions[i];
-            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission.representation+"</a></li>";
+        var dropdownText =  "<b>Transmission:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+        for(var i = 0; i < myTransmissions.types.length; i++){
+            var transmission = myTransmissions.types[i].operator;
+            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission+"</a></li>";
         }
         dropdownText = dropdownText + "</ul>";
 
         //Append it to the container
         nestedDrop.append(dropdownText);
+
+
 
 
         //Next set up a listener for the next menu
@@ -371,6 +363,99 @@ propertyTable.swtListeners = function(lineNum, length){
             //Set the text in the Dropdown button to the selected text
             $("#SWTDropDownButtonNested1At"+lineNum+"And"+length).val($(this).text());
             $("#SWTDropDownButtonNested1At"+lineNum+"And"+length).text($(this).text());
+
+            //First, find out where we are in the description
+            var transmission = findTransmission($("#SWTDropDownButtonAt"+lineNum+"And"+length).text(), $(this).text() );
+
+            //
+            //Now onto Descriptions
+            //
+            var descriptionDiv = $("#SWTDropDownContainerNested2At"+lineNum+"And"+length);
+            descriptionDiv.empty();
+
+            //Build up the description
+            if(transmission.second !== undefined){
+                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>, <u class='second'>second</u>)";
+            } else {
+                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>)";
+            }
+
+            var lexical = transmission.template;
+            lexical = lexical.replace("%f%", "<u class='first'>first</u>");
+            lexical = lexical.replace("%s%", "<u class='second'>second</u>");
+
+            descriptionText += "<br> <b>Lexical Representation:</b> " + lexical;
+
+            descriptionDiv.append(descriptionText);
+
+            //
+            // Now onto firsts and seconds
+            //
+
+            var firstDiv = $("#SWTDropDownContainerNested3At"+lineNum+"And"+length);
+            firstDiv.empty();
+
+            var secondDiv = $("#SWTDropDownContainerNested4At"+lineNum+"And"+length);
+            secondDiv.empty();
+
+            var firstText =  "<b>First:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested3At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select First <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested3At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+            for(var i = 0; i < transmission.first.length; i++){
+                var option = transmission.first[i];
+                firstText = firstText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+option+"</a></li>";
+            }
+            firstText += "</ul>";
+
+            //Append it to the container
+            firstDiv.append(firstText);
+
+            //Next set up a listener for the second
+            $("#SWTDropDownNested3At" + lineNum + "And"+ length).on('click', 'li a', function(){
+                //get the line number and length
+                var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownNested3At", "");
+                var nums = nums.split("And");
+                var lineNum = nums[0];
+                var length = nums[1];
+
+                //Set the text in the Dropdown button to the selected text
+                $("#SWTDropDownButtonNested3At"+lineNum+"And"+length).val($(this).text());
+                $("#SWTDropDownButtonNested3At"+lineNum+"And"+length).text($(this).text());
+
+                //Reset the descriptions
+                $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').val($(this).text());
+                $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').text($(this).text());
+
+            });
+
+            if(transmission.second !== undefined){
+                var secondText =  "<b>Second:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested4At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Second <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested4At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+                for(var j = 0; j < transmission.second.length; j++){
+                    var option = transmission.second[j];
+                    secondText = secondText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+option+"</a></li>";
+                }
+                secondText += "</ul>";
+
+                //Append it to the container
+                secondDiv.append(secondText);
+
+                //Next set up a listener for the second
+                $("#SWTDropDownNested4At" + lineNum + "And"+ length).on('click', 'li a', function(){
+                    //get the line number and length
+                    var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownNested4At", "");
+                    var nums = nums.split("And");
+                    var lineNum = nums[0];
+                    var length = nums[1];
+
+                    //Set the text in the Dropdown button to the selected text
+                    $("#SWTDropDownButtonNested4At"+lineNum+"And"+length).val($(this).text());
+                    $("#SWTDropDownButtonNested4At"+lineNum+"And"+length).text($(this).text());
+
+                    //Reset the descriptions
+                    //Reset the descriptions
+                    $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').val($(this).text());
+                    $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').text($(this).text());
+                });
+            }
+
         });
 
 

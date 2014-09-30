@@ -197,7 +197,9 @@ Property.prototype.sapUpdate = function(){
 
         //assign the act value
         if(act.text().search("Select Speech Act") == -1 && act.length && act.text() !== this.val[i-1]){
-            this.val[i-1] = {"name": act.text(), "slider": $("#SAPslider-rangeAt" + this.lineNum + "And" + i).slider("value")};
+            this.val[i-1] = {"name": act.text(),
+                             "slider": $("#SAPslider-rangeAt" + this.lineNum + "And" + i).slider("value"),
+                             "direction": $("#SAPSpeakerDropDownButtonAt" + this.lineNum + "And" + i).text() };
         }
         if(!act.length) this.val[i-1] = {};
 
@@ -206,8 +208,8 @@ Property.prototype.sapUpdate = function(){
 
     //this.val data structure:
     //[
-    //string speechAct1,
-    //string speechAct2,
+    //{ string speechAct, int sliderStrength, string direction},
+    //{ string speechAct, int sliderStrength, string direction},
     //...
     //
     //]
@@ -230,7 +232,9 @@ Property.prototype.safUpdate = function(){
 
         //assign the act value
         if(act.text().search("Select Speech Act") == -1 && act.length && act.text() !== this.val[i-1]){
-            this.val[i-1] = {"name": act.text(), "slider": $("#SAFslider-rangeAt" + this.lineNum + "And" + i).slider("value")} ;
+            this.val[i-1] = {"name": act.text(),
+                             "slider": $("#SAFslider-rangeAt" + this.lineNum + "And" + i).slider("value"),
+                             "direction": $("#SAFSpeakerDropDownButtonAt" + this.lineNum + "And" + i).text()} ;
         }
         if(!act.length) this.val[i-1] = {};
 
@@ -239,8 +243,8 @@ Property.prototype.safUpdate = function(){
 
     //this.val data structure:
     //[
-    //{ string speechAct, int sliderStrength},
-    //{ string speechAct, int sliderStrength},
+    //{ string speechAct, int sliderStrength, string direction},
+    //{ string speechAct, int sliderStrength, string direction},
     //...
     //
     //]
