@@ -135,8 +135,9 @@ Main.prototype.exportButton = function(){
             for(var sap = 0; sap < line.annotationData["SpeechActsPrecede"].val.length; sap++){
                 var speechAct = line.annotationData["SpeechActsPrecede"].val[sap].name;
                 var sapSlider = line.annotationData["SpeechActsPrecede"].val[sap].slider;
+                var sapDirection = line.annotationData["SpeechActsPrecede"].val[sap].direction;
                 if(speechAct === "") continue;
-                lineObj.speech_acts_that_can_precede.speech_act.push({"name": speechAct, "slider": sapSlider});
+                lineObj.speech_acts_that_can_precede.speech_act.push({"name": speechAct, "slider": sapSlider, "direction": sapDirection});
             }
 
         }
@@ -148,8 +149,9 @@ Main.prototype.exportButton = function(){
             for(var saf = 0; saf < line.annotationData["SpeechActsFollow"].val.length; saf++){
                 var speechAct = line.annotationData["SpeechActsFollow"].val[saf].name;
                 var safSlider = line.annotationData["SpeechActsFollow"].val[saf].slider;
+                var safDirection = line.annotationData["SpeechActsFollow"].cal[saf].direction;
                 if(speechAct === "") continue;
-                lineObj.speech_acts_that_can_follow.speech_act.push({"name": speechAct, "slider": safSlider});
+                lineObj.speech_acts_that_can_follow.speech_act.push({"name": speechAct, "slider": safSlider, "direction": safDirection});
             }
 
         }
@@ -327,6 +329,9 @@ Main.prototype.successfulImport = function(contents){
                     $("#SAPslider-rangeAt" + lineObj.lineNumber + "And" + (sapLength+1)).slider("value", actsPrecede[sapLength].slider);
 
                     $("#SAPAmountAt"+lineObj.lineNumber+"And"+(sapLength+1)).val(actsPrecede[sapLength].slider);
+
+                    $("#SAPSpeakerDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).val(actsPrecede[sapLength].direction);
+                    $("#SAPSpeakerDropDownButtonAt" + lineObj.lineNumber + "And" + (sapLength+1)).text(actsPrecede[sapLength].direction);
                 }
             }
         }
@@ -347,6 +352,9 @@ Main.prototype.successfulImport = function(contents){
                     $("#SAFslider-rangeAt" + lineObj.lineNumber + "And" + (safLength+1)).slider("value", actsFollow[safLength].slider);
 
                     $("#SAFAmountAt"+lineObj.lineNumber+"And"+(safLength+1)).val(actsFollow[safLength].slider);
+
+                    $("#SAFSpeakerDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).val(actsFollow[safLength].direction);
+                    $("#SAFSpeakerDropDownButtonAt" + lineObj.lineNumber + "And" + (safLength+1)).text(actsFollow[safLength].direction);
                 }
             }
         }
@@ -466,13 +474,35 @@ function findSpeechActDescription(actName){
 }
 
 function findSpeechAct(actName){
-	 for(var i = 0; i < speechActs.length; i++){
-	    var act = speechActs[i];
+    for(var i = 0; i < speechActs.length; i++){
+        var act = speechActs[i];
 
-	    if(act.name === actName){
-	        return act;
-	    }
-	 }
-	    alert("This is a bug related to finding the right speech act. Please report this.");	
+        if(act.name === actName){
+            return act;
+        }
+    }
+    alert(actName+" is not a speech act. This is a bug related to finding the right speech act. Please report this.");
+}
+
+function findTransmissionType(typeName){
+    for(var i=0; i < transmissions.length; i++){
+        var transmissionType = transmissions[i];
+
+        if(transmissionType.class === typeName){
+            return transmissionType;
+        }
+    }
+    alert(typeName+" is not a transmission type. This is a bug related to finding the right transmission type. Please report this.");
+}
+
+function findTransmission(typeName, transmissionName){
+    var transmissionType = findTransmissionType(typeName);
+    for(var i = 0; i < transmissionType.types.length; i++){
+        var transmission = transmissionType.types[i];
+        if(transmission.operator === transmissionName){
+            return transmission;
+        }
+    }
+    alert(transmissionName+" is not a transmission name. This is a bug related to finding the right transmission name. Please report this.");
 }
 
