@@ -542,6 +542,8 @@ propertyTable.saListeners = function(lineNum, length){
         //	  Step 3) Press PlusButton length-of-options-number of times
         //	  Step 4) Load contents of groups into those generated listgroups
         
+        //Note to self: Add exception in close listgroup listener to handle deleting autofilled 
+        
         //find out how many items are in the listgroup
         console.log( $("#SpeechActsPrecedeListGroup"+lineNum).children().length );
         
