@@ -206,7 +206,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                        //Remove the list item
 	                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
 
-	                        //Speech Acts auto-fill exception
+	                        //Speech Acts and Transmission auto-fill exceptions
 	                        if(id === "SpeechActs"){
                                 var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto=auto"+length+"]");
                                 var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto=auto"+length+"]");
@@ -220,6 +220,13 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                                 }
 
                             }
+	                        if(id === "StoryWorldTransmissions"){
+	                        	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+	                        	
+	                        	for(var c = 0; c < autoItems.length; c++){
+	                        		autoItems[c].remove();
+	                        	}
+	                        }
                         }
 
                     });
@@ -261,7 +268,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                //add the correct property back into the dropdown
 	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
 
-	                //exception for speech act, close all the autos
+	                //exception for speech act and transmissions, close all the autos
 	                if(id === "SpeechActs"){
 	                    var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto]");
 	                    var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto]");
@@ -274,6 +281,13 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                             followItems[b].remove();
                         }
 
+	                }
+	                if(id === "StoryWorldTransmissions"){
+	                	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto]");
+	                	
+	                	for(var c = 0; c < autoItems.length; c++){
+	                		autoItems[c].remove();
+	                	}
 	                }
                 }
 	        });

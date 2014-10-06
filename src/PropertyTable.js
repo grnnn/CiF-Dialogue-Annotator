@@ -504,7 +504,7 @@ propertyTable.swtListeners = function(lineNum, length){
             //Append it to the container
             firstDiv.append(firstText);
 
-            //Next set up a listener for the second
+            //Next set up a listener for the first
             $("#SWTDropDownNested3At" + lineNum + "And"+ length).on('click', 'li a', function(){
                 //get the line number and length
                 var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownNested3At", "");
@@ -519,6 +519,15 @@ propertyTable.swtListeners = function(lineNum, length){
                 //Reset the descriptions
                 $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').val($(this).text());
                 $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').text($(this).text());
+                
+                //Get the auto filled contradictions
+                var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+                autoItems = [autoItems];
+                for(var i = 0; i < autoItems.length; i++){
+                	//console.log(autoItems[i]);
+                	var firstDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested3At"]');
+                	firstDropDown.find('a:contains("'+$(this).text()+'")').trigger('click');
+                }
 
             });
 
@@ -549,6 +558,14 @@ propertyTable.swtListeners = function(lineNum, length){
                     //Reset the descriptions
                     $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').val($(this).text());
                     $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').text($(this).text());
+                    
+                    //Get the auto filled contradictions
+                    var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+                    if(autoItems.length === 1) autoItems = [autoItems];
+                    for(var i = 0; i < autoItems.length; i++){
+                    	var secondDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested4At"]');
+                    	secondDropDown.find('a:contains("'+$(this).text()+'")').trigger('click');
+                    }
                 });
             }
             
@@ -556,7 +573,7 @@ propertyTable.swtListeners = function(lineNum, length){
             var contradictions = transmission.contradictions;
             
             //Create the listgroups if they dont exist
-            if(! $("#StoryWorldContradictionsListGroup"+lineNum).length ){
+            if(! $("#StoryWorldContradictionsListGroup"+lineNum).length && contradictions !== undefined){
             	$("#StoryWorldContradictionsProp"+lineNum).trigger('click');
             }
 
@@ -580,6 +597,9 @@ propertyTable.swtListeners = function(lineNum, length){
 
                     //Fill out the right values for the contradiction by triggering the correct contradiction
                     $("#SWCDropDownNested1At"+lineNum+"And"+itemLength).find('a:contains("'+contra.operator+'")').trigger("click");
+                    
+                    // Add auto text
+                    $("#SWCDropDownContainerNested5At"+lineNum+"And"+itemLength).append("<br> <br> <font style='color: grey;'> auto</font> ");
 
                 }
 
@@ -589,7 +609,9 @@ propertyTable.swtListeners = function(lineNum, length){
 
                 for(var i = autoItems.length; i < contradictions.length ; i++){
                 	var contra = findTransmission($("#SWTDropDownButtonAt"+lineNum+"And"+length ).text(), contradictions[i]);
-                    $("#StoryWorldContradictionsPlusButton"+lineNum).trigger('click');
+                    if(contra === undefined) continue;
+                	$("#StoryWorldContradictionsPlusButton"+lineNum).trigger('click');
+                    
 
 
                     //change the values here
@@ -604,7 +626,7 @@ propertyTable.swtListeners = function(lineNum, length){
                     $("#StoryWorldContradictionsItemAt"+lineNum+"And"+(i+precedeLength+1)).attr("auto", "auto"+length);
                     
                     // Add auto text
-                    $("#SWCDropDownNested5At"+lineNum+"And"+(i+precedeLength+1)).append("<br> <br> <font style='color: grey;'> auto</font> ");
+                    $("#SWCDropDownContainerNested5At"+lineNum+"And"+(i+precedeLength+1)).append("<br> <br> <font style='color: grey;'> auto</font> ");
 
                 }
 
