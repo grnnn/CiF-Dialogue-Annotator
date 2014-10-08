@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CiF Dialogue Annotator</title>
+    <title>Recombinator</title>
 
     <!-- Bootstrap -->
     <link href="lib/css/bootstrap.min.css" rel="stylesheet">
@@ -23,10 +23,10 @@
   </head>
   <body style="padding: 30px">
     <div class="page-header">
-        <h1 >CiF Dialogue Annotator</h1>
-        <p class="lead">Web page for annotating CiF dialogue, so that it may later be recombined.</p>
+        <h1 >Recombinator</h1>
+        <p class="lead">A tool for combinatorial dialogue authoring</p>
 
-        <input id="nameOfInstantiation" class="form-control" type="text" value="Enter Name of Instantiation here">
+        <input id="nameOfInstantiation" class="form-control" type="text" value="Enter the instantiation name here">
         <div class="btn-group" style="padding-top:5px;">
             <button class="btn btn-default btn-file" id="importer">Import <span class="glyphicon glyphicon-import"></span> <input type="file"></button>
             <button class="btn btn-default" id="exporter">Export <span class="glyphicon glyphicon-export"></span></button>
@@ -72,36 +72,36 @@
         //Json loading doesnt work locally, so this is manually entered for now
         var propertyTypes = [
                 {"id": "SocialExchangeIdentities",
-                 "name": "Social Exchange Identities",
-                 "description": "This line transmits the identity of the Social Exchange",
+                 "name": "Identity",
+                 "description": "A social exchange that this line communicates as being enacted </br>by this instantiation.",
                  "color": "#428bca"},
                 {"id": "SocialExchangeOutcomes",
-                 "name": "Social Exchange Outcomes",
-                 "description": "This line transmits the outcome (eg Accept, Reject) of the Social Exchange",
+                 "name": "Outcome",
+                 "description": "A specific social-exchange outcome that this line communicates.",
                  "color": "#3c763d"},
                 {"id": "StoryWorldTransmissions",
-                 "name": "Story World Transmissions",
-                 "description": "This line transmits things about the Story World",
+                 "name": "Expression",
+                 "description": "Something about the story world that this line expresses as being </br> true, or that at least must be true in order for the line to make sense.",
                  "color": "#31708f"},
                 {"id": "StoryWorldContradictions",
-                 "name": "Story World Contradictions",
-                 "description": "This line cannot be accurate if these are true about the Story World",
+                 "name": "Contradiction",
+                 "description": "Something about the story world that must <i>not</i> be true in order for the </br> line to make sense.",
                  "color": "#8a6d3b"},
                 {"id": "SpeechActs",
-                 "name": "Speech Acts",
-                 "description": "This line is some type(s) of Speech Act",
+                 "name": "Speech Act",
+                 "description": "A speech act that this line has.",
                  "color": "#a94442"},
                 {"id": "SpeechActsPrecede",
-                 "name": "Speech Acts that can Precede",
-                 "description": "This line has speech acts that can precede it",
+                 "name": "Speech Act, Preceding",
+                 "description": "A speech act that a line directly preceding this line may have.",
                  "color": "#ffaeae"},
                 {"id": "SpeechActsFollow",
-                 "name": "Speech Acts that can Follow",
-                 "description": "This line has speech acts that can follow it",
+                 "name": "Speech Act, Succeeding",
+                 "description": "A speech act that a line directly succeeding this line may have.",
                  "color": "#ff9900"},
                 {"id": "StrictDependence",
-                 "name": "Strict Dependence",
-                 "description": "This line relies strictly on another line",
+                 "name": "Strict Dependency",
+                 "description": "A line that must precede this line in order for it to make sense.",
                  "color": "#660066"}
                 ];
 
@@ -265,723 +265,1096 @@
                 ];
 
         var speechActs = [
-			{"name": "Accept Offer",
-			 "description": "Speaker accepts an interlocutor offer.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			{"name": "Accept Action-Directive",
-			 "description": "Speaker agrees to undertake interlocutor action-directive.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			{"name": "Action-Directive",
-			 "description": "Speaker is requesting/directing interlocutor to do something.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			{"name": "Address Third Party",
-			 "description": "Speaker is addressing a person or group outside of the initiator, responder, or other.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Affirmative Answer",
-			 "description": "'Yes' and other affirmative answers.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Agree",
-			 "description": "Speaker agrees with an interlocutor statement.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Apology",
-			 "description": "Speaker apologizes to the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Compliment",
-			 "description": "Speaker compliments the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Conventional Closing",
-			 "description": "Speaker is closing the conversation in a conventional way, e.g., 'Alright, I'll talk to you later.'",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Deliberation",
-			 "description": "Speaker is deliberating over how to respond to an interlocutor question or offer.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Disagree",
-			 "description": "Speaker disagrees with an interlocutor statement.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Exclamation",
-			 "description": "Speaker exclaims as a reaction to some sort of spectacular display by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Insult",
-			 "description": "Speaker insults the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Greeting",
-			 "description": "Speaker greets the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Hedge",
-			 "description": "Speaker is hesitant, non-committal, beating around the bush, etc.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Lead-In",
-			 "description": "Speaker utterance is a lead-in for his or her subsequent utterance, e.g., 'Look, %i%.'",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Negative Answer",
-			 "description": "'No' and other negative answers.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Negative Response Acknowledgement",
-			 "description": "Speaker acknowledges a negative interlocutor response - e.g., a negative answer to the speaker's question or an interlocutor insult directed at the speaker.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Negative Statement",
-			 "description": "General statement that is negative in sentiment. First try to use negative answer, negative response acknowledgement, insult, etc.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Offer",
-			 "description": "Speaker offers to do something, usually for the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Off-Topic",
-			 "description": "Off-topic speech.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Other Answer",
-			 "description": "Answer that is neither affirmative, negative, nor a hedge.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Positive Response Acknowledgement",
-			 "description": "Speaker acknowledges a positive interlocutor response - e.g., an affirmative answer to the speaker's question of an interlocutor compliment directed at the speaker.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Positive Statement",
-			 "description": "General statement that is positive in sentiment. First try to use affirmative answer, positive response acknowledgement, compliment, etc.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Reject Offer",
-			 "description": "Speaker rejects an interlocutor offer.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Refuse Action-Directive",
-			 "description": "Speaker refuses an interlocutor action-directive.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Request Repair",
-			 "description": "Speaker requests rewording, confirmation about unclear speech, etc.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Response",
-			 "description": "Speaker generically responds to interlocutor. (Use only if no other tag fits.)",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Response Acknowledgement",
-			 "description": "Speaker acknowledges a generic interlocutor response. (Use positive or negative response acknowledgement, if possible.)",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Statement",
-			 "description": "Speaker generically states something.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Stun",
-			 "description": "Speaker does something that would warrant exclamation by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Summarize or Reformulate",
-			 "description": "Speaker summarizes or reformulates prior speech.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Thanking",
-			 "description": "Speaker thanks the interlocutor.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Yes or No Question",
-			 "description": "Speaker asks a question of the interlocutor that obligates a yes/no answer.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 },
-			 {"name": "Wh- Question",
-			 "description": "Speaker asks a question of the interlocutor that does not obligate a yes/no answer.",
-			 "canFollow":[
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						],
-			 "canPrecede": [
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50},
-						 {"name": "Speech Act name",
-						  "weight": 50}
-						]
-			 }
-			];
+                {"name": "Accept Offer",
+                 "description": "Speaker accepts an interlocutor offer.",
+                 "canPrecede":[
+                             {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                {"name": "Accept Action-Directive",
+                 "description": "Speaker agrees to undertake interlocutor action-directive.",
+                 "canPrecede":[
+                             {"name": "Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                {"name": "Action-Directive",
+                 "description": "Speaker is requesting/directing interlocutor to do something.",
+                 "canFollow": [
+                            {"name": "Accept Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Deliberation",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Lead-In",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Refuse Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Request Repair",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Summarize-Reformulate",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                {"name": "Address Third Party",
+                 "description": "Speaker is addressing a person or group outside of the initiator, responder, or other."
+                 },
+                 {"name": "Affirmative Answer",
+                 "description": "'Yes' and other affirmative answers.",
+                 "canPrecede":[
+                             {"name": "Yes-No Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Agree",
+                 "description": "Speaker agrees with an interlocutor statement.",
+                 "canPrecede":[
+                             {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Agree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Thanking",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Apology",
+                 "description": "Speaker apologizes to the interlocutor."
+                 },
+                 {"name": "Compliment",
+                 "description": "Speaker compliments the interlocutor."
+                 },
+                 {"name": "Conventional Closing",
+                 "description": "Speaker is closing the conversation in a conventional way, e.g., 'Alright, I'll talk to you later.'"
+                 },
+                 {"name": "Deliberation",
+                 "description": "Speaker is deliberating over how to respond to an interlocutor question or offer.",
+                 "canPrecede":[
+                             {"name": "Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Yes-No Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Wh- Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ],
+                 "canFollow": [
+                            {"name": "Other Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Refuse Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Reject Offer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Accept Offer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Accept Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Affirmative Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Agree",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Disagree",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Apology",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Negative Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Yes-No Question",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Wh- Question",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Summarize-Reformulate",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Disagree",
+                 "description": "Speaker disagrees with an interlocutor statement.",
+                 "canPrecede":[
+                             {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Disagree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Thanking",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Exclamation",
+                 "description": "Speaker exclaims as a reaction to some sort of spectacular display by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
+                 "canPrecede":[
+                             {"name": "Stun",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Special: Pick-Up Line",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Special: Reject Game",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Insult",
+                 "description": "Speaker insults the interlocutor.",
+                 "canPrecede":[
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Greeting",
+                 "description": "Speaker greets the interlocutor.",
+                 "canPrecede":[
+                             {"name": "Greeting",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Hedge",
+                 "description": "Speaker is hesitant, non-committal, beating around the bush, etc.",
+                 "canPrecede":[
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Hedge",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                             {"name": "Address Third Party",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                             {"name": "Deliberation",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Lead-In",
+                 "description": "Speaker utterance is a lead-in for his or her subsequent utterance, e.g., 'Look, %i%.'",
+                 "canFollow": [
+                            {"name": "Accept Offer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Deliberation",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Accept Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Affirmative Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Agree",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Disagree",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Apology",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Compliment",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Negative Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Offer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Other Answer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Refuse Action-Directive",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Reject Offer",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Thanking",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Yes-No Question",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Wh- Question",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Negative Answer",
+                 "description": "'No' and other negative answers.",
+                 "canPrecede":[
+                             {"name": "Yes-No Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Negative Response Acknowledgement",
+                 "description": "Speaker acknowledges a negative interlocutor response - e.g., a negative answer to the speaker's question or an interlocutor insult directed at the speaker.",
+                 "canPrecede":[
+                             {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Disagree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Refuse Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Reject Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Negative Statement",
+                 "description": "General statement that is negative in sentiment. First try to use negative answer, negative response acknowledgement, insult, etc."
+                 },
+                 {"name": "Offer",
+                 "description": "Speaker offers to do something, usually for the interlocutor.",
+                 "canFollow": [
+                            {"name": "Accept Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Deliberation",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Lead-In",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Reject Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Request Repair",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Summarize-Reformulate",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Off-Topic",
+                 "description": "Off-topic speech."
+                 },
+                 {"name": "Other Answer",
+                 "description": "Answer that is neither affirmative, negative, nor a hedge.",
+                 "canPrecede":[
+                             {"name": "Yes-No Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Wh- Question",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Positive Response Acknowledgement",
+                 "description": "Speaker acknowledges a positive interlocutor response - e.g., an affirmative answer to the speaker's question of an interlocutor compliment directed at the speaker.",
+                 "canPrecede":[
+                             {"name": "Accept Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Accept Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Affirmative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Agree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Response Acknowledgement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Thanking",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Positive Statement",
+                 "description": "General statement that is positive in sentiment. First try to use affirmative answer, positive response acknowledgement, compliment, etc."
+                 },
+                 {"name": "Reject Offer",
+                 "description": "Speaker rejects an interlocutor offer.",
+                 "canPrecede":[
+                             {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Refuse Action-Directive",
+                 "description": "Speaker refuses an interlocutor action-directive.",
+                 "canPrecede":[
+                             {"name": "Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Request Repair",
+                 "description": "Speaker requests rewording, confirmation about unclear speech, etc.",
+                 "canPrecede":[
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ],
+                 "canFollow": [
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Response",
+                 "description": "Speaker generically responds to interlocutor. (Use only if no other tag fits.)",
+                 "canPrecede":[
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Response Acknowledgement",
+                 "description": "Speaker acknowledges a generic interlocutor response. (Use positive or negative response acknowledgement, if possible.)",
+                 "canPrecede":[
+                             {"name": "Accept Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Accept Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Affirmative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Agree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Response Acknowledgement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Thanking",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Disagree",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Negative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Refuse Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Reject Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Other Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Statement",
+                 "description": "Speaker generically states something."
+                 },
+                 {"name": "Stun",
+                 "description": "Speaker does something that would warrant exclamation by the interlocutor (e.g., a bold statement, biting insult, pick-up line, etc.).",
+                 "canFollow": [
+                             {"name": "Exclamation",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Summarize-Reformulate",
+                 "description": "Speaker summarizes or reformulates prior speech.",
+                 "canPrecede":[
+                             {"name": "Anything",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Anything",
+                              "first": "speaker",
+                              "second": "interlocutor",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Thanking",
+                 "description": "Speaker thanks the interlocutor.",
+                 "canPrecede":[
+                             {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Compliment",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                             {"name": "Accept Action-Directive",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Yes-No Question",
+                 "description": "Speaker asks a question of the interlocutor that obligates a Yes-No answer.",
+                 "canFollow": [
+                            {"name": "Affirmative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Deliberation",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Lead-In",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Negative Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Other Answer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Request Repair",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Summarize-Reformulate",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 },
+                 {"name": "Wh- Question",
+                 "description": "Speaker asks a question of the interlocutor that does not obligate a Yes-No answer.",
+                 "canFollow": [
+                            {"name": "Apology",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Deliberation",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Insult",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Hedge",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Lead-In",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Offer",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Off-Topic",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Request Repair",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Response",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Summarize-Reformulate",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Negative Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50},
+                            {"name": "Positive Statement",
+                              "first": "interlocutor",
+                              "second": "speaker",
+                              "weight": 50}
+                            ]
+                 }
+                ];
 
-		var transmissions = {};
-        transmissions.CKB = [
-            {"representation":"Initiator likes a CKB item"},
-            {"representation":"Responder likes a CKB item"}
-        ];
-        transmissions.ST = [
-            {"representation":"Initiator is brainy"},
-            {"representation":"Responder is brainy"},
-            {"representation":"Initiator is a cheater"},
-            {"representation":"Responder is a cheater"},
-            {"representation":"Responder is cold"},
-            {"representation":"Initiator is confident"},
-            {"representation":"Initiator has a crush on Responder"},
-            {"representation":"Initiator is domineering"},
-            {"representation":"Responder is domineering"},
-            {"representation":"Initiator is impulsive"},
-            {"representation":"Initiator is inarticulate"},
-            {"representation":"Initiator is introverted"},
-            {"representation":"Responder is introverted"},
-            {"representation":"Responder is a jerk"},
-            {"representation":"Responder is mean"},
-            {"representation":"Initiator is muscular"},
-            {"representation":"Responder is nice"},
-            {"representation":"Initiator is popular"},
-            {"representation":"Responder is popular"},
-            {"representation":"Initiator is sharp"},
-            {"representation":"Responder is shy"},
-            {"representation":"Responder is a swinger"},
-            {"representation":"Initiator is a weakling"}
-        ];
-        transmissions.SFDB = [
-            {"representation":"Initiator did something cool"},
-            {"representation":"Initiator did something cool to/with Responder"},
-            {"representation":"Initiator did something failed-romance to/with Responder"},
-            {"representation":"Initiator did something mean to Other"},
-            {"representation":"Initiator did something romantic to/with Responder"},
-            {"representation":"Responder did something romantic to/with Initiator"}
-        ];
-        transmissions.REL = [
-            {"representation":"Initiator and Responder are friends"},
-            {"representation":"Initiator and Responder are enemies"},
-            {"representation":"Initiator and Other are enemies"},
-            {"representation":"Initiator and Responder are dating"},
-            {"representation":"Initiator and Other are dating"},
-            {"representation":"Responder and Other are dating"},
-            {"representation":"Initiator and Responder used to date"},
-            {"representation":"Initiator and Other are/were dating (unspecified)"},
-        ];
-        transmissions.NET = [
-            {"representation":"Responder thinks Initiator is attractive"},
-            {"representation":"Initiator thinks Responder is attractive"},
-            {"representation":"Responder thinks Initiator is cool"}
+		var transmissions = [
+            {
+            "class" : "Prom Week Examples",
+            "isBoolean": true,
+            "directionType": "Do when organized",
+            "defaultValue": false,
+            "allowIntent": true,
+            "types" :[
+            {
+                "operator": "friends",
+                "template": "%f% and %s% are friends",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+                "contradictions": ["enemies"]
+             },
+              {
+                "operator": "nice",
+                "template": "%f% is nice",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["mean", "jerk", "cold"]
+             },
+              {
+                "operator": "thinks is cool",
+                "template": "%f% thinks %s% is cool",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "inarticulate",
+                "template": "%f% is inarticulate",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["sharp", "popular", "confident"]
+             },
+              {
+                "operator": "cheater",
+                "template": "%f% is a cheater",
+                "first": ["initiator","responder","other"],
+             },
+              {
+                "operator": "domineering",
+                "template": "%f% is domineering",
+                "first": ["initiator", "responder", "other"],
+                "contradictions": ["shy", "introverted"]
+             },
+              {
+                "operator": "introverted",
+                "template": "%f% is introverted",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["domineering", "sharp", "popular", "confident"]
+             },
+              {
+                "operator": "brainy",
+                "template": "%f% is brainy",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["popular", "muscular"]
+             },
+              {
+                "operator": "dating",
+                "template": "%f% and %s% are dating",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "popular",
+                "template": "%f% is popular",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["brainy", "inarticulate", "shy", "introverted"]
+             },
+              {
+                "operator": "did something cool to",
+                "template": "%f% did something cool that %s% is aware of",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "former friends",
+                "template": "%f% and %s% used to be friends",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "attracted to",
+                "template": "%f% is attracted to %s%",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "dating, unspecified",
+                "template": "%f% and %s% are or were dating",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "failed romance",
+                "template": "%f% performed a failed romantic gesture to %s%",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "did something cool",
+                "template": "%f% did something cool",
+                "first": ["initiator","responder","other"],
+             },
+              {
+                "operator": "jerk",
+                "template": "%f% is a jerk",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["nice"]
+             },
+              {
+                "operator": "enemies",
+                "template": "%f% and %s% are enemies",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+                "contradictions": ["friends"]
+             },
+              {
+                "operator": "has a crush on",
+                "template": "%f% has a crush on %s%",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "cold",
+                "template": "%f% is cold",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["nice"]
+             },
+              {
+                "operator": "did something mean to",
+                "template": "%f% did something mean to %s%",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "muscular",
+                "template": "%f% is muscular",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["brainy"]
+             },
+              {
+                "operator": "romantic gesture",
+                "template": "%f% performed a romantic gesture to %s%",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "confident",
+                "template": "%f% is confident",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["brainy", "inarticulate", "shy", "introverted"]
+             },
+              {
+                "operator": "impulsive",
+                "template": "%f% is impulsive",
+                "first": ["initiator","responder","other"],
+             },
+              {
+                "operator": "sharp",
+                "template": "%f% is sharp",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["inarticulate", "shy", "introverted"]
+             },
+              {
+                "operator": "swinger",
+                "template": "%f% is a swinger",
+                "first": ["initiator","responder","other"],
+             },
+              {
+                "operator": "mean",
+                "template": "%f% is mean",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["nice"]
+             },
+              {
+                "operator": "like the same thing",
+                "template": "%f% and %s% like the same thing",
+                "first": ["initiator","responder","other"],
+                "second": ["initiator","responder","other"],
+             },
+              {
+                "operator": "shy",
+                "template": "%f% is shy",
+                "first": ["initiator","responder","other"],
+                "contradictions": ["domineering", "sharp", "popular", "confident"]
+             }
+             ]
+
+             }
         ];
 
         //$.getJSON("res/property_types.json", function(data){
@@ -996,21 +1369,10 @@
         //   speechActs = data;
         //});
 
-        //$.getJSON("res/Transmissions/CKB.json", function(data){
-        //   transmissions.CKB = data;
+        //$.getJSON("res/preconditions.json", function(data){
+        //   transmissions = data;
         //});
-        //$.getJSON("res/Transmissions/S-T.json", function(data){
-        //   transmissions.ST = data;
-        //});
-        //$.getJSON("res/Transmissions/SFDB.json", function(data){
-        //   transmissions.SFDB = data;
-        //});
-        //$.getJSON("res/Transmissions/REL.json", function(data){
-        //   transmissions.REL = data;
-        //});
-        //$.getJSON("res/Transmissions/NET.json", function(data){
-        //   transmissions.NET = data;
-        //});
+
 
 
     </script>

@@ -1,4 +1,12 @@
-[{
+[
+{
+"class" : "Prom Week Examples",
+"isBoolean": true,
+"directionType": "Do when organized",
+"defaultValue": false,
+"allowIntent": true,
+"types" :[
+{
 	"operator": "friends",
 	"template": "%f% and %s% are friends",
 	"first": ["initiator","responder","other"],
@@ -21,7 +29,7 @@
 	"operator": "inarticulate",
 	"template": "%f% is inarticulate",
 	"first": ["initiator","responder","other"],
-	"contradictions": ["sharp", "popular", "cool", "confident"]
+	"contradictions": ["sharp", "popular", "confident"]
  },
   {
 	"operator": "cheater",
@@ -38,13 +46,13 @@
 	"operator": "introverted",
 	"template": "%f% is introverted",
 	"first": ["initiator","responder","other"],
-	"contradictions": ["domineering", "cool", "sharp", "popular", "confident"]
+	"contradictions": ["domineering", "sharp", "popular", "confident"]
  },
   {
 	"operator": "brainy",
 	"template": "%f% is brainy",
 	"first": ["initiator","responder","other"],
-	"contradictions": ["cool", "popular", "muscular"]
+	"contradictions": ["popular", "muscular"]
  },
   {
 	"operator": "dating",
@@ -174,5 +182,9 @@
 	"operator": "shy",
 	"template": "%f% is shy",
 	"first": ["initiator","responder","other"],
-	"contradictions": ["domineering", "sharp", "popular", "cool", "confident"]
- }]
+	"contradictions": ["domineering", "sharp", "popular", "confident"]
+ }
+ ]
+ 
+ }
+ ]
