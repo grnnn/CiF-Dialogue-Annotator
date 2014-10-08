@@ -313,16 +313,31 @@ Property.prototype.swtUpdate = function(){
 
     //Iterate through each listgroup item
     for(var i = 1; i < this.length+1; i++){
+    	
+    	//Get the class
+    	var cls = $("#SWTDropDownButtonAt" + this.lineNum + "And" + i);
 
-        //Get the jquery object
-        var transmission = $("#SWTDropDownButtonNested1At" + this.lineNum + "And" + i);
+        //Get the type
+        var type = $("#SWTDropDownButtonNested1At" + this.lineNum + "And" + i);
+        
+        //Get the first
+        var first = $("#SWTDropDownButtonNested3At" + this.lineNum + "And" + i);
+        
+        //Get the second
+        var second = $("#SWTDropDownButtonNested4At" + this.lineNum + "And" + i);
 
         //(do some upkeep on the array)
         if(i > this.val.length) this.val.push({});
 
         //assign the transmission value
         if(transmission.text().search("Select Transmission") == -1 && transmission.length && transmission.text() !== this.val[i-1]){
-            this.val[i-1] = {"transmission":transmission.text(), "slider":$("#SWTslider-rangeAt" + this.lineNum + "And" + i).slider("value") };
+            this.val[i-1] = {
+            		"class":cls.text(), 
+            		"type": type.text(),
+            		"first": first.text(),
+            		"second": second.text(),
+            		"slider":$("#SWTslider-rangeAt" + this.lineNum + "And" + i).slider("value")
+            		};
         }
         if(!transmission.length) this.val[i-1] = {};
 
@@ -331,8 +346,8 @@ Property.prototype.swtUpdate = function(){
 
     //this.val data structure:
     //[
-    //{string transmission, int sliderValue},
-    //{string transmission, int sliderValue},
+    //{string class, string type, string first, string second, int sliderValue},
+    //{string class, string type, string first, string second, int sliderValue},
     //...
     //
     //]
@@ -345,16 +360,31 @@ Property.prototype.swcUpdate = function(){
 
     //Iterate through each listgroup item
     for(var i = 1; i < this.length+1; i++){
+    	
+    	//Get the class
+    	var cls = $("#SWCDropDownButtonAt" + this.lineNum + "And" + i);
 
-        //Get the jquery object
-        var transmission = $("#SWCDropDownButtonNested1At" + this.lineNum + "And" + i);
+        //Get the type
+        var type = $("#SWCDropDownButtonNested1At" + this.lineNum + "And" + i);
+        
+        //Get the first
+        var first = $("#SWCDropDownButtonNested3At" + this.lineNum + "And" + i);
+        
+        //Get the second
+        var second = $("#SWCDropDownButtonNested4At" + this.lineNum + "And" + i);
 
         //(do some upkeep on the array)
         if(i > this.val.length) this.val.push({});
 
         //assign the transmission value
         if(transmission.text().search("Select Transmission") == -1 && transmission.length && transmission.text() !== this.val[i-1]){
-            this.val[i-1] = {"transmission":transmission.text(), "slider":$("#SWCslider-rangeAt" + this.lineNum + "And" + i).slider("value") };
+            this.val[i-1] = {
+            		"class":cls.text(), 
+            		"type": type.text(),
+            		"first": first.text(),
+            		"second": second.text(),
+            		"slider":$("#SWTslider-rangeAt" + this.lineNum + "And" + i).slider("value")
+            		};
         }
         if(!transmission.length) this.val[i-1] = {};
 
@@ -363,8 +393,8 @@ Property.prototype.swcUpdate = function(){
 
     //this.val data structure:
     //[
-    //{string transmission, int sliderValue},
-    //{string transmission, int sliderValue},
+    //{string class, string type, string first, string second, int sliderValue},
+    //{string class, string type, string first, string second, int sliderValue},
     //...
     //
     //]

@@ -107,10 +107,13 @@ Main.prototype.exportButton = function(){
         lineObj.transmissions.transmission = [];
         if(line.annotationData["StoryWorldTransmissions"] != null){
             for(var t = 0; t < line.annotationData["StoryWorldTransmissions"].val.length; t++){
-                var transmission = line.annotationData["StoryWorldTransmissions"].val[t].transmission;
+                var tClass = line.annotationData["StoryWorldTransmissions"].val[t].class;
+                var tType = line.annotationData["StoryWorldTransmissions"].val[t].type;
+                var tFirst = line.annotationData["StoryWorldTransmissions"].val[t].first;
+                var tSecond = line.annotationData["StoryWorldTransmissions"].val[t].second;
                 var slider = line.annotationData["StoryWorldTransmissions"].val[t].slider;
                 if(transmission === "") continue;
-                lineObj.transmissions.transmission.push({"name": transmission, "slider": slider});
+                lineObj.transmissions.transmission.push({"type":tClass, "name": tType, "first": tFirst, "second": tSecond,"slider": slider});
             }
 
         }
@@ -120,10 +123,13 @@ Main.prototype.exportButton = function(){
         lineObj.contradictions.contradiction = [];
         if(line.annotationData["StoryWorldContradictions"] != null){
             for(var c = 0; c < line.annotationData["StoryWorldContradictions"].val.length; c++){
-                var contradiction = line.annotationData["StoryWorldContradictions"].val[c].transmission;
+                var cClass = line.annotationData["StoryWorldContradictions"].val[c].class;
+                var cType = line.annotationData["StoryWorldContradictions"].val[c].type;
+                var cFirst = line.annotationData["StoryWorldContradictions"].val[c].first;
+                var cSecond = line.annotationData["StoryWorldContradictions"].val[c].second;
                 var cSlider = line.annotationData["StoryWorldContradictions"].val[c].slider;
                 if(contradiction === "") continue;
-                lineObj.contradictions.contradiction.push({"name": contradiction, "slider": cSlider});
+                lineObj.contradictions.contradiction.push({"type":cClass, "name": cType, "first": cFirst, "second": cSecond,"slider": cSlider});
             }
 
         }
@@ -442,25 +448,6 @@ Main.prototype.successfulImport = function(contents){
     }
 
 };
-
-function findTransmissionType(trans){
-    for(var stLength = 0; stLength < transmissions.ST.length; stLength++){
-        if(trans === transmissions.ST[stLength].representation) return "Status/Trait Predicates";
-    }
-    for(var ckbLength = 0; ckbLength < transmissions.CKB.length; ckbLength++){
-        if(trans === transmissions.CKB[ckbLength].representation) return "Cultural Knowledgebase Predicates";
-    }
-    for(var sfdbLength = 0; sfdbLength < transmissions.SFDB.length; sfdbLength++){
-        if(trans === transmissions.SFDB[sfdbLength].representation) return "Social Facts Database Predicates";
-    }
-    for(var relLength = 0; relLength < transmissions.REL.length; relLength++){
-        if(trans === transmissions.REL[relLength].representation) return "Relationship Predicates";
-    }
-    for(var netLength = 0; netLength < transmissions.NET.length; netLength++){
-        if(trans === transmissions.NET[netLength].representation) return "Network-value Predicates";
-    }
-    alert("No transmission was found. This is a bug, please report it.");
-}
 
 function findSpeechActDescription(actName){
     for(var i = 0; i < speechActs.length; i++){
