@@ -398,16 +398,16 @@ Main.prototype.successfulImport = function(contents){
                     $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
                     
                     //class
-                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].class+"')").trigger("click");
+                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].type+"')").trigger("click");
                     
                     //type
-                    $("#SWTDropDownNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].type+"')");
+                    $("#SWTDropDownNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].name+"')").trigger("click");
                     
                     //first
-                    $("#SWTDropDownNested3At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].first+"')");
+                    $("#SWTDropDownNested3At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].first+"')").trigger("click");
                     
                     //second
-                    $("#SWTDropDownNested4At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].second+"')");
+                    $("#SWTDropDownNested4At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].second+"')").trigger("click");
                     
                     //slider
                     $("#SWTslider-rangeAt" + lineObj.lineNumber + "And" + (swtLength+1)).slider("value", myTransmissions[swtLength].slider);
@@ -436,20 +436,32 @@ Main.prototype.successfulImport = function(contents){
                     $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
 
                     //class
-                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].class+"')").trigger("click");
+                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].type+"')").trigger("click");
 
                     //type
-                    $("#SWCDropDownNested1At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].type+"')").trigger("click");
+                    $("#SWCDropDownNested1At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].name+"')").trigger("click");
                     
                     //first
-                    $("#SWCDropDownNested3At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].first+"')").trigger("click");
+                    $("#SWCDropDownNested3At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].first+"')").trigger("click");
                     
                     //second
-                    $("#SWCDropDownNested4At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].second+"')").trigger("click");
+                    $("#SWCDropDownNested4At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].second+"')").trigger("click");
 
                     //slider
                     $("#SWCslider-rangeAt" + lineObj.lineNumber + "And" + (swcLength+1)).slider("value", myContradictions[swcLength].slider);
                     $("#SWCAmountAt"+lineObj.lineNumber+"And"+(swcLength+1)).val(myContradictions[swcLength].slider);
+                    
+                    //Cleanup and disable auto-filled elements
+                    //Possibly account for auto-filled elements in the future?
+                    $("#StoryWorldContradictionsItemAt"+lineObj.lineNumber+"And"+(swcLength+1)).removeAttr("auto");  
+                }
+                //More cleanup stuff, get rid of all empty SWC Items
+                var contradictionListItems = $("#StoryWorldContradictionsListGroup" + lineObj.lineNumber).find("li.clearfix");
+                for(var swcLen = 0; swcLen < contradictionListItems.length; swcLen++){
+                	var item = contradictionListItems[swcLen];
+                	if($("#SWCDropDownButtonAt"+lineObj.lineNumber+"And"+(swcLen+1)).text().search("Select Transmission Type") === 0 ){
+                		item.remove();
+                	}
                 }
             }
         }
@@ -503,3 +515,10 @@ function findTransmission(typeName, transmissionName){
     alert(transmissionName+" is not a transmission name. This is a bug related to finding the right transmission name. Please report this.");
 }
 
+//Add pseudo function to replace 'contains' selector
+//Usage, $('li:equals("Blah")') --> will find all 'li' divs with the innerHTML as exactly "Blah"
+$.expr[':'].equals = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().match("^" + arg + "$");
+    };
+});

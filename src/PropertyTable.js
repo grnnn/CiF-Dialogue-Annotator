@@ -273,6 +273,7 @@ propertyTable.swcListeners = function(lineNum, length){
 
             //First, find out where we are in the description
             var transmission = findTransmission($("#SWCDropDownButtonAt"+lineNum+"And"+length).text(), $(this).text() );
+            
 
             //
             //Now onto Descriptions
@@ -527,7 +528,7 @@ propertyTable.swtListeners = function(lineNum, length){
                 for(var i = 0; i < autoItems.length; i++){
                 	//console.log(autoItems[i]);
                 	var firstDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested3At"]');
-                	firstDropDown.find('a:contains("'+$(this).text()+'")').trigger('click');
+                	firstDropDown.find('a:equals("'+$(this).text()+'")').trigger('click');
                 }
 
             });
@@ -565,7 +566,7 @@ propertyTable.swtListeners = function(lineNum, length){
                     if(autoItems.length === 1) autoItems = [autoItems];
                     for(var i = 0; i < autoItems.length; i++){
                     	var secondDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested4At"]');
-                    	secondDropDown.find('a:contains("'+$(this).text()+'")').trigger('click');
+                    	secondDropDown.find('a:equals("'+$(this).text()+'")').trigger('click');
                     }
                 });
             }
@@ -594,10 +595,10 @@ propertyTable.swtListeners = function(lineNum, length){
                     //change the values here
 
                     //Set the text in the first Dropdown button to the type, triggering the correct next dropdown
-                    $("#SWCDropDownAt"+lineNum+"And"+itemLength ).find('a:contains("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
+                    $("#SWCDropDownAt"+lineNum+"And"+itemLength ).find('a:equals("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
 
                     //Fill out the right values for the contradiction by triggering the correct contradiction
-                    $("#SWCDropDownNested1At"+lineNum+"And"+itemLength).find('a:contains("'+contra.operator+'")').trigger("click");
+                    $("#SWCDropDownNested1At"+lineNum+"And"+itemLength).find('a:equals("'+contra.operator+'")').trigger("click");
                     
                     // Add auto text
                     $("#SWCDropDownContainerNested5At"+lineNum+"And"+itemLength).append("<br> <br> <font style='color: grey;'> auto</font> ");
@@ -618,10 +619,10 @@ propertyTable.swtListeners = function(lineNum, length){
                     //change the values here
 
                     //Set the text in the first Dropdown button to the type, triggering the correct next dropdown
-                    $("#SWCDropDownAt"+lineNum+"And"+(i+precedeLength+1) ).find('a:contains("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
+                    $("#SWCDropDownAt"+lineNum+"And"+(i+precedeLength+1) ).find('a:equals("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
 
                     //Fill out the right values for the contradiction by triggering the correct contradiction
-                    $("#SWCDropDownNested1At"+lineNum+"And"+(i+precedeLength+1)).find('a:contains("'+contra.operator+'")').trigger("click");
+                    $("#SWCDropDownNested1At"+lineNum+"And"+(i+precedeLength+1)).find('a:equals("'+contra.operator+'")').trigger("click");
                     
                     //set the auto attribute on the item
                     $("#StoryWorldContradictionsItemAt"+lineNum+"And"+(i+precedeLength+1)).attr("auto", "auto"+length);
