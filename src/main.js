@@ -112,7 +112,7 @@ Main.prototype.exportButton = function(){
                 var tFirst = line.annotationData["StoryWorldTransmissions"].val[t].first;
                 var tSecond = line.annotationData["StoryWorldTransmissions"].val[t].second;
                 var slider = line.annotationData["StoryWorldTransmissions"].val[t].slider;
-                if(transmission === "") continue;
+                if(tType === "") continue;
                 lineObj.transmissions.transmission.push({"type":tClass, "name": tType, "first": tFirst, "second": tSecond,"slider": slider});
             }
 
@@ -128,7 +128,7 @@ Main.prototype.exportButton = function(){
                 var cFirst = line.annotationData["StoryWorldContradictions"].val[c].first;
                 var cSecond = line.annotationData["StoryWorldContradictions"].val[c].second;
                 var cSlider = line.annotationData["StoryWorldContradictions"].val[c].slider;
-                if(contradiction === "") continue;
+                if(cType === "") continue;
                 lineObj.contradictions.contradiction.push({"type":cClass, "name": cType, "first": cFirst, "second": cSecond,"slider": cSlider});
             }
 
@@ -396,16 +396,21 @@ Main.prototype.successfulImport = function(contents){
                 $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
                     $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
-
-                    var type = findTransmissionType(myTransmissions[swtLength].name);
-
-                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+type+"')").trigger("click");
-
-                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).val(myTransmissions[swtLength].name);
-                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).text(myTransmissions[swtLength].name);
-
+                    
+                    //class
+                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].class+"')").trigger("click");
+                    
+                    //type
+                    $("#SWTDropDownNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].type+"')");
+                    
+                    //first
+                    $("#SWTDropDownNested3At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].first+"')");
+                    
+                    //second
+                    $("#SWTDropDownNested4At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:contains('"+myTransmissions[swtLength].second+"')");
+                    
+                    //slider
                     $("#SWTslider-rangeAt" + lineObj.lineNumber + "And" + (swtLength+1)).slider("value", myTransmissions[swtLength].slider);
-
                     $("#SWTAmountAt"+lineObj.lineNumber+"And"+(swtLength+1)).val(myTransmissions[swtLength].slider);
 
                     if(myTransmissions[swtLength].slider <= 30){
@@ -430,15 +435,20 @@ Main.prototype.successfulImport = function(contents){
                 for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
                     $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
 
-                    var cType = findTransmissionType(myContradictions[swcLength].name);
+                    //class
+                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].class+"')").trigger("click");
 
-                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+cType+"')").trigger("click");
+                    //type
+                    $("#SWCDropDownNested1At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].type+"')").trigger("click");
+                    
+                    //first
+                    $("#SWCDropDownNested3At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].first+"')").trigger("click");
+                    
+                    //second
+                    $("#SWCDropDownNested4At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+myContradictions[swcLength].second+"')").trigger("click");
 
-                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).val(myContradictions[swcLength].name);
-                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).text(myContradictions[swcLength].name);
-
+                    //slider
                     $("#SWCslider-rangeAt" + lineObj.lineNumber + "And" + (swcLength+1)).slider("value", myContradictions[swcLength].slider);
-
                     $("#SWCAmountAt"+lineObj.lineNumber+"And"+(swcLength+1)).val(myContradictions[swcLength].slider);
                 }
             }
