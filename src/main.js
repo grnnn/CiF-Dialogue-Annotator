@@ -107,10 +107,13 @@ Main.prototype.exportButton = function(){
         lineObj.transmissions.transmission = [];
         if(line.annotationData["StoryWorldTransmissions"] != null){
             for(var t = 0; t < line.annotationData["StoryWorldTransmissions"].val.length; t++){
-                var transmission = line.annotationData["StoryWorldTransmissions"].val[t].transmission;
+                var tClass = line.annotationData["StoryWorldTransmissions"].val[t].class;
+                var tType = line.annotationData["StoryWorldTransmissions"].val[t].type;
+                var tFirst = line.annotationData["StoryWorldTransmissions"].val[t].first;
+                var tSecond = line.annotationData["StoryWorldTransmissions"].val[t].second;
                 var slider = line.annotationData["StoryWorldTransmissions"].val[t].slider;
-                if(transmission === "") continue;
-                lineObj.transmissions.transmission.push({"name": transmission, "slider": slider});
+                if(tType === "") continue;
+                lineObj.transmissions.transmission.push({"type":tClass, "name": tType, "first": tFirst, "second": tSecond,"slider": slider});
             }
 
         }
@@ -120,10 +123,13 @@ Main.prototype.exportButton = function(){
         lineObj.contradictions.contradiction = [];
         if(line.annotationData["StoryWorldContradictions"] != null){
             for(var c = 0; c < line.annotationData["StoryWorldContradictions"].val.length; c++){
-                var contradiction = line.annotationData["StoryWorldContradictions"].val[c].transmission;
+                var cClass = line.annotationData["StoryWorldContradictions"].val[c].class;
+                var cType = line.annotationData["StoryWorldContradictions"].val[c].type;
+                var cFirst = line.annotationData["StoryWorldContradictions"].val[c].first;
+                var cSecond = line.annotationData["StoryWorldContradictions"].val[c].second;
                 var cSlider = line.annotationData["StoryWorldContradictions"].val[c].slider;
-                if(contradiction === "") continue;
-                lineObj.contradictions.contradiction.push({"name": contradiction, "slider": cSlider});
+                if(cType === "") continue;
+                lineObj.contradictions.contradiction.push({"type":cClass, "name": cType, "first": cFirst, "second": cSecond,"slider": cSlider});
             }
 
         }
@@ -390,16 +396,21 @@ Main.prototype.successfulImport = function(contents){
                 $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
                     $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
-
-                    var type = findTransmissionType(myTransmissions[swtLength].name);
-
-                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:contains('"+type+"')").trigger("click");
-
-                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).val(myTransmissions[swtLength].name);
-                    $("#SWTDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).text(myTransmissions[swtLength].name);
-
+                    
+                    //class
+                    $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].type+"')").trigger("click");
+                    
+                    //type
+                    $("#SWTDropDownNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].name+"')").trigger("click");
+                    
+                    //first
+                    $("#SWTDropDownNested3At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].first+"')").trigger("click");
+                    
+                    //second
+                    $("#SWTDropDownNested4At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].second+"')").trigger("click");
+                    
+                    //slider
                     $("#SWTslider-rangeAt" + lineObj.lineNumber + "And" + (swtLength+1)).slider("value", myTransmissions[swtLength].slider);
-
                     $("#SWTAmountAt"+lineObj.lineNumber+"And"+(swtLength+1)).val(myTransmissions[swtLength].slider);
 
                     if(myTransmissions[swtLength].slider <= 30){
@@ -424,16 +435,33 @@ Main.prototype.successfulImport = function(contents){
                 for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
                     $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
 
-                    var cType = findTransmissionType(myContradictions[swcLength].name);
+                    //class
+                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].type+"')").trigger("click");
 
-                    $("#SWCDropDownAt"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:contains('"+cType+"')").trigger("click");
+                    //type
+                    $("#SWCDropDownNested1At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].name+"')").trigger("click");
+                    
+                    //first
+                    $("#SWCDropDownNested3At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].first+"')").trigger("click");
+                    
+                    //second
+                    $("#SWCDropDownNested4At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].second+"')").trigger("click");
 
-                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).val(myContradictions[swcLength].name);
-                    $("#SWCDropDownButtonNested1At" + lineObj.lineNumber + "And" + (swcLength+1)).text(myContradictions[swcLength].name);
-
+                    //slider
                     $("#SWCslider-rangeAt" + lineObj.lineNumber + "And" + (swcLength+1)).slider("value", myContradictions[swcLength].slider);
-
                     $("#SWCAmountAt"+lineObj.lineNumber+"And"+(swcLength+1)).val(myContradictions[swcLength].slider);
+                    
+                    //Cleanup and disable auto-filled elements
+                    //Possibly account for auto-filled elements in the future?
+                    $("#StoryWorldContradictionsItemAt"+lineObj.lineNumber+"And"+(swcLength+1)).removeAttr("auto");  
+                }
+                //More cleanup stuff, get rid of all empty SWC Items
+                var contradictionListItems = $("#StoryWorldContradictionsListGroup" + lineObj.lineNumber).find("li.clearfix");
+                for(var swcLen = 0; swcLen < contradictionListItems.length; swcLen++){
+                	var item = contradictionListItems[swcLen];
+                	if($("#SWCDropDownButtonAt"+lineObj.lineNumber+"And"+(swcLen+1)).text().search("Select Transmission Type") === 0 ){
+                		item.remove();
+                	}
                 }
             }
         }
@@ -442,25 +470,6 @@ Main.prototype.successfulImport = function(contents){
     }
 
 };
-
-function findTransmissionType(trans){
-    for(var stLength = 0; stLength < transmissions.ST.length; stLength++){
-        if(trans === transmissions.ST[stLength].representation) return "Status/Trait Predicates";
-    }
-    for(var ckbLength = 0; ckbLength < transmissions.CKB.length; ckbLength++){
-        if(trans === transmissions.CKB[ckbLength].representation) return "Cultural Knowledgebase Predicates";
-    }
-    for(var sfdbLength = 0; sfdbLength < transmissions.SFDB.length; sfdbLength++){
-        if(trans === transmissions.SFDB[sfdbLength].representation) return "Social Facts Database Predicates";
-    }
-    for(var relLength = 0; relLength < transmissions.REL.length; relLength++){
-        if(trans === transmissions.REL[relLength].representation) return "Relationship Predicates";
-    }
-    for(var netLength = 0; netLength < transmissions.NET.length; netLength++){
-        if(trans === transmissions.NET[netLength].representation) return "Network-value Predicates";
-    }
-    alert("No transmission was found. This is a bug, please report it.");
-}
 
 function findSpeechActDescription(actName){
     for(var i = 0; i < speechActs.length; i++){
@@ -506,3 +515,10 @@ function findTransmission(typeName, transmissionName){
     alert(transmissionName+" is not a transmission name. This is a bug related to finding the right transmission name. Please report this.");
 }
 
+//Add pseudo function to replace 'contains' selector
+//Usage, $('li:equals("Blah")') --> will find all 'li' divs with the innerHTML as exactly "Blah"
+$.expr[':'].equals = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().match("^" + arg + "$");
+    };
+});

@@ -147,7 +147,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
             main.findLine(lineNum).annotationData.addProperty(id);
 
             //Add the list-group for the property
-            $("#Properties"+lineNum).append("<ul class='list-group' id='"+id+"ListGroup"+lineNum+"'><li class='list-group-item' style='color:white; background-color: "+color+"; border-color: "+color+";'><h4 class='list-group-item-heading' style='color:white'>"+name+"<button type='button' id='"+id+"ListGroupClose"+lineNum+"' class='close' aria-hidden='true'>&times;</button></h4>"+desc+"</li><a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a></ul>");
+            $("#Properties"+lineNum).append("<ul class='list-group' id='"+id+"ListGroup"+lineNum+"'><li class='list-group-item' style='color:white; background-color: "+color+"; border-color: "+color+";'><h4 class='list-group-item-heading' style='color:white'>"+name+"<button type='button' id='"+id+"ListGroupClose"+lineNum+"' class='close' aria-hidden='true'>&times;</button><button type='button' id='"+id+"ListGroupCollapse"+lineNum+"' class='close' aria-hidden='true'>-</button></h4>"+desc+"</li><a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a></ul>");
             //Add a 'click' listener for the plus button in that list group
             //Logic for different formats is in the propertyTable object (defined in PropertyTable.js)
             $("#"+id+"ListGroup"+lineNum).on('click', 'a', function(){
@@ -206,7 +206,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                        //Remove the list item
 	                        $("#"+id+"ItemAt"+lineNum+"And"+length).remove();
 
-	                        //Speech Acts auto-fill exception
+	                        //Speech Acts and Transmission auto-fill exceptions
 	                        if(id === "SpeechActs"){
                                 var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto=auto"+length+"]");
                                 var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto=auto"+length+"]");
@@ -220,11 +220,50 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                                 }
 
                             }
+	                        if(id === "StoryWorldTransmissions"){
+	                        	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+	                        	
+	                        	for(var c = 0; c < autoItems.length; c++){
+	                        		autoItems[c].remove();
+	                        	}
+	                        }
                         }
 
                     });
 
                 }
+
+
+            });
+
+            //Add a listener for collapsing a listgroup with the - in the upper corner
+            $("#"+id+"ListGroupCollapse"+lineNum).on('click', function(){
+
+                //retrieve id and lineNum
+                var id = this.id.replace("ListGroupCollapse", "");
+                id = id.replace(/(\d+)/g, "");
+                var lineNum = this.id.replace(/([A-Z]+)/g, "");
+                lineNum = lineNum.replace(/([a-z]+)/g, "");
+
+                var open;
+                if($(this).text() === "-"){
+                    $(this).val("+");
+                    $(this).text("+");
+                    open = true;
+                } else {
+                    $(this).val("-");
+                    $(this).text("-");
+                    open = false;
+                }
+                
+
+                var listGroupItems = [$(this).parent().parent().parent().find("li.clearfix")];
+                listGroupItems.push($("#"+id+"PlusButton"+lineNum));
+                for(var i = 0; i < listGroupItems.length; i++){
+                    if(open) listGroupItems[i].attr("style", "display: none;");
+                    else listGroupItems[i].removeAttr("style");
+                }
+
 
 
             });
@@ -261,7 +300,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                //add the correct property back into the dropdown
 	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
 
-	                //exception for speech act, close all the autos
+	                //exception for speech act and transmissions, close all the autos
 	                if(id === "SpeechActs"){
 	                    var precedeItems =  $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto]");
 	                    var followItems =  $("#SpeechActsFollowListGroup"+lineNum).find("li[auto]");
@@ -274,6 +313,13 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                             followItems[b].remove();
                         }
 
+	                }
+	                if(id === "StoryWorldTransmissions"){
+	                	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto]");
+	                	
+	                	for(var c = 0; c < autoItems.length; c++){
+	                		autoItems[c].remove();
+	                	}
 	                }
                 }
 	        });

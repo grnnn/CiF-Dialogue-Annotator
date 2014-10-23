@@ -70,7 +70,7 @@ propertyTable.swtHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested4At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Second
 
-    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
+    dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested5At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
 
     dropdownText += "<br><p><label for='amount'>Strength of Transmission:</label><input type='text'id='SWTAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWTslider-rangeAt"+lineNum+"And"+length+"'></div>";
     dropdownText += "<div id='SWTTypeOfStrength"+lineNum+"And"+length+"' style='margin-top: 10px;'>The transmission is of medium strength</div>";
@@ -222,7 +222,7 @@ propertyTable.swcListeners = function(lineNum, length){
     });
 
     $("#SWCDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
-        //get the line number and length
+    	//get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownAt", "");
         var nums = nums.split("And");
         var lineNum = nums[0];
@@ -233,39 +233,30 @@ propertyTable.swcListeners = function(lineNum, length){
         $("#SWCDropDownButtonAt"+lineNum+"And"+length).text($(this).text());
 
         //Get the proper object for the first nested dropdown
-        myTransmissions = {};
-        switch($(this).text()) {
-            case "Cultural Knowledgebase Predicates":
-                myTransmissions = transmissions.CKB;
-                break;
-            case "Network-value Predicates":
-                myTransmissions = transmissions.NET;
-                break;
-            case "Relationship Predicates":
-                myTransmissions = transmissions.REL;
-                break;
-            case "Status/Trait Predicates":
-                myTransmissions = transmissions.ST;
-                break;
-            case "Social Facts Database Predicates":
-                myTransmissions = transmissions.SFDB;
-                break;
-        }
+        myTransmissions = findTransmissionType($(this).text());
 
         //Then obtain the div for the next dropdown, and push out the old container elements
         var nestedDrop = $("#SWCDropDownContainerNested1At"+lineNum+"And"+length);
         nestedDrop.empty();
 
+        //Empty other dropdowns too
+        $("#SWCDropDownContainerNested2At"+lineNum+"And"+length).empty();
+        $("#SWCDropDownContainerNested3At"+lineNum+"And"+length).empty();
+        $("#SWCDropDownContainerNested4At"+lineNum+"And"+length).empty();
+        $("#SWCDropDownContainerNested5At"+lineNum+"And"+length).empty();
+
         //Build up the dropdown string
-        var dropdownText =  "<button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWCDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
-        for(var i = 0; i < myTransmissions.length; i++){
-            var transmission = myTransmissions[i];
-            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission.representation+"</a></li>";
+        var dropdownText =  "<b>Transmission:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWCDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+        for(var i = 0; i < myTransmissions.types.length; i++){
+            var transmission = myTransmissions.types[i].operator;
+            dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+transmission+"</a></li>";
         }
         dropdownText = dropdownText + "</ul>";
 
         //Append it to the container
         nestedDrop.append(dropdownText);
+
+
 
 
         //Next set up a listener for the next menu
@@ -279,8 +270,101 @@ propertyTable.swcListeners = function(lineNum, length){
             //Set the text in the Dropdown button to the selected text
             $("#SWCDropDownButtonNested1At"+lineNum+"And"+length).val($(this).text());
             $("#SWCDropDownButtonNested1At"+lineNum+"And"+length).text($(this).text());
-        });
 
+            //First, find out where we are in the description
+            var transmission = findTransmission($("#SWCDropDownButtonAt"+lineNum+"And"+length).text(), $(this).text() );
+
+
+            //
+            //Now onto Descriptions
+            //
+            var descriptionDiv = $("#SWCDropDownContainerNested2At"+lineNum+"And"+length);
+            descriptionDiv.empty();
+
+            //Build up the description
+            if(transmission.second !== undefined){
+                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>, <u class='second'>second</u>)";
+            } else {
+                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>)";
+            }
+
+            var lexical = transmission.template;
+            lexical = lexical.replace("%f%", "<u class='first'>first</u>");
+            lexical = lexical.replace("%s%", "<u class='second'>second</u>");
+
+            descriptionText += "<br> <b>Lexical Representation:</b> " + lexical;
+
+            descriptionDiv.append(descriptionText);
+
+            //
+            // Now onto firsts and seconds
+            //
+
+            var firstDiv = $("#SWCDropDownContainerNested3At"+lineNum+"And"+length);
+            firstDiv.empty();
+
+            var secondDiv = $("#SWCDropDownContainerNested4At"+lineNum+"And"+length);
+            secondDiv.empty();
+
+            var firstText =  "<b>First:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonNested3At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select First <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWCDropDownNested3At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+            for(var i = 0; i < transmission.first.length; i++){
+                var option = transmission.first[i];
+                firstText = firstText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+option+"</a></li>";
+            }
+            firstText += "</ul>";
+
+            //Append it to the container
+            firstDiv.append(firstText);
+
+            //Next set up a listener for the second
+            $("#SWCDropDownNested3At" + lineNum + "And"+ length).on('click', 'li a', function(){
+                //get the line number and length
+                var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownNested3At", "");
+                var nums = nums.split("And");
+                var lineNum = nums[0];
+                var length = nums[1];
+
+                //Set the text in the Dropdown button to the selected text
+                $("#SWCDropDownButtonNested3At"+lineNum+"And"+length).val($(this).text());
+                $("#SWCDropDownButtonNested3At"+lineNum+"And"+length).text($(this).text());
+
+                //Reset the descriptions
+                $("#SWCDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').val($(this).text());
+                $("#SWCDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').text($(this).text());
+
+            });
+
+            if(transmission.second !== undefined){
+                var secondText =  "<b>Second:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonNested4At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Second <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWCDropDownNested4At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+                for(var j = 0; j < transmission.second.length; j++){
+                    var option = transmission.second[j];
+                    secondText = secondText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' >"+option+"</a></li>";
+                }
+                secondText += "</ul>";
+
+                //Append it to the container
+                secondDiv.append(secondText);
+
+                //Next set up a listener for the second
+                $("#SWCDropDownNested4At" + lineNum + "And"+ length).on('click', 'li a', function(){
+                    //get the line number and length
+                    var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownNested4At", "");
+                    var nums = nums.split("And");
+                    var lineNum = nums[0];
+                    var length = nums[1];
+
+                    //Set the text in the Dropdown button to the selected text
+                    $("#SWCDropDownButtonNested4At"+lineNum+"And"+length).val($(this).text());
+                    $("#SWCDropDownButtonNested4At"+lineNum+"And"+length).text($(this).text());
+
+                    //Reset the descriptions
+                    //Reset the descriptions
+                    $("#SWCDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').val($(this).text());
+                    $("#SWCDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').text($(this).text());
+                });
+            }
+
+        });
 
     });
 
@@ -345,6 +429,12 @@ propertyTable.swtListeners = function(lineNum, length){
         var nestedDrop = $("#SWTDropDownContainerNested1At"+lineNum+"And"+length);
         nestedDrop.empty();
 
+        //Empty other dropdowns too
+        $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).empty();
+        $("#SWTDropDownContainerNested3At"+lineNum+"And"+length).empty();
+        $("#SWTDropDownContainerNested4At"+lineNum+"And"+length).empty();
+        $("#SWTDropDownContainerNested5At"+lineNum+"And"+length).empty();
+
         //Build up the dropdown string
         var dropdownText =  "<b>Transmission:</b> <button type='button' class='btn btn-default dropdown-toggle' id='SWTDropDownButtonNested1At"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SWTDropDownNested1At"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
         for(var i = 0; i < myTransmissions.types.length; i++){
@@ -380,18 +470,19 @@ propertyTable.swtListeners = function(lineNum, length){
             var descriptionDiv = $("#SWTDropDownContainerNested2At"+lineNum+"And"+length);
             descriptionDiv.empty();
 
-            //Build up the description
-            if(transmission.second !== undefined){
-                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>, <u class='second'>second</u>)";
-            } else {
-                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>)";
-            }
+            var descriptionText = "";
+            // //Build up the description
+            // if(transmission.second !== undefined){
+            //     var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>, <u class='second'>second</u>)";
+            // } else {
+            //     var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>)";
+            // }
 
             var lexical = transmission.template;
             lexical = lexical.replace("%f%", "<u class='first'>first</u>");
             lexical = lexical.replace("%s%", "<u class='second'>second</u>");
 
-            descriptionText += "<br> <b>Lexical Representation:</b> " + lexical;
+            descriptionText += lexical + "<br>";
 
             descriptionDiv.append(descriptionText);
 
@@ -415,7 +506,7 @@ propertyTable.swtListeners = function(lineNum, length){
             //Append it to the container
             firstDiv.append(firstText);
 
-            //Next set up a listener for the second
+            //Next set up a listener for the first
             $("#SWTDropDownNested3At" + lineNum + "And"+ length).on('click', 'li a', function(){
                 //get the line number and length
                 var nums =  $(this).parent().parent().attr("id").replace("SWTDropDownNested3At", "");
@@ -430,6 +521,15 @@ propertyTable.swtListeners = function(lineNum, length){
                 //Reset the descriptions
                 $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').val($(this).text());
                 $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.first').text($(this).text());
+
+                //Get the auto filled contradictions
+                var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+                autoItems = [autoItems];
+                for(var i = 0; i < autoItems.length; i++){
+                	//console.log(autoItems[i]);
+                	var firstDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested3At"]');
+                	firstDropDown.find('a:equals("'+$(this).text()+'")').trigger('click');
+                }
 
             });
 
@@ -460,7 +560,90 @@ propertyTable.swtListeners = function(lineNum, length){
                     //Reset the descriptions
                     $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').val($(this).text());
                     $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').text($(this).text());
+
+                    //Get the auto filled contradictions
+                    var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+                    if(autoItems.length === 1) autoItems = [autoItems];
+                    for(var i = 0; i < autoItems.length; i++){
+                    	var secondDropDown = autoItems[i].find('[id*="SWCDropDownContainerNested4At"]');
+                    	secondDropDown.find('a:equals("'+$(this).text()+'")').trigger('click');
+                    }
                 });
+            }
+
+            //Write code for autofilling contradictions here
+            var contradictions = transmission.contradictions;
+
+            //Create the listgroups if they dont exist
+            if(! $("#StoryWorldContradictionsListGroup"+lineNum).length && contradictions !== undefined){
+            	$("#StoryWorldContradictionsProp"+lineNum).trigger('click');
+            }
+
+            //Get the items that are already there
+            var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
+
+            if(contradictions !== undefined){
+                for(var a = 0; a < autoItems.length; a++){
+
+                    var contra = findTransmission($("#SWTDropDownButtonAt"+lineNum+"And"+length ).text(), contradictions[a]);
+                    var cItem = autoItems[a];
+
+                    if(contra === undefined || cItem === undefined) break;
+
+                    var itemLength = cItem.id.replace("StoryWorldContradictionsItemAt"+lineNum+"And", "");
+
+                    //change the values here
+
+                    //Set the text in the first Dropdown button to the type, triggering the correct next dropdown
+                    $("#SWCDropDownAt"+lineNum+"And"+itemLength ).find('a:equals("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
+
+                    //Fill out the right values for the contradiction by triggering the correct contradiction
+                    $("#SWCDropDownNested1At"+lineNum+"And"+itemLength).find('a:equals("'+contra.operator+'")').trigger("click");
+
+                    // Add auto text
+                    $("#SWCDropDownContainerNested5At"+lineNum+"And"+itemLength).append("<br> <br> <font style='color: grey;'> auto</font> ");
+
+                }
+
+
+                //find out how many items have been created
+                var precedeLength = main.findLine(lineNum).annotationData["StoryWorldContradictions"].length - autoItems.length;
+
+                for(var i = autoItems.length; i < contradictions.length ; i++){
+                	var contra = findTransmission($("#SWTDropDownButtonAt"+lineNum+"And"+length ).text(), contradictions[i]);
+                    if(contra === undefined) continue;
+                	$("#StoryWorldContradictionsPlusButton"+lineNum).trigger('click');
+
+
+
+                    //change the values here
+
+                    //Set the text in the first Dropdown button to the type, triggering the correct next dropdown
+                    $("#SWCDropDownAt"+lineNum+"And"+(i+precedeLength+1) ).find('a:equals("'+$("#SWTDropDownButtonAt"+lineNum+"And"+length ).text()+'")').trigger("click");
+
+                    //Fill out the right values for the contradiction by triggering the correct contradiction
+                    $("#SWCDropDownNested1At"+lineNum+"And"+(i+precedeLength+1)).find('a:equals("'+contra.operator+'")').trigger("click");
+
+                    //set the auto attribute on the item
+                    $("#StoryWorldContradictionsItemAt"+lineNum+"And"+(i+precedeLength+1)).attr("auto", "auto"+length);
+
+                    // Add auto text
+                    $("#SWCDropDownContainerNested5At"+lineNum+"And"+(i+precedeLength+1)).append("<br> <br> <font style='color: grey;'> auto</font> ");
+
+                }
+
+
+                for(var j = contradictions.length; j < autoItems.length; j++){
+                    var aItem = autoItems[j];
+                    aItem.remove();
+                }
+
+
+            } else if(autoItems !== undefined){
+                for(var b = 0; b < autoItems.length; b++){
+                    autoItems[b].remove();
+                }
+
             }
 
             //
@@ -664,7 +847,7 @@ propertyTable.saListeners = function(lineNum, length){
         var actsThatPrecede = speechAct.canPrecede;
         var actsThatFollow = speechAct.canFollow;
 
-        //
+        //First fill out the preceding speech acts
 
         var precedeItems = $("#SpeechActsPrecedeListGroup"+lineNum).find("li[auto=auto"+length+"]");
 
