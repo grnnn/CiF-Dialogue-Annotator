@@ -114,7 +114,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
     var textForDropdown = "<div class='dropdown' id='PropertiesDropDown"+this.lineNumber+"' style='padding:15px'><button type='button' class='btn btn-default dropdown-toggle'   data-toggle='dropdown'>+ Add Type of Annotation <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='PropertiesDropDownInner"+this.lineNumber+"' aria-labelledby='dropdownMenu1' >";
     for(var i = 0; i < propertyTypes.length; i++){
         var propertyType = propertyTypes[i];
-        textForDropdown = textForDropdown + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+this.lineNumber+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>";
+        textForDropdown = textForDropdown + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+this.lineNumber+"' title='"+propertyType.description+"'><h4>"+propertyType.name+"</h4></a></li>";
 
     }
     //append that text to the Property tag
@@ -132,8 +132,8 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
             id = id.replace(/(\d+)/g, "");
             var lineNum = this.id.replace(/([A-Z]+)/g, "");
             lineNum = lineNum.replace(/([a-z]+)/g, "");
-            var name = $(this).text().split("--")[0];
-            var desc = $(this).text().split("--")[1]
+            var name = $(this).text();
+            var desc = $(this).attr("title");
             var color = $(this).attr("color");
 
             //Remove the button that adds that type of property
@@ -222,7 +222,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                             }
 	                        if(id === "StoryWorldTransmissions"){
 	                        	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto=auto"+length+"]");
-	                        	
+
 	                        	for(var c = 0; c < autoItems.length; c++){
 	                        		autoItems[c].remove();
 	                        	}
@@ -255,7 +255,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                     $(this).text("-");
                     open = false;
                 }
-                
+
 
                 var listGroupItems = [$(this).parent().parent().parent().find("li.clearfix")];
                 listGroupItems.push($("#"+id+"PlusButton"+lineNum));
@@ -298,7 +298,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                $("#PropertiesDropDown" + lineNum).show();
 
 	                //add the correct property back into the dropdown
-	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"'><h4>"+propertyType.name+"</h4> -- "+propertyType.description+"</a></li>");
+	                $("#PropertiesDropDownInner"+lineNum).append(" <li role='presentation'><a role='menuitem' tabindex='-1' color='"+propertyType.color+"'  id='"+propertyType.id+"Prop"+lineNum+"' title='"+propertyType.description+"'><h4>"+propertyType.name+"</h4></a></li>");
 
 	                //exception for speech act and transmissions, close all the autos
 	                if(id === "SpeechActs"){
@@ -316,7 +316,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
 	                }
 	                if(id === "StoryWorldTransmissions"){
 	                	var autoItems = $("#StoryWorldContradictionsListGroup"+lineNum).find("li[auto]");
-	                	
+
 	                	for(var c = 0; c < autoItems.length; c++){
 	                		autoItems[c].remove();
 	                	}

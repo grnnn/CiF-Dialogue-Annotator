@@ -261,7 +261,7 @@ Property.prototype.sdUpdate = function(){
         //next pull all of the lineNumber pointers into an array at this.val
         var buttonText = $("#SDDropDownButtonAt"+this.lineNum+"And"+k).text();
         //array upkeep
-        if( k > this.val.length) this.val.push(-1);
+        if( k > this.val.length) this.val.push({});
         //If the line content matches the value, get the line Number
         var trigger = true;
         for(var u = 0; u<main.linesOfDialogue.length; u++){
@@ -269,7 +269,12 @@ Property.prototype.sdUpdate = function(){
 
             var fromTheLine = (main.linesOfDialogue.indexOf(line)+1).toString() + "." + line.speaker + ":" + line.text;
             if(fromTheLine === buttonText){
-                this.val[k-1] = line.lineNumber;
+                this.val[k-1].lineNumber = line.lineNumber;
+                if( main.linesOfDialogue.indexOf( main.findLine(this.val[k-1].lineNumber) ) === main.linesOfDialogue.indexOf( main.findLine(this.lineNum) ) - 1 ){
+                    this.val[k-1].directPrecedence = true;
+                } else {
+                    this.val[k-1].directPrecedence = false;
+                }
                 trigger = false;
                 break;
             }
@@ -296,8 +301,8 @@ Property.prototype.sdUpdate = function(){
 
     //this.val data structure:
     //[
-    //int lineNumber1,
-    //int lineNumber2,
+    //{int lineNumber, bool directPrecedence},
+    //{int lineNumber, bool directPrecedence}
     //...
     //
     //]
@@ -313,16 +318,16 @@ Property.prototype.swtUpdate = function(){
 
     //Iterate through each listgroup item
     for(var i = 1; i < this.length+1; i++){
-    	
+
     	//Get the class
     	var cls = $("#SWTDropDownButtonAt" + this.lineNum + "And" + i);
 
         //Get the type
         var type = $("#SWTDropDownButtonNested1At" + this.lineNum + "And" + i);
-        
+
         //Get the first
         var first = $("#SWTDropDownButtonNested3At" + this.lineNum + "And" + i);
-        
+
         //Get the second
         var second = $("#SWTDropDownButtonNested4At" + this.lineNum + "And" + i);
 
@@ -332,7 +337,7 @@ Property.prototype.swtUpdate = function(){
         //assign the transmission value
         if(type.text().search("Select Transmission") == -1 && type.length && type.text() !== this.val[i-1]){
             this.val[i-1] = {
-            		"class":cls.text(), 
+            		"class":cls.text(),
             		"type": type.text(),
             		"first": first.text(),
             		"second": second.text(),
@@ -360,16 +365,16 @@ Property.prototype.swcUpdate = function(){
 
     //Iterate through each listgroup item
     for(var i = 1; i < this.length+1; i++){
-    	
+
     	//Get the class
     	var cls = $("#SWCDropDownButtonAt" + this.lineNum + "And" + i);
 
         //Get the type
         var type = $("#SWCDropDownButtonNested1At" + this.lineNum + "And" + i);
-        
+
         //Get the first
         var first = $("#SWCDropDownButtonNested3At" + this.lineNum + "And" + i);
-        
+
         //Get the second
         var second = $("#SWCDropDownButtonNested4At" + this.lineNum + "And" + i);
 
@@ -379,11 +384,10 @@ Property.prototype.swcUpdate = function(){
         //assign the transmission value
         if(type.text().search("Select Transmission") == -1 && type.length && type.text() !== this.val[i-1]){
             this.val[i-1] = {
-            		"class":cls.text(), 
+            		"class":cls.text(),
             		"type": type.text(),
             		"first": first.text(),
-            		"second": second.text(),
-            		"slider":$("#SWTslider-rangeAt" + this.lineNum + "And" + i).slider("value")
+            		"second": second.text()
             		};
         }
         if(!type.length) this.val[i-1] = {};
@@ -393,8 +397,8 @@ Property.prototype.swcUpdate = function(){
 
     //this.val data structure:
     //[
-    //{string class, string type, string first, string second, int sliderValue},
-    //{string class, string type, string first, string second, int sliderValue},
+    //{string class, string type, string first, string second},
+    //{string class, string type, string first, string second},
     //...
     //
     //]

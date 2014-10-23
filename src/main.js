@@ -127,9 +127,8 @@ Main.prototype.exportButton = function(){
                 var cType = line.annotationData["StoryWorldContradictions"].val[c].type;
                 var cFirst = line.annotationData["StoryWorldContradictions"].val[c].first;
                 var cSecond = line.annotationData["StoryWorldContradictions"].val[c].second;
-                var cSlider = line.annotationData["StoryWorldContradictions"].val[c].slider;
                 if(cType === "") continue;
-                lineObj.contradictions.contradiction.push({"type":cClass, "name": cType, "first": cFirst, "second": cSecond,"slider": cSlider});
+                lineObj.contradictions.contradiction.push({"type":cClass, "name": cType, "first": cFirst, "second": cSecond});
             }
 
         }
@@ -162,11 +161,11 @@ Main.prototype.exportButton = function(){
 
         }
 
-        lineObj.lines_strictly_depended_on = "";
-
         //Likeliness of success
         lineObj.likeliness_of_success_range = line.rangeVal1.toString() + " - " + line.rangeVal2.toString();
         lineObj.range_of_next_success = line.nextRange;
+
+        lineObj.lines_strictly_depended_on = {};
 
 
         lines.line.push(lineObj);
@@ -178,16 +177,16 @@ Main.prototype.exportButton = function(){
         var line = lines.line[j];
 
         //strict dependence
-        line.lines_strictly_depended_on = "";
+        line.lines_strictly_depended_on.line = [];
         if(this.linesOfDialogue[j].annotationData["StrictDependence"] != null){
             for(var sd = 0; sd < this.linesOfDialogue[j].annotationData["StrictDependence"].val.length; sd++){
-                var dependence = this.linesOfDialogue[j].annotationData["StrictDependence"].val[sd];
+                var dependence = this.linesOfDialogue[j].annotationData["StrictDependence"].val[sd].lineNumber;
+                var directPrecedence = this.linesOfDialogue[j].annotationData["StrictDependence"].val[sd].directPrecedence;
                 if(dependence === -1) continue;
                 var index = this.linesOfDialogue.indexOf(this.findLine(dependence));
                 var dependence = lines.line[index].id;
 
-                if(sd > 0) line.lines_strictly_depended_on = line.lines_strictly_depended_on + ", " + dependence;
-                if(sd === 0) line.lines_strictly_depended_on = dependence;
+                line.lines_strictly_depended_on.line.push({"dependence": dependence, "directPrecedence": directPrecedence});
             }
         }
 
@@ -366,15 +365,16 @@ Main.prototype.successfulImport = function(contents){
         }
 
         //Strict Dependence
-        if(typeof line.lines_strictly_depended_on !== "object"){
-            var dependencies = line.lines_strictly_depended_on.split(", ");
+        if(line.lines_strictly_depended_on.line !== undefined){
+            var dependencies = line.lines_strictly_depended_on.line;
             $("#StrictDependenceProp" + lineObj.lineNumber).trigger("click");
+            if(dependencies.dependence !== undefined) dependencies = [dependencies];
             for(var dLength = 0; dLength < dependencies.length; dLength++){
                 $("#StrictDependencePlusButton" + lineObj.lineNumber).trigger("click");
 
                 var lineNum = 0;
                 for(var l = 0; l < lines.length; l++){
-                    if(dependencies[dLength] === lines[l].id){
+                    if(dependencies[dLength].dependence === lines[l].id){
                         lineNum = l;
                         break;
                     }
@@ -396,19 +396,19 @@ Main.prototype.successfulImport = function(contents){
                 $("#StoryWorldTransmissionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swtLength = 0; swtLength < myTransmissions.length; swtLength++){
                     $("#StoryWorldTransmissionsPlusButton" + lineObj.lineNumber).trigger("click");
-                    
+
                     //class
                     $("#SWTDropDownAt"+lineObj.lineNumber+"And"+(swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].type+"')").trigger("click");
-                    
+
                     //type
                     $("#SWTDropDownNested1At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].name+"')").trigger("click");
-                    
+
                     //first
                     $("#SWTDropDownNested3At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].first+"')").trigger("click");
-                    
+
                     //second
                     $("#SWTDropDownNested4At" + lineObj.lineNumber + "And" + (swtLength+1)).find("li a:equals('"+myTransmissions[swtLength].second+"')").trigger("click");
-                    
+
                     //slider
                     $("#SWTslider-rangeAt" + lineObj.lineNumber + "And" + (swtLength+1)).slider("value", myTransmissions[swtLength].slider);
                     $("#SWTAmountAt"+lineObj.lineNumber+"And"+(swtLength+1)).val(myTransmissions[swtLength].slider);
@@ -428,9 +428,9 @@ Main.prototype.successfulImport = function(contents){
 
         //Story World Contradictions
         if(line.contradictions.contradiction !== undefined){
-            if(line.contradictions.contradiction.length !== undefined || line.contradictions.contradiction.slider >= 0){
+            if(line.contradictions.contradiction.length !== undefined || line.contradictions.contradiction.name !== undefined){
                 var myContradictions = line.contradictions.contradiction;
-                if(line.contradictions.contradiction.slider >= 0) myContradictions = [myContradictions];
+                if(line.contradictions.contradiction.name !== undefined) myContradictions = [myContradictions];
                 $("#StoryWorldContradictionsProp" + lineObj.lineNumber).trigger("click");
                 for(var swcLength = 0; swcLength < myContradictions.length; swcLength++){
                     $("#StoryWorldContradictionsPlusButton" + lineObj.lineNumber).trigger("click");
@@ -440,20 +440,16 @@ Main.prototype.successfulImport = function(contents){
 
                     //type
                     $("#SWCDropDownNested1At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].name+"')").trigger("click");
-                    
+
                     //first
                     $("#SWCDropDownNested3At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].first+"')").trigger("click");
-                    
+
                     //second
                     $("#SWCDropDownNested4At"+lineObj.lineNumber+"And"+(swcLength+1)).find("li a:equals('"+myContradictions[swcLength].second+"')").trigger("click");
 
-                    //slider
-                    $("#SWCslider-rangeAt" + lineObj.lineNumber + "And" + (swcLength+1)).slider("value", myContradictions[swcLength].slider);
-                    $("#SWCAmountAt"+lineObj.lineNumber+"And"+(swcLength+1)).val(myContradictions[swcLength].slider);
-                    
                     //Cleanup and disable auto-filled elements
                     //Possibly account for auto-filled elements in the future?
-                    $("#StoryWorldContradictionsItemAt"+lineObj.lineNumber+"And"+(swcLength+1)).removeAttr("auto");  
+                    $("#StoryWorldContradictionsItemAt"+lineObj.lineNumber+"And"+(swcLength+1)).removeAttr("auto");
                 }
                 //More cleanup stuff, get rid of all empty SWC Items
                 var contradictionListItems = $("#StoryWorldContradictionsListGroup" + lineObj.lineNumber).find("li.clearfix");

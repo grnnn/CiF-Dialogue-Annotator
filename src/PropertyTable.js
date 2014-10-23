@@ -47,8 +47,6 @@ propertyTable.swcHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
 
-    dropdownText += "<br><p><label for='amount'>Strength of Contradiction:</label><input type='text'id='SWCAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWCslider-rangeAt"+lineNum+"And"+length+"'></div>";
-
     return dropdownText;
 };
 
@@ -208,19 +206,6 @@ propertyTable.setListeners = function(id, lineNum, length){
 
 //Nested Dropdown listeners for StoryWorldContradictions
 propertyTable.swcListeners = function(lineNum, length){
-    //Set up slider for the strength of transmission
-    $(function() {
-        $( "#SWCslider-rangeAt" + lineNum + "And" + length ).slider({
-            min: 0,
-            max: 100,
-            value: 50,
-            slide: function( event, ui ) {
-                $( "#SWCAmountAt"+lineNum+"And"+length ).val( ui.value );
-            }
-        });
-        $( "#SWCAmountAt"+lineNum+"And"+length ).val( $( "#SWCslider-rangeAt" + lineNum + "And" + length ).slider("value") );
-    });
-
     $("#SWCDropDownAt" + lineNum + "And"+ length).on('click', 'li a', function(){
     	//get the line number and length
         var nums =  $(this).parent().parent().attr("id").replace("SWCDropDownAt", "");
@@ -257,8 +242,6 @@ propertyTable.swcListeners = function(lineNum, length){
         nestedDrop.append(dropdownText);
 
 
-
-
         //Next set up a listener for the next menu
         $("#SWCDropDownNested1At" + lineNum + "And"+ length).on('click', 'li a', function(){
             //get the line number and length
@@ -281,20 +264,11 @@ propertyTable.swcListeners = function(lineNum, length){
             var descriptionDiv = $("#SWCDropDownContainerNested2At"+lineNum+"And"+length);
             descriptionDiv.empty();
 
-            //Build up the description
-            if(transmission.second !== undefined){
-                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>, <u class='second'>second</u>)";
-            } else {
-                var descriptionText = "<b>Logical Representation:</b> " + transmission.operator + "(<u class='first'>first</u>)";
-            }
-
             var lexical = transmission.template;
             lexical = lexical.replace("%f%", "<u class='first'>first</u>");
             lexical = lexical.replace("%s%", "<u class='second'>second</u>");
 
-            descriptionText += "<br> <b>Lexical Representation:</b> " + lexical;
-
-            descriptionDiv.append(descriptionText);
+            descriptionDiv.append(lexical);
 
             //
             // Now onto firsts and seconds
@@ -835,17 +809,17 @@ propertyTable.saListeners = function(lineNum, length){
         //Get the proper speechAct data
         var speechAct = findSpeechAct(name);
 
-        //Create the listgroups if they dont exist
-        if(! $("#SpeechActsPrecedeListGroup"+lineNum).length ){
-        	$("#SpeechActsPrecedeProp"+lineNum).trigger('click');
-        }
-        if(!  $("#SpeechActsFollowListGroup"+lineNum).length ){
-        	$("#SpeechActsFollowProp"+lineNum).trigger('click');
-        }
-
         //Get the two speech act autofill groups
         var actsThatPrecede = speechAct.canPrecede;
         var actsThatFollow = speechAct.canFollow;
+
+        //Create the listgroups if they dont exist
+        if(actsThatPrecede !== undefined ){
+            $("#SpeechActsPrecedeProp"+lineNum).trigger('click');
+        }
+        if(actsThatFollow !== undefined ){
+            $("#SpeechActsFollowProp"+lineNum).trigger('click');
+        }
 
         //First fill out the preceding speech acts
 
