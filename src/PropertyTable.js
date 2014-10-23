@@ -32,13 +32,20 @@ propertyTable.addHTML = function(id, lineNum, length){
 //Then a drop down for the representations for that type
 propertyTable.swcHTML = function(lineNum, length){
 	var dropdownText = "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SWCDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Transmission Type <span class='caret'></span></button> <ul class='dropdown-menu' role='menu' id='SWCDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Cultural Knowledgebase Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Network-value Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Relationship Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Status/Trait Predicates</a></li>";
-    dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Social Facts Database Predicates</a></li> </ul> </div>";
+     for(var i=0; i < transmissions.length; i++){
+        dropdownText += " <li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>"+transmissions[i].class+"</a></li>";
+    }
+    dropdownText = dropdownText + " </ul> </div>";
 
-    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>";
+    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Type
+
+    dropdownText = dropdownText + "<div id='SWCDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Descriptions
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested3At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For First
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested4At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Second
+
+    dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
 
     dropdownText += "<br><p><label for='amount'>Strength of Contradiction:</label><input type='text'id='SWCAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWCslider-rangeAt"+lineNum+"And"+length+"'></div>";
 
@@ -455,6 +462,10 @@ propertyTable.swtListeners = function(lineNum, length){
                     $("#SWTDropDownContainerNested2At"+lineNum+"And"+length).find('u.second').text($(this).text());
                 });
             }
+
+            //
+            //Set up autofilling Contradictions
+            //
 
         });
 
