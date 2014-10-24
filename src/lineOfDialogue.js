@@ -105,7 +105,7 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
         $("#RangeDropDownButton"+lineNum).val($(this).text());
 
     });
-
+    
 }
 
 //Append the properties, and the listeners for those properties
@@ -147,7 +147,7 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
             main.findLine(lineNum).annotationData.addProperty(id);
 
             //Add the list-group for the property
-            $("#Properties"+lineNum).append("<ul class='list-group' id='"+id+"ListGroup"+lineNum+"'><li class='list-group-item' style='color:white; background-color: "+color+"; border-color: "+color+";'><h4 class='list-group-item-heading' style='color:white'>"+name+"<button type='button' id='"+id+"ListGroupClose"+lineNum+"' class='close' aria-hidden='true'>&times;</button><button type='button' id='"+id+"ListGroupCollapse"+lineNum+"' class='close' aria-hidden='true'>-</button></h4>"+desc+"</li><a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a></ul>");
+            $("#Properties"+lineNum).append("<ul class='list-group' id='"+id+"ListGroup"+lineNum+"'><li class='list-group-item' style='color:white; background-color: "+color+"; border-color: "+color+";'><h4 class='list-group-item-heading' style='color:white'>"+name+"<button type='button' id='"+id+"ListGroupClose"+lineNum+"' class='close' aria-hidden='true'>&times;</button><button type='button' id='"+id+"ListGroupCollapse"+lineNum+"' style='font-size: 30px;' class='close' aria-hidden='true'>-</button></h4><p id='"+id+"Desc"+lineNum+"'>"+desc+"</p></li><a  class='list-group-item' id='"+id+"PlusButton"+lineNum+"'>+</a></ul>");
             //Add a 'click' listener for the plus button in that list group
             //Logic for different formats is in the propertyTable object (defined in PropertyTable.js)
             $("#"+id+"ListGroup"+lineNum).on('click', 'a', function(){
@@ -255,13 +255,62 @@ LineOfDialogue.prototype.propertyDropdownConfigure = function(){
                     $(this).text("-");
                     open = false;
                 }
+                
+                //First, hide description
+                if(open) $("#"+id+"Desc"+lineNum).attr("style", "display: none;");
+                else $("#"+id+"Desc"+lineNum).removeAttr("style");
+                
+                //Next, hide plus button
+                if(open) $("#"+id+"PlusButton"+lineNum).attr("style", "display: none;");
+                else $("#"+id+"PlusButton"+lineNum).removeAttr("style");
 
 
                 var listGroupItems = [$(this).parent().parent().parent().find("li.clearfix")];
-                listGroupItems.push($("#"+id+"PlusButton"+lineNum));
                 for(var i = 0; i < listGroupItems.length; i++){
-                    if(open) listGroupItems[i].attr("style", "display: none;");
-                    else listGroupItems[i].removeAttr("style");
+                	
+                	//Get all children of the listGroupItems and exclude them based on the id type
+                	var children =  listGroupItems[i].children();
+                	
+                	//get the right class identifier
+                	var cls = "";
+                	switch(id){
+                	case "SocialExchangeIdentities":
+                		cls = "dropdown";
+                		break;
+                	case "SocialExchangeOutcomes":
+                		cls = "dropdown";
+                		break;
+                	case "StoryWorldTransmissions":
+                		cls = "lexical";
+                		break;
+                	case "StoryWorldContradictions":
+                		cls = "lexical";
+                		break;
+                	case "SpeechActs":
+                		cls = "dropdown act";
+                		break;
+                	case "SpeechActsPrecede":
+                		cls = "dropdown act";
+                		break;
+                	case "SpeechActsFollow":
+                		cls = "dropdown act";
+                		break;
+                	case "StrictDependence":
+                		cls = "dropdown";
+                		break;
+                	}
+                	
+                	//console.log(children);
+                	
+                	//hide all divs that dont have the class
+                	for(var j = 0; j < children.length; j++){
+                		var child = children[j];
+                		
+                		if( child.className !== cls){
+                			if(open) child.setAttribute("style", "display: none;");
+                            else child.removeAttribute("style");
+                		}
+                	}
                 }
 
 

@@ -25,7 +25,27 @@ Main.prototype.update = function(){
 //Adds a new line of dialogue
 Main.prototype.addLine = function(){
     this.currentLineNumber++;
-    this.linesOfDialogue.push(new LineOfDialogue(this.currentLineNumber));
+    var newLine = new LineOfDialogue(this.currentLineNumber);
+    this.linesOfDialogue.push(newLine);
+    
+    
+    //Set Speaker and interlocutor automatically, based on last line
+	if( this.linesOfDialogue.indexOf(newLine) > 0 ){
+		var lastLineIndex = this.linesOfDialogue.indexOf(newLine) - 1;
+		
+		if(this.linesOfDialogue[lastLineIndex].speaker === "Initiator" ){
+			$("#SpeakerDropDownButton"+newLine.lineNumber).text("Responder");
+			$("#SpeakerDropDownButton"+newLine.lineNumber).val("Responder");
+			$("#InterlocutorDropDownButton"+newLine.lineNumber).text("Initiator");
+			$("#InterlocutorDropDownButton"+newLine.lineNumber).val("Initiator");
+			
+		} else if(this.linesOfDialogue[lastLineIndex].speaker === "Responder" ){
+			$("#SpeakerDropDownButton"+newLine.lineNumber).text("Initiator");
+			$("#SpeakerDropDownButton"+newLine.lineNumber).val("Initiator");
+			$("#InterlocutorDropDownButton"+newLine.lineNumber).text("Responder");
+			$("#InterlocutorDropDownButton"+newLine.lineNumber).val("Responder");
+		}
+	}
 };
 
 

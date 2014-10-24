@@ -39,7 +39,7 @@ propertyTable.swcHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Type
 
-    dropdownText = dropdownText + "<div id='SWCDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Descriptions
+    dropdownText = dropdownText + "<div class='lexical' id='SWCDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'> Select Type and Transmission </div>"; //For Descriptions
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWCDropDownContainerNested3At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For First
 
@@ -62,7 +62,7 @@ propertyTable.swtHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested1At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Type
 
-    dropdownText = dropdownText + "<div id='SWTDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Descriptions
+    dropdownText = dropdownText + "<div class='lexical' id='SWTDropDownContainerNested2At"+lineNum+"And"+length+"' style='padding:5px;'>Select Type and Transmission</div>"; //For Descriptions
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested3At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For First
 
@@ -100,7 +100,7 @@ propertyTable.sdHTML = function(lineNum, length){
 //return the html string for "SpeechActsFollow"
 //Includes a drop down speech acts with descriptions
 propertyTable.safHTML = function(lineNum, length){
-  var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+  var dropdownText =  "<div class='dropdown act' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
   for(var i = 0; i < speechActs.length; i++){
       var speechAct = speechActs[i];
       dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
@@ -108,7 +108,7 @@ propertyTable.safHTML = function(lineNum, length){
   dropdownText = dropdownText + "</ul> </div>";
   dropdownText = dropdownText + "<p style='padding:10px;' id='SAFTextAt"+lineNum+"And"+length+"'></p>";
 
-  dropdownText += "Next Line: <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+  dropdownText += "<p>Next Line:</p> <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAFSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAFSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
   dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Interlocutor to Speaker</a></li>";
   dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Speaker to Interlocutor</a></li> </ul> </div>";
 
@@ -121,7 +121,7 @@ propertyTable.safHTML = function(lineNum, length){
 //return the html string for "SpeechActsPrecede"
 //Includes a drop down speech acts with descriptions
 propertyTable.sapHTML = function(lineNum, length){
-    var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    var dropdownText =  "<div class='dropdown act' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
     for(var i = 0; i < speechActs.length; i++){
         var speechAct = speechActs[i];
         dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
@@ -129,7 +129,7 @@ propertyTable.sapHTML = function(lineNum, length){
     dropdownText = dropdownText + "</ul> </div>";
     dropdownText = dropdownText + "<p style='padding:10px;' id='SAPTextAt"+lineNum+"And"+length+"'></p>";
 
-    dropdownText += "Previous Line: <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+    dropdownText += "<p>Previous Line:</p> <div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SAPSpeakerDropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Interlocutor to Speaker</button><ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SAPSpeakerDropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
     dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Interlocutor to Speaker</a></li>";
     dropdownText += "<li role='presentation'><a role='menuitem' tabindex='-1' style='cursor:default;'>Speaker to Interlocutor</a></li> </ul> </div>";
 
@@ -143,7 +143,7 @@ propertyTable.sapHTML = function(lineNum, length){
 //return the html string for "SpeechActs"
 //Includes a drop down speech acts with descriptions
 propertyTable.saHTML = function(lineNum, length){
-	var dropdownText =  "<div class='dropdown' ><button type='button' class='btn btn-default dropdown-toggle' id='SADropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SADropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
+	var dropdownText =  "<div class='dropdown act' ><button type='button' class='btn btn-default dropdown-toggle' id='SADropDownButtonAt"+lineNum+"And"+length+"'  data-toggle='dropdown'>Select Speech Act <span class='caret'></span></button> <ul class='dropdown-menu' style='white-space: normal;' role='menu' id='SADropDownAt"+lineNum+"And"+length+"' aria-labelledby='dropdownMenu1' >";
 	for(var i = 0; i < speechActs.length; i++){
 		var speechAct = speechActs[i];
 		dropdownText = dropdownText + " <li role='presentation'><a role='menuitem' style='white-space: normal; width: 300px; cursor:default;' tabindex='-1' ><b style='font-size:15px;'>"+speechAct.name+"</b> <br>"+speechAct.description+"</a></li>";
