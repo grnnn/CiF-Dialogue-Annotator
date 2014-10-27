@@ -603,7 +603,18 @@ propertyTable.swtListeners = function(lineNum, length){
 
                     // Add auto text
                     $("#SWCDropDownContainerNested5At"+lineNum+"And"+(i+precedeLength+1)).append("<br> <br> <font style='color: grey;'> auto</font> ");
-
+                    
+                    
+                    //Autohide the elements that aren't lexical
+                    if( $("#StoryWorldContradictionsListGroupCollapse"+lineNum).text() === "+"){
+                    	var children = $("#StoryWorldContradictionsItemAt"+lineNum+"And"+(i+precedeLength+1)).children();
+                    	for(var c = 0; c < children.length; c++){
+                    		if(children[c].className !== "lexical"){
+                    			children[c].setAttribute("style", "display: none;");
+                    		}
+                    	}
+                    	$("#StoryWorldContradictionsPlusButton"+lineNum).attr("style", "display: none;");
+                    }
                 }
 
 
@@ -887,8 +898,18 @@ propertyTable.saListeners = function(lineNum, length){
                 $("#SAPslider-rangeAt" + lineNum + "And" + (i+precedeLength+1)).slider("value", pAct.weight);
 
                 $("#SAPAmountAt"+lineNum+"And"+(i+precedeLength+1)).val(pAct.weight);
-
-
+                
+                
+                //Autohide the elements that aren't dropdown act
+                if( $("#SpeechActsPrecedeListGroupCollapse"+lineNum).text() === "+"){
+                	var children = $("#SpeechActsPrecedeItemAt"+lineNum+"And"+(i+precedeLength+1)).children();
+                	for(var c = 0; c < children.length; c++){
+                		if(children[c].className !== "dropdown act"){
+                			children[c].setAttribute("style", "display: none;");
+                		}
+                	}
+                	$("#SpeechActsPrecedePlusButton"+lineNum).attr("style", "display: none;");
+                }
 
             }
 
@@ -973,7 +994,16 @@ propertyTable.saListeners = function(lineNum, length){
 
                 $("#SAFAmountAt"+lineNum+"And"+(i+followLength+1)).val(fAct.weight);
 
-
+                //Autohide the elements that aren't dropdown act
+                if( $("#SpeechActsFollowListGroupCollapse"+lineNum).text() === "+"){
+                	var children = $("#SpeechActsFollowItemAt"+lineNum+"And"+(i+followLength+1)).children();
+                	for(var c = 0; c < children.length; c++){
+                		if(children[c].className !== "dropdown act"){
+                			children[c].setAttribute("style", "display: none;");
+                		}
+                	}
+                	$("#SpeechActsFollowPlusButton"+lineNum).attr("style", "display: none;");
+                }
 
             }
 
