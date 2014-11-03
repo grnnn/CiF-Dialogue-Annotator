@@ -10,11 +10,11 @@ function LineOfDialogue(lineNum){
 
     this.text = "";
 
-    this.rangeVal1 = 40;
+    this.rangeVal1 = 4;
 
-    this.rangeVal2 = 60;
+    this.rangeVal2 = 6;
 
-    this.nextRange = "+20";
+    this.nextRange = "+2";
 
     this.annotationData = new AnnotationData(lineNum);
 
@@ -33,8 +33,9 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
     //Superlong append that I wish I could make tidier
     $('#LinesContainer').append("<div class='row' id='Line"+this.lineNumber+"'><div class='col-md-2' > <b style='font-size: 24px;'> Speaker </b> <div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='SpeakerDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Speaker <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='SpeakerDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Other</a></li></ul></div>"
     							+"<b style='font-size: 24px;'> Interlocutor </b> <div class='dropdown'><button type='button' class='btn btn-default dropdown-toggle'  id='InterlocutorDropDownButton"+this.lineNumber+"' data-toggle='dropdown'>Select Interlocutor <span class='caret'></span></button><ul class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu1' id='InterlocutorDropDown"+this.lineNumber+"'><li role='presentation'><a role='menuitem' tabindex='-1' >Initiator</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Responder</a></li><li role='presentation'><a role='menuitem' tabindex='-1' >Other</a></li></ul></div></div>"
-                                +"<div class='col-md-5' > <b style='font-size: 24px;'> Text </b> <textarea rows='5' cols='60' style='resize:vertical' id='TextArea"+this.lineNumber+"'>Enter Dialogue here</textarea> <div><p><label for='amount'>Likeliness of Sucess range: </label><input type='text' id='amountAt"+this.lineNumber+"' readonly style='border:0; color:#f6931f; font-weight:bold;'></p><div id='slider-rangeAt"+this.lineNumber+"'></div><div style='padding-top: 20px;'><b >Range of next line sucess:</b></div><div style='width:25%; padding-top: 10px;' class='input-group'><div class='input-group-btn'><button type='button' id='RangeDropDownButton"+this.lineNumber+"' class='btn btn-default dropdown-toggle' data-toggle='dropdown'> +</button><ul id='RangeDropDown"+this.lineNumber+"' class='dropdown-menu' role='menu'><li><a> +</a></li><li><a> -</a></li></ul></div><input type='text' value='20' id='NextRange"+this.lineNumber+"' class='form-control'></div> </div> </div>"
-                                +"<div class='col-md-4' id='Properties"+this.lineNumber+"' > <b style='font-size: 24px;'> Annotations </b> </div><div class='col-md-1' ><div style='padding:40px'><button class='btn btn-danger'  id='RemoveLineButton"+this.lineNumber+"'>&times;</button></div> </div></div><div id='Divider"+this.lineNumber+"' class='page-header'></div>");
+                                +"<div class='col-md-4' > <b style='font-size: 24px;'> Text </b> <textarea rows='5' cols='50' style='resize:vertical' id='TextArea"+this.lineNumber+"'>Enter Dialogue here</textarea> <div><p><label for='amount'>Likeliness of Sucess range: </label><input type='text' id='amountAt"+this.lineNumber+"' readonly style='border:0; color:#f6931f; font-weight:bold;'></p><div id='slider-rangeAt"+this.lineNumber+"'></div><div style='padding-top: 20px;'><b >Range of next line sucess:</b></div><div style='width:25%; padding-top: 10px;' class='input-group'><div class='input-group-btn'><button type='button' id='RangeDropDownButton"+this.lineNumber+"' class='btn btn-default dropdown-toggle' data-toggle='dropdown'> +</button><ul id='RangeDropDown"+this.lineNumber+"' class='dropdown-menu' role='menu'><li><a> +</a></li><li><a> -</a></li></ul></div><input type='text' value='2' id='NextRange"+this.lineNumber+"' class='form-control'></div> </div> </div>"
+                                +"<div class='col-md-4' id='Properties"+this.lineNumber+"' > <b style='font-size: 24px;'> Annotations </b> </div>"
+                                +"<div class='col-md-2' id='toKeep"+this.lineNumber+"'><div style='padding:40px'><button class='btn btn-danger'  id='CollapseLineButton"+this.lineNumber+"'>-</button><button class='btn btn-danger'  id='RemoveLineButton"+this.lineNumber+"'>&times;</button></div> </div></div><div id='Divider"+this.lineNumber+"' class='page-header'></div>");
 
     //'click' listener for the Speaker dropdown
     $("#SpeakerDropDown"+this.lineNumber).on('click', 'li a', function(){
@@ -80,6 +81,38 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
 	        $("#Divider" + lineNum).remove();
         }
     });
+    
+    $("#CollapseLineButton"+this.lineNumber).on('click', function(){
+    	var lineNum = this.id.replace("CollapseLineButton","");
+    	var isOpen = ($(this).text() === "-");
+    	
+    	var line = $("#Line"+lineNum);
+		var children = line.children();
+    	
+		for(var i = 0; i < children.length; i++){
+			var child = children[i];
+			if(child.id !== "toKeep"+ lineNum){
+				if(isOpen)child.setAttribute("style", "display: none;");
+				else child.removeAttribute("style");
+			}
+		}
+		
+		if(isOpen) {
+			$(this).val("+");
+			$(this).text("+");
+		} else{
+			$(this).val("-");
+			$(this).text("-");
+		}
+		
+		var ind = main.linesOfDialogue.indexOf(main.findLine(lineNum)) + 1;
+		var speaker = main.findLine(lineNum).speaker;
+		var dialogue = main.findLine(lineNum).text;
+		
+		if(isOpen) $(this).parent().parent().parent().prepend("<strong id='tempRep"+lineNum+"'>"+ind+". "+speaker+": "+dialogue+"</strong>");
+		else $("#tempRep"+lineNum).remove();
+		
+    });
 
     var lineNum = this.lineNumber;
     //Set up slider for the likeliness of success
@@ -87,8 +120,8 @@ LineOfDialogue.prototype.baseStructureConfigure = function(){
         $( "#slider-rangeAt" + lineNum ).slider({
           range: true,
           min: 0,
-          max: 100,
-          values: [ 40, 60 ],
+          max: 10,
+          values: [ 4, 6 ],
           slide: function( event, ui ) {
             $( "#amountAt" + lineNum ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
           }
