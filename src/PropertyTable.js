@@ -70,9 +70,9 @@ propertyTable.swtHTML = function(lineNum, length){
 
     dropdownText = dropdownText + "<div class='dropdown' id='SWTDropDownContainerNested5At"+lineNum+"And"+length+"' style='padding:5px;'></div>"; //For Range (if needed)
 
-    dropdownText += "<br><p><label for='amount'>Strength of Transmission:</label><input type='text'id='SWTAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 50px;'></p><div id='SWTslider-rangeAt"+lineNum+"And"+length+"'></div>";
-    dropdownText += "<div id='SWTTypeOfStrength"+lineNum+"And"+length+"' style='margin-top: 10px;'>The transmission is of medium strength</div>";
-
+    dropdownText += "<br><p><label for='amount'>Strength of Transmission:</label><input type='text'id='SWTAmountAt"+lineNum+"And"+length+"' readonly style='border:0; color:#f6931f; font-weight:bold; width: 70px;'></p><div id='SWTslider-rangeAt"+lineNum+"And"+length+"'></div>";
+    dropdownText += "<p id='SWTTypeOfStrength"+lineNum+"And"+length+"'>medium</p>"
+    
     return dropdownText;
 };
 
@@ -353,18 +353,27 @@ propertyTable.swtListeners = function(lineNum, length){
             max: 100,
             value: 50,
             slide: function( event, ui ) {
-                $( "#SWTAmountAt"+lineNum+"And"+length ).val( ui.value );
                 //Change meaning based on value of slider
                 if(ui.value <= 30){
                     $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is only a dependency");
+                    $( "#SWTAmountAt"+lineNum+"And"+length ).val( "weak" );
                 } else if(ui.value > 30 && ui.value < 70){
                     $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is of medium strength");
+                    $( "#SWTAmountAt"+lineNum+"And"+length ).val( "medium" );
                 } else if(ui.value >= 70 ){
                     $("#SWTTypeOfStrength"+lineNum+"And"+length).text("This transmission is a proper transmission");
+                    $( "#SWTAmountAt"+lineNum+"And"+length ).val( "strong" );
                 }
             }
         });
-        $( "#SWTAmountAt"+lineNum+"And"+length ).val( $( "#SWTslider-rangeAt" + lineNum + "And" + length ).slider("value") );
+        var val = $( "#SWTslider-rangeAt" + lineNum + "And" + length ).slider("value");
+        if(val <= 30){
+        	$( "#SWTAmountAt"+lineNum+"And"+length ).val( "weak" );
+        } else if(val > 30 && val < 70){
+        	$( "#SWTAmountAt"+lineNum+"And"+length ).val( "medium" );
+        } else if(val >= 70){
+        	$( "#SWTAmountAt"+lineNum+"And"+length ).val( "strong" );
+        }
     });
 
     //Set up ticks on slider
