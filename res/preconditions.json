@@ -23,7 +23,7 @@
 	"operator": "thinks is cool",
 	"template": "%f% thinks %s% is cool",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "inarticulate",
@@ -34,7 +34,7 @@
   {
 	"operator": "cheater",
 	"template": "%f% is a cheater",
-	"first": ["initiator","responder","other"],
+	"first": ["initiator","responder","other"]
  },
   {
 	"operator": "domineering",
@@ -58,7 +58,7 @@
 	"operator": "dating",
 	"template": "%f% and %s% are dating",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "popular",
@@ -70,36 +70,36 @@
 	"operator": "did something cool to",
 	"template": "%f% did something cool that %s% is aware of",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "former friends",
 	"template": "%f% and %s% used to be friends",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "attracted to",
 	"template": "%f% is attracted to %s%",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "dating, unspecified",
 	"template": "%f% and %s% are or were dating",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "failed romance",
 	"template": "%f% performed a failed romantic gesture to %s%",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "did something cool",
 	"template": "%f% did something cool",
-	"first": ["initiator","responder","other"],
+	"first": ["initiator","responder","other"]
  },
   {
 	"operator": "jerk",
@@ -118,7 +118,7 @@
 	"operator": "has a crush on",
 	"template": "%f% has a crush on %s%",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "cold",
@@ -130,7 +130,7 @@
 	"operator": "did something mean to",
 	"template": "%f% did something mean to %s%",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "muscular",
@@ -142,7 +142,7 @@
 	"operator": "romantic gesture",
 	"template": "%f% performed a romantic gesture to %s%",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "confident",
@@ -153,7 +153,7 @@
   {
 	"operator": "impulsive",
 	"template": "%f% is impulsive",
-	"first": ["initiator","responder","other"],
+	"first": ["initiator","responder","other"]
  },
   {
 	"operator": "sharp",
@@ -164,7 +164,7 @@
   {
 	"operator": "swinger",
 	"template": "%f% is a swinger",
-	"first": ["initiator","responder","other"],
+	"first": ["initiator","responder","other"]
  },
   {
 	"operator": "mean",
@@ -176,7 +176,7 @@
 	"operator": "like the same thing",
 	"template": "%f% and %s% like the same thing",
 	"first": ["initiator","responder","other"],
-	"second": ["initiator","responder","other"],
+	"second": ["initiator","responder","other"]
  },
   {
 	"operator": "shy",

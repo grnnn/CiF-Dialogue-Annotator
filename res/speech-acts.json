@@ -790,7 +790,7 @@
 			{"name": "Affirmative Answer",
 			  "first": "interlocutor",
 			  "second": "speaker",
-			  "weight": 50}
+			  "weight": 50},
 			{"name": "Apology",
 			  "first": "interlocutor",
 			  "second": "speaker",
